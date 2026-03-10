@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Projects — Zero to Shipped</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --royal-dark: #142e8a;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* NAV */
+.site-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--royal); }
+.nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+.nav-btn:hover { background: var(--surface2); }
+
+/* TABS */
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
+.page-tab.disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+
+/* HERO */
+.page-hero {
+  background: var(--royal);
+  color: #fff;
+  padding: 36px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%);
+}
+.hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; position: relative; }
+.hero-heading { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
+.hero-heading em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: clamp(13px, 1.8vw, 16px); color: rgba(255,255,255,0.6); max-width: 460px; margin: 0 auto; line-height: 1.7; position: relative; }
+
+/* MAIN CONTENT */
+.main-section { flex: 1; max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
+.section-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); }
+.add-btn { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 6px; background: var(--royal); color: #fff; border: none; cursor: pointer; transition: background 0.15s; }
+.add-btn:hover { background: var(--royal-dark); }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 80px 24px; }
+.empty-icon { font-size: 52px; margin-bottom: 20px; }
+.empty-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.empty-sub { font-size: 14px; color: var(--text-muted); line-height: 1.75; max-width: 400px; margin: 0 auto 28px; }
+
+/* PROJECT GRID */
+.proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 860px) { .proj-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .proj-grid { grid-template-columns: 1fr; } }
+
+/* PROJECT CARD */
+.proj-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.proj-card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,0.09); }
+
+/* PREVIEW */
+.proj-preview {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: var(--surface2);
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.proj-preview iframe {
+  width: 1280px;
+  height: 800px;
+  border: none;
+  transform: scale(0.28);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.proj-preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(26,61,181,0.07) 0%, rgba(201,146,42,0.07) 100%);
+}
+.proj-preview-placeholder span { font-size: 32px; }
+.proj-preview-placeholder p { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--text-dim); letter-spacing: 0.08em; }
+.proj-preview-link {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--royal);
+  text-decoration: none;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.proj-card:hover .proj-preview-link { opacity: 1; }
+
+/* CARD BODY */
+.proj-card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.proj-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.proj-card-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.proj-card-delete { background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: 16px; padding: 2px; line-height: 1; flex-shrink: 0; transition: color 0.15s; }
+.proj-card-delete:hover { color: #c0392b; }
+.proj-level-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: rgba(26,61,181,0.08); border: 1px solid rgba(26,61,181,0.2); color: var(--royal); }
+.proj-level-badge.gold { background: rgba(201,146,42,0.1); border-color: rgba(201,146,42,0.3); color: var(--gold); }
+.proj-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.proj-tool { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
+.proj-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--royal); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.proj-url:hover { text-decoration: underline; }
+.proj-date { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: auto; }
+
+/* ADD MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+.modal-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.modal-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+.modal-input, .modal-textarea {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.modal-input:focus, .modal-textarea:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
+.modal-textarea { resize: vertical; min-height: 80px; font-size: 13px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+.modal-save { flex: 1; padding: 12px; background: var(--royal); color: #fff; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; border: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.modal-save:hover { background: var(--royal-dark); }
+.modal-cancel { padding: 12px 20px; background: transparent; color: var(--text-muted); font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.modal-cancel:hover { background: var(--surface2); }
+
+footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 12px; }
+footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="dashboard.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs">
+      <a class="page-tab" href="dashboard.html">My Dashboard</a>
+      <a class="page-tab active">My Projects</a>
+      <a class="page-tab disabled">My Profile</a>
+    </div>
+    <button class="nav-btn" id="logout-btn" style="align-self:center;">Log Out</button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-eyebrow">✦ Project Library</div>
+  <h1 class="hero-heading">My <em>Projects</em></h1>
+  <p class="hero-sub">Everything you've built. Add projects from the Web Apps track or log anything you've shipped on your own.</p>
+</section>
+
+<section class="main-section">
+  <div class="section-top">
+    <div class="section-label" id="proj-count">Loading…</div>
+    <button class="add-btn" id="add-btn">+ Add Project</button>
+  </div>
+
+  <div id="proj-grid" class="proj-grid"></div>
+
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <div class="empty-icon">🚀</div>
+    <div class="empty-title">No projects yet</div>
+    <p class="empty-sub">Complete a project in the Web Apps track and check "Save to my Project Library" — or add one manually using the button above.</p>
+    <button class="add-btn" onclick="openModal()">+ Add Your First Project</button>
+  </div>
+</section>
+
+<!-- ADD PROJECT MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title">Add a Project</div>
+    <div class="modal-sub">Log something you've built — from any track, tutorial, or on your own.</div>
+    <div class="modal-field">
+      <label class="modal-label">Project Name *</label>
+      <input class="modal-input" id="m-title" type="text" placeholder="e.g. My Portfolio Site" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">What did you build?</label>
+      <input class="modal-input" id="m-desc" type="text" placeholder="e.g. A personal blog with auth and payments" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Live URL</label>
+      <input class="modal-input" id="m-url" type="url" placeholder="https://your-project.vercel.app" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Tools Used (comma separated)</label>
+      <input class="modal-input" id="m-tools" type="text" placeholder="e.g. React, Supabase, Stripe" />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Notes</label>
+      <textarea class="modal-textarea" id="m-notes" placeholder="Anything you want to remember about this project…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="modal-cancel">Cancel</button>
+      <button class="modal-save" id="modal-save">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft">Zero to Shipped</div>
+  Build Real Things with AI · Created with Claude
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+// ── AUTH GUARD ──
+(async function () {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+})();
+
+// ── LEVEL COLOR ──
+const GOLD_LEVELS = ['Advanced','Pro','Ninja'];
+function levelClass(level) { return GOLD_LEVELS.includes(level) ? 'gold' : ''; }
+
+// ── RENDER ──
+function getProjects() {
+  return JSON.parse(localStorage.getItem('zts_my_projects') || '[]');
+}
+function saveProjects(list) {
+  localStorage.setItem('zts_my_projects', JSON.stringify(list));
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function renderCard(proj) {
+  const hasUrl = proj.url && proj.url.startsWith('http');
+  const tools = (proj.tools || []).map(function(t) {
+    return `<span class="proj-tool">${t}</span>`;
+  }).join('');
+
+  const preview = hasUrl
+    ? `<iframe src="${proj.url}" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+       <a href="${proj.url}" target="_blank" class="proj-preview-link">↗ Open</a>`
+    : `<div class="proj-preview-placeholder"><span>🚀</span><p>No URL saved</p></div>`;
+
+  const levelBadge = proj.level
+    ? `<span class="proj-level-badge ${levelClass(proj.level)}">${proj.level}</span>` : '';
+
+  const urlEl = hasUrl
+    ? `<a href="${proj.url}" target="_blank" class="proj-url">${proj.url.replace(/^https?:\/\//, '')}</a>` : '';
+
+  const card = document.createElement('div');
+  card.className = 'proj-card';
+  card.dataset.id = proj.id;
+  card.innerHTML = `
+    <div class="proj-preview">${preview}</div>
+    <div class="proj-card-body">
+      <div class="proj-card-top">
+        <div></div>
+        <button class="proj-card-delete" data-id="${proj.id}" title="Remove">✕</button>
+      </div>
+      ${proj.description ? `<div style="font-size:13px;color:var(--text-muted);line-height:1.65;">${proj.description}</div>` : ''}
+      ${tools ? `<div class="proj-tools">${tools}</div>` : ''}
+      ${urlEl}
+      ${proj.notes ? `<div style="font-size:12px;color:var(--text-dim);line-height:1.6;font-style:italic;">${proj.notes}</div>` : ''}
+      <div class="proj-date">${proj.savedAt ? 'Saved ' + formatDate(proj.savedAt) : ''}</div>
+    </div>
+  `;
+  return card;
+}
+
+function render() {
+  const projects = getProjects();
+  const grid = document.getElementById('proj-grid');
+  const empty = document.getElementById('empty-state');
+  const count = document.getElementById('proj-count');
+
+  grid.innerHTML = '';
+  if (projects.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    count.textContent = '0 projects';
+    return;
+  }
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  count.textContent = projects.length + (projects.length === 1 ? ' project' : ' projects');
+
+  projects.forEach(function(proj) {
+    grid.appendChild(renderCard(proj));
+  });
+
+  // Delete buttons
+  grid.querySelectorAll('.proj-card-delete').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const id = btn.dataset.id;
+      const list = getProjects().filter(function(p) { return p.id !== id; });
+      saveProjects(list);
+      render();
+    });
+  });
+}
+
+// ── ADD MODAL ──
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('m-title').focus();
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  ['m-title','m-desc','m-url','m-tools','m-notes'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+}
+
+document.getElementById('add-btn').addEventListener('click', openModal);
+document.getElementById('modal-cancel').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.getElementById('modal-save').addEventListener('click', function() {
+  const title = document.getElementById('m-title').value.trim();
+  if (!title) { document.getElementById('m-title').focus(); return; }
+  const toolsRaw = document.getElementById('m-tools').value.trim();
+  const tools = toolsRaw ? toolsRaw.split(',').map(function(t) { return t.trim(); }).filter(Boolean) : [];
+  const list = getProjects();
+  list.push({
+    id: 'manual-' + Date.now(),
+    title: title,
+    description: document.getElementById('m-desc').value.trim(),
+    url: document.getElementById('m-url').value.trim(),
+    tools: tools,
+    notes: document.getElementById('m-notes').value.trim(),
+    savedAt: new Date().toISOString()
+  });
+  saveProjects(list);
+  closeModal();
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Zero to Shipped</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+  --purple: #7c3aed;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAV */
+.site-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-logo em { color: var(--royal); }
+.nav-btn {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 50px;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.nav-btn:hover { background: var(--surface2); }
+
+/* HERO */
+.dash-hero {
+  background: var(--royal);
+  color: #fff;
+  padding: 36px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 50%, rgba(255,255,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%);
+}
+.dash-eyebrow {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,146,42,0.4);
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.dash-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  position: relative;
+  margin-bottom: 12px;
+}
+.dash-heading em { font-style: italic; color: var(--gold); }
+.dash-sub {
+  font-size: clamp(14px, 2vw, 17px);
+  color: rgba(255,255,255,0.6);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+  position: relative;
+}
+
+/* PAGE TABS */
+.page-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  height: 100%;
+}
+.page-tab {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 0 18px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+  white-space: nowrap;
+  height: 60px;
+}
+.page-tab:hover { color: var(--text); }
+.page-tab.active {
+  color: var(--royal);
+  border-bottom-color: var(--royal);
+}
+.page-tab.disabled {
+  opacity: 0.4;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ORIENTATION */
+.orientation {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 32px 24px;
+}
+.orientation-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 24px;
+}
+.orient-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding-left: 24px;
+  border-left: 1px solid var(--border);
+}
+.orient-item:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+.orient-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.orient-text span {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+@media (max-width: 900px) {
+  .orientation-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .orientation-inner { grid-template-columns: 1fr; gap: 16px; }
+}
+
+/* COMPLETION BADGE */
+.completion-badge {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.completion-badge.has-progress {
+  background: rgba(201,146,42,0.25);
+  border-color: rgba(201,146,42,0.5);
+  color: var(--gold);
+}
+
+/* TRACKS */
+.tracks-section {
+  flex: 1;
+  padding: 32px 24px 80px;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+.tracks-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 32px;
+}
+.tracks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+@media (max-width: 640px) { .tracks-grid { grid-template-columns: 1fr; } }
+
+.track-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.track-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+}
+.track-card-header {
+  padding: 36px 32px 28px;
+  position: relative;
+}
+.track-web .track-card-header { background: var(--royal); }
+.track-agent .track-card-header { background: #1a1a1a; }
+.track-icon { font-size: 42px; margin-bottom: 16px; display: block; }
+.track-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+}
+.track-name em { font-style: italic; color: var(--gold); }
+.track-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.track-card-body {
+  padding: 24px 32px 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.track-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  flex: 1;
+}
+.track-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.track-project-row {
+  display: grid;
+  grid-template-columns: 20px 68px 1fr;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.tp-badge {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.tp-level {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.track-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-top: auto;
+  transition: opacity 0.15s;
+  text-decoration: none;
+}
+.track-cta:hover { opacity: 0.88; }
+.track-web .track-cta { background: var(--royal); color: #fff; }
+.track-agent .track-cta { background: #1a1a1a; color: #fff; }
+.track-cta-arrow { font-size: 18px; }
+
+.coming-soon-badge {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 2px;
+}
+
+.free-note {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.free-note strong { color: var(--text-muted); }
+
+footer {
+  background: var(--text);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 28px 24px;
+  font-size: 12px;
+}
+footer .ft {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 4px;
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="dashboard.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs">
+      <a class="page-tab active">My Dashboard</a>
+      <a class="page-tab" href="my-projects.html">My Projects</a>
+      <a class="page-tab disabled">My Profile</a>
+    </div>
+    <button class="nav-btn" id="logout-btn" style="align-self:center;">Log Out</button>
+  </div>
+</nav>
+
+<section class="dash-hero">
+  <div class="dash-eyebrow">✦ Choose Your Track</div>
+  <h1 class="dash-heading">What are you<br><em>building?</em></h1>
+  <p class="dash-sub">Pick a track below. Each one takes you from zero experience to shipping real software — one project at a time.</p>
+</section>
+
+<section class="orientation">
+  <div class="orientation-inner">
+    <div class="orient-item">
+      <div class="orient-text">
+        <strong>Follow a structured path</strong>
+        <span>Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</span>
+      </div>
+    </div>
+    <div class="orient-item">
+      <div class="orient-text">
+        <strong>Learn by building real things</strong>
+        <span>Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</span>
+      </div>
+    </div>
+    <div class="orient-item">
+      <div class="orient-text">
+        <strong>Develop the skills to ship</strong>
+        <span>By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</span>
+      </div>
+    </div>
+    <div class="orient-item">
+      <div class="orient-text">
+        <strong>Build anything you envision</strong>
+        <span>Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tracks-section">
+  <div class="tracks-label">Choose your track and start building</div>
+  <div class="tracks-grid">
+
+    <!-- WEB APPS TRACK -->
+    <div class="track-card track-web" onclick="window.location='web-apps.html'">
+      <div class="track-card-header">
+        <span class="track-icon">🌐</span>
+        <div class="track-name">Web Apps<br><em>&amp; Mobile</em></div>
+        <div class="track-tagline">From a free single-page site to a fully monetized SaaS with a mobile app.</div>
+        <span class="completion-badge" id="web-completion-badge">0 / 7 completed</span>
+      </div>
+      <div class="track-card-body">
+        <div class="track-desc">Start with a free dashboard live on the internet in under an hour. Progress through user auth, databases, admin panels, mobile apps, and real payment processing.</div>
+        <a class="track-cta track-web" href="web-apps.html">Start Web Apps Track <span class="track-cta-arrow">→</span></a>
+      </div>
+    </div>
+
+    <!-- AGENTS TRACK -->
+    <div class="track-card track-agent">
+      <div class="track-card-header">
+        <span class="track-icon">🤖</span>
+        <div class="track-name">AI<br><em>Agents</em></div>
+        <div class="track-tagline">Build AI that thinks, searches, remembers, and acts autonomously.</div>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+      <div class="track-card-body">
+        <div class="track-desc">Start with a simple no-code AI assistant. Progress through file intelligence, web research, multi-agent pipelines, memory systems, and fully autonomous agents running 24/7.</div>
+        <div class="track-cta track-agent" style="opacity:0.5;cursor:default;">Coming Soon <span class="track-cta-arrow">→</span></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="free-note"><strong>Project 1 in both tracks is 100% free.</strong> No credit card or installation required to start.</div>
+</section>
+
+<footer>
+  <div class="ft">Zero to Shipped</div>
+  Build Real Things with AI · Created with Claude
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+(async function () {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+
+})();
+
+// Update Web Apps completion count from localStorage
+(function () {
+  const completion = JSON.parse(localStorage.getItem('zts_completion') || '{}');
+  const count = ['p1','p2','p3','p4','p5','p6','p7'].filter(function(id) {
+    return completion[id] && completion[id].done;
+  }).length;
+  const badge = document.getElementById('web-completion-badge');
+  if (!badge) return;
+  badge.textContent = count + ' / 7 completed';
+  if (count > 0) badge.classList.add('has-progress');
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Zero to Shipped</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --royal-dark: #142e8a;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SPLIT LAYOUT ── */
+.split {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* LEFT — value prop panel */
+.panel-left {
+  flex: 0 0 55%;
+  background: var(--royal);
+  display: flex;
+  flex-direction: column;
+  padding: 48px 64px 48px 56px;
+  position: relative;
+  overflow: hidden;
+}
+.panel-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 80%, rgba(201,146,42,0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(255,255,255,0.05) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.left-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  position: relative;
+  margin-bottom: auto;
+}
+.left-logo em { color: var(--gold); }
+
+.left-content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0 40px;
+}
+
+.left-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.left-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+.left-heading em { font-style: italic; color: var(--gold); }
+
+.left-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.75;
+  max-width: 420px;
+  margin-bottom: 48px;
+}
+
+/* VALUE PROPS */
+.props { display: flex; flex-direction: column; gap: 22px; }
+.prop {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.prop-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-top: 1px;
+}
+.prop-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.prop-text span {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+}
+
+/* TESTIMONIAL */
+.testimonial {
+  position: relative;
+  margin-top: 52px;
+  padding: 22px 24px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+}
+.testimonial-quote {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 14px;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.testimonial-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #e8a830);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+.testimonial-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+}
+.testimonial-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 1px;
+}
+
+/* RIGHT — form panel */
+.panel-right {
+  flex: 0 0 45%;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+  position: relative;
+}
+
+.right-nav {
+  position: absolute;
+  top: 32px;
+  right: 40px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.nav-btn {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: opacity 0.15s, background 0.15s;
+  cursor: pointer;
+}
+.nav-btn--ghost {
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  background: transparent;
+}
+.nav-btn--ghost:hover { background: var(--surface2); }
+.nav-btn--primary { background: var(--royal); color: #fff; border: 1px solid transparent; }
+.nav-btn--primary:hover { opacity: 0.88; }
+
+/* FORM CARD */
+.form-wrap {
+  width: 100%;
+  max-width: 360px;
+}
+
+.form-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.form-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+  margin-bottom: 32px;
+}
+.form-heading em { font-style: italic; color: var(--royal); }
+
+/* FIELDS */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.field input {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+  -webkit-appearance: none;
+}
+.field input:focus {
+  border-color: var(--royal);
+  box-shadow: 0 0 0 3px rgba(26,61,181,0.1);
+  background: #fff;
+}
+.field input::placeholder { color: var(--text-dim); }
+
+.field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.field-row label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.forgot-link {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-weight: 600;
+}
+.forgot-link:hover { color: var(--royal); }
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--royal);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.15s, transform 0.15s;
+}
+.submit-btn:hover { background: var(--royal-dark); transform: translateY(-1px); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* MESSAGES */
+.msg {
+  display: none;
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.msg.error { display: block; background: #fff5f5; border: 1px solid #fca5a5; color: #b91c1c; }
+.msg.success { display: block; background: #f0fdf4; border: 1px solid #86efac; color: #166534; }
+
+/* DIVIDER */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* FORM FOOTER */
+.form-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.form-footer a {
+  color: var(--royal);
+  font-weight: 700;
+  text-decoration: none;
+}
+.form-footer a:hover { text-decoration: underline; }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .split { flex-direction: column; }
+  .panel-left {
+    flex: none;
+    padding: 40px 32px;
+    min-height: auto;
+  }
+  .left-content { padding: 36px 0 0; }
+  .testimonial { display: none; }
+  .panel-right {
+    flex: none;
+    padding: 48px 32px 64px;
+    justify-content: flex-start;
+  }
+  .right-nav { top: 20px; right: 24px; }
+}
+@media (max-width: 480px) {
+  .panel-left { padding: 32px 24px; }
+  .panel-right { padding: 48px 24px 56px; }
+}
+</style>
+</head>
+<body>
+
+<div class="split">
+
+  <!-- LEFT: VALUE PROP -->
+  <div class="panel-left">
+    <a href="index.html" class="left-logo">Zero to <em>Shipped</em></a>
+
+    <div class="left-content">
+      <div class="left-eyebrow">✦ 100% Project-Based Learning</div>
+      <h1 class="left-heading">Build real things.<br>Ship <em>fast.</em></h1>
+      <p class="left-sub">Go from zero experience to building and monetizing your own software — using AI as your co-pilot every step of the way.</p>
+
+      <div class="testimonial">
+        <div class="testimonial-quote">"I had zero coding experience. Six weeks later I had a live SaaS product with paying customers. Zero to Shipped is the real deal."</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">M</div>
+          <div>
+            <div class="testimonial-name">Marcus T.</div>
+            <div class="testimonial-title">Completed Web Apps Track</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="panel-right">
+    <div class="right-nav">
+      <a href="login.html" class="nav-btn nav-btn--ghost">Log In</a>
+      <a href="signup.html" class="nav-btn nav-btn--primary">Sign Up</a>
+    </div>
+
+    <div class="form-wrap">
+      <div class="form-eyebrow">Welcome back</div>
+      <h2 class="form-heading">Log in to your <em>account</em></h2>
+
+      <div class="msg" id="msg"></div>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <div class="field-row">
+            <label for="password">Password</label>
+            <a href="#" class="forgot-link" id="forgot-link">Forgot password?</a>
+          </div>
+          <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">Log In →</button>
+      </form>
+
+      <div class="divider">or</div>
+
+      <div class="form-footer">
+        Don't have an account? <a href="signup.html">Sign Up — It's Free →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+(function () {
+  const form = document.getElementById('login-form');
+  const btn = document.getElementById('submit-btn');
+  const msgEl = document.getElementById('msg');
+
+  function showMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg ' + type;
+  }
+
+  document.getElementById('forgot-link').addEventListener('click', async function (e) {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    if (!email) { showMsg('Enter your email above first, then click Forgot password.', 'error'); return; }
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+    if (error) { showMsg(error.message, 'error'); return; }
+    showMsg('Password reset email sent — check your inbox.', 'success');
+  });
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const email = form.email.value.trim();
+    const password = form.password.value;
+
+    if (!email) { showMsg('Please enter your email.', 'error'); return; }
+    if (!password) { showMsg('Please enter your password.', 'error'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Logging in…';
+    msgEl.className = 'msg';
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    btn.disabled = false;
+    btn.textContent = 'Log In →';
+
+    if (error) {
+      showMsg(error.message, 'error');
+      return;
+    }
+
+    window.location.href = 'dashboard.html';
+  });
+})();
+</script>
+
+</body>
+</html>

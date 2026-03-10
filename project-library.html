@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Library — Zero to Shipped</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --royal-dark: #142e8a;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* NAV */
+.site-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--royal); }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+/* TABS */
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
+.nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+.nav-btn:hover { background: var(--surface2); }
+.nav-btn--primary { background: var(--royal); color: #fff; border-color: transparent; }
+.nav-btn--primary:hover { background: var(--royal-dark); opacity: 1; }
+
+/* HERO */
+.page-hero {
+  background: var(--royal);
+  color: #fff;
+  padding: 36px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%);
+}
+.hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; position: relative; }
+.hero-heading { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
+.hero-heading em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: clamp(13px, 1.8vw, 16px); color: rgba(255,255,255,0.6); max-width: 520px; margin: 0 auto; line-height: 1.7; position: relative; }
+
+/* MAIN */
+.main-section { flex: 1; max-width: 1040px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
+.section-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.section-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 80px 24px; }
+.empty-icon { font-size: 52px; margin-bottom: 20px; }
+.empty-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.empty-sub { font-size: 14px; color: var(--text-muted); line-height: 1.75; max-width: 440px; margin: 0 auto 28px; }
+.cta-btn { display: inline-block; padding: 12px 28px; background: var(--royal); color: #fff; font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
+.cta-btn:hover { background: var(--royal-dark); }
+
+/* GRID */
+.proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+@media (max-width: 860px) { .proj-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .proj-grid { grid-template-columns: 1fr; } }
+
+/* CARD */
+.proj-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.proj-card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,0.09); }
+
+/* PREVIEW */
+.proj-preview {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: var(--surface2);
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.proj-preview iframe {
+  width: 1280px;
+  height: 800px;
+  border: none;
+  transform: scale(0.28);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.proj-preview-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(26,61,181,0.07) 0%, rgba(201,146,42,0.07) 100%);
+}
+.proj-preview-placeholder span { font-size: 32px; }
+.proj-preview-placeholder p { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--text-dim); letter-spacing: 0.08em; }
+.proj-preview-link {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--royal);
+  text-decoration: none;
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.proj-card:hover .proj-preview-link { opacity: 1; }
+
+/* CARD BODY */
+.proj-card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.proj-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.proj-tool { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 2px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
+.proj-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--royal); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.proj-url:hover { text-decoration: underline; }
+.proj-date { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: auto; }
+
+footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 12px; }
+footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs">
+      <a href="project-library.html" class="page-tab active">Project Library</a>
+      <a href="testimonials.html" class="page-tab">Testimonials</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-btn">Log In</a>
+      <a href="signup.html" class="nav-btn nav-btn--primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-eyebrow">✦ Community Showcase</div>
+  <h1 class="hero-heading">Project <em>Library</em></h1>
+  <p class="hero-sub">Real projects built by Zero to Shipped students. Browse what others have shipped — then build your own.</p>
+</section>
+
+<section class="main-section">
+  <div class="section-top">
+    <div class="section-label" id="proj-count">Loading…</div>
+  </div>
+
+  <div id="proj-grid" class="proj-grid"></div>
+
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <div class="empty-icon">🚀</div>
+    <div class="empty-title">No shared projects yet</div>
+    <p class="empty-sub">Complete a project in the Web Apps track and check "Share with the Zero to Shipped Project Library" to be the first to appear here.</p>
+    <a href="signup.html" class="cta-btn">Start Building →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">Zero to Shipped</div>
+  Build Real Things with AI · Created with Claude
+</footer>
+
+<script>
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function renderCard(proj) {
+  const hasUrl = proj.url && proj.url.startsWith('http');
+
+  const preview = hasUrl
+    ? `<iframe src="${proj.url}" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+       <a href="${proj.url}" target="_blank" class="proj-preview-link">↗ Open</a>`
+    : `<div class="proj-preview-placeholder"><span>🚀</span><p>No URL saved</p></div>`;
+
+  const tools = (proj.tools || []).map(function(t) {
+    return '<span class="proj-tool">' + t + '</span>';
+  }).join('');
+
+  const urlEl = hasUrl
+    ? '<a href="' + proj.url + '" target="_blank" class="proj-url">' + proj.url.replace(/^https?:\/\//, '') + '</a>' : '';
+
+  const card = document.createElement('div');
+  card.className = 'proj-card';
+  card.innerHTML =
+    '<div class="proj-preview">' + preview + '</div>' +
+    '<div class="proj-card-body">' +
+      (proj.description ? '<div style="font-size:13px;color:var(--text-muted);line-height:1.65;">' + proj.description + '</div>' : '') +
+      (tools ? '<div class="proj-tools">' + tools + '</div>' : '') +
+      urlEl +
+      (proj.notes ? '<div style="font-size:12px;color:var(--text-dim);line-height:1.6;font-style:italic;">' + proj.notes + '</div>' : '') +
+      '<div class="proj-date">' + (proj.savedAt ? 'Shared ' + formatDate(proj.savedAt) : '') + '</div>' +
+    '</div>';
+  return card;
+}
+
+function render() {
+  const all = JSON.parse(localStorage.getItem('zts_my_projects') || '[]');
+
+  // Also pull shared flags directly from zts_completion for track projects
+  const completion = JSON.parse(localStorage.getItem('zts_completion') || '{}');
+  const sharedIds = Object.keys(completion).filter(function(id) {
+    return completion[id] && completion[id].share;
+  });
+
+  // Filter: projects in library that have share=true, OR track projects marked share in completion
+  const shared = all.filter(function(p) {
+    if (p.share) return true;
+    // For track projects saved from web-apps, match by track id
+    const pid = p.trackId;
+    if (pid && sharedIds.indexOf(pid) !== -1) return true;
+    return false;
+  });
+
+  const grid = document.getElementById('proj-grid');
+  const empty = document.getElementById('empty-state');
+  const count = document.getElementById('proj-count');
+
+  grid.innerHTML = '';
+
+  if (shared.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    count.textContent = '0 projects shared';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  count.textContent = shared.length + (shared.length === 1 ? ' project' : ' projects') + ' shared';
+
+  shared.forEach(function(proj) {
+    grid.appendChild(renderCard(proj));
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Testimonials — Zero to Shipped</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --royal-dark: #142e8a;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* NAV */
+.site-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--royal); }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+.nav-btn:hover { background: var(--surface2); }
+.nav-btn--primary { background: var(--royal); color: #fff; border-color: transparent; }
+.nav-btn--primary:hover { background: var(--royal-dark); }
+
+/* TABS */
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
+
+/* HERO */
+.page-hero {
+  background: var(--royal);
+  color: #fff;
+  padding: 36px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%);
+}
+.hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; position: relative; }
+.hero-heading { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
+.hero-heading em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: clamp(13px, 1.8vw, 16px); color: rgba(255,255,255,0.6); max-width: 520px; margin: 0 auto; line-height: 1.7; position: relative; }
+
+/* MAIN */
+.main-section { flex: 1; max-width: 960px; margin: 0 auto; padding: 64px 24px 80px; width: 100%; }
+
+/* GRID */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 64px;
+}
+@media (max-width: 860px) { .testi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .testi-grid { grid-template-columns: 1fr; } }
+
+/* CARD */
+.testi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.testi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,0.08); }
+
+.testi-stars { display: flex; gap: 3px; }
+.testi-star { color: var(--gold); font-size: 15px; }
+
+.testi-quote {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  font-style: italic;
+  flex: 1;
+}
+.testi-quote::before { content: '\201C'; }
+.testi-quote::after  { content: '\201D'; }
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.testi-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--royal), #2655d8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.testi-avatar.gold { background: linear-gradient(135deg, var(--gold), #e8a830); }
+.testi-name { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.testi-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+
+/* CTA STRIP */
+.cta-strip {
+  background: var(--royal);
+  border-radius: 8px;
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.cta-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(201,146,42,0.2) 0%, transparent 60%);
+}
+.cta-strip-text { position: relative; }
+.cta-strip-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.cta-strip-heading { font-family: 'Playfair Display', serif; font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: #fff; line-height: 1.2; }
+.cta-strip-heading em { font-style: italic; color: var(--gold); }
+.cta-btn {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--gold);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: 0 4px 18px rgba(201,146,42,0.4);
+}
+.cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+@media (max-width: 640px) {
+  .cta-strip { flex-direction: column; text-align: center; padding: 32px 28px; }
+}
+
+footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 12px; }
+footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs">
+      <a href="project-library.html" class="page-tab">Project Library</a>
+      <a href="testimonials.html" class="page-tab active">Testimonials</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="nav-btn">Log In</a>
+      <a href="signup.html" class="nav-btn nav-btn--primary">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-eyebrow">✦ Student Stories</div>
+  <h1 class="hero-heading">What Students Are <em>Saying</em></h1>
+  <p class="hero-sub">Real results from real people who went from zero coding experience to shipping software with AI.</p>
+</section>
+
+<section class="main-section">
+  <div class="testi-grid">
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">I had zero coding experience. Six weeks later I had a live SaaS product with paying customers. Zero to Shipped is the real deal.</div>
+      <div class="testi-author">
+        <div class="testi-avatar gold">M</div>
+        <div>
+          <div class="testi-name">Marcus T.</div>
+          <div class="testi-meta">Completed Web Apps Track</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">The projects are so well-structured. I went from not knowing what a variable was to deploying a full-stack web app in two months.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">S</div>
+        <div>
+          <div class="testi-name">Sarah K.</div>
+          <div class="testi-meta">Completed Web Apps Track</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">Using AI as a co-pilot while learning changed everything. I actually understand what I'm building instead of just copying code I don't understand.</div>
+      <div class="testi-author">
+        <div class="testi-avatar gold">D</div>
+        <div>
+          <div class="testi-name">David R.</div>
+          <div class="testi-meta">Web Apps — Project 4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">I tried three other coding courses before this. None of them had me building and shipping real products on day one. This is the only one that stuck.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name">Amara J.</div>
+          <div class="testi-meta">Web Apps — Project 3</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">The Stripe integration project was mind-blowing. I set up payments in an afternoon. My friends thought I hired a developer.</div>
+      <div class="testi-author">
+        <div class="testi-avatar gold">T</div>
+        <div>
+          <div class="testi-name">Tyler M.</div>
+          <div class="testi-meta">Completed Web Apps Track</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-stars"><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span></div>
+      <div class="testi-quote">I quit my job and freelance now. The portfolio I built going through these projects landed me my first three clients. Best investment I've ever made.</div>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div>
+          <div class="testi-name">Priya N.</div>
+          <div class="testi-meta">Completed Web Apps Track</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-strip">
+    <div class="cta-strip-text">
+      <div class="cta-strip-label">Ready to write your own story?</div>
+      <div class="cta-strip-heading">Start building today.<br><em>It's completely free.</em></div>
+    </div>
+    <a href="signup.html" class="cta-btn">Get Started — It's Free →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="ft">Zero to Shipped</div>
+  Build Real Things with AI · Created with Claude
+</footer>
+
+</body>
+</html>

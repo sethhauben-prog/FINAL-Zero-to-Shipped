@@ -1,0 +1,11 @@
+# Supabase secrets — never commit these
+.env
+supabase-config.js
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

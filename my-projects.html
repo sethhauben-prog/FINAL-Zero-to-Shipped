@@ -269,6 +269,10 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
       <label class="modal-label">Notes</label>
       <textarea class="modal-textarea" id="m-notes" placeholder="Anything you want to remember about this project…"></textarea>
     </div>
+    <div class="modal-field" style="flex-direction:row;align-items:center;gap:10px;cursor:pointer;" id="m-share-row">
+      <div id="m-share-check" style="width:18px;height:18px;border-radius:4px;border:2px solid var(--border);background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;"></div>
+      <span style="font-size:13px;color:var(--text-muted);line-height:1.4;">Share with the Zero to Shipped Project Library</span>
+    </div>
     <div class="modal-actions">
       <button class="modal-cancel" id="modal-cancel">Cancel</button>
       <button class="modal-save" id="modal-save">Save Project</button>
@@ -382,6 +386,8 @@ function render() {
 }
 
 // ── ADD MODAL ──
+var modalShareChecked = false;
+
 function openModal() {
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('m-title').focus();
@@ -391,7 +397,26 @@ function closeModal() {
   ['m-title','m-desc','m-url','m-tools','m-notes'].forEach(function(id) {
     document.getElementById(id).value = '';
   });
+  modalShareChecked = false;
+  var chk = document.getElementById('m-share-check');
+  chk.style.background = 'var(--bg)';
+  chk.style.borderColor = 'var(--border)';
+  chk.innerHTML = '';
 }
+
+document.getElementById('m-share-row').addEventListener('click', function() {
+  modalShareChecked = !modalShareChecked;
+  var chk = document.getElementById('m-share-check');
+  if (modalShareChecked) {
+    chk.style.background = 'var(--royal)';
+    chk.style.borderColor = 'var(--royal)';
+    chk.innerHTML = '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  } else {
+    chk.style.background = 'var(--bg)';
+    chk.style.borderColor = 'var(--border)';
+    chk.innerHTML = '';
+  }
+});
 
 document.getElementById('add-btn').addEventListener('click', openModal);
 document.getElementById('modal-cancel').addEventListener('click', closeModal);
@@ -399,22 +424,47 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-document.getElementById('modal-save').addEventListener('click', function() {
+document.getElementById('modal-save').addEventListener('click', async function() {
   const title = document.getElementById('m-title').value.trim();
   if (!title) { document.getElementById('m-title').focus(); return; }
   const toolsRaw = document.getElementById('m-tools').value.trim();
   const tools = toolsRaw ? toolsRaw.split(',').map(function(t) { return t.trim(); }).filter(Boolean) : [];
+  const projectId = 'manual-' + Date.now();
+  const url = document.getElementById('m-url').value.trim();
+  const description = document.getElementById('m-desc').value.trim();
+  const notes = document.getElementById('m-notes').value.trim();
+  const now = new Date().toISOString();
+
   const list = getProjects();
   list.push({
-    id: 'manual-' + Date.now(),
+    id: projectId,
     title: title,
-    description: document.getElementById('m-desc').value.trim(),
-    url: document.getElementById('m-url').value.trim(),
+    description: description,
+    url: url,
     tools: tools,
-    notes: document.getElementById('m-notes').value.trim(),
-    savedAt: new Date().toISOString()
+    notes: notes,
+    share: modalShareChecked,
+    savedAt: now
   });
   saveProjects(list);
+
+  if (modalShareChecked) {
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
+        await supabaseClient.from('shared_projects').upsert({
+          user_id: session.user.id,
+          project_id: projectId,
+          url: url,
+          tools: tools,
+          description: description,
+          notes: notes,
+          shared_at: now
+        }, { onConflict: 'user_id,project_id' });
+      }
+    } catch(e) { /* silent fail */ }
+  }
+
   closeModal();
   render();
 });

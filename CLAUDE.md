@@ -18,7 +18,7 @@ A plain HTML/CSS/JS learning platform with no build step or framework. Open file
 - `my-projects.html` — Authenticated user's saved project library
 - `project-library.html` — Public showcase of projects shared with the Zero to Shipped community
 - `testimonials.html` — Public testimonials page
-- `supabase-config.js` — Supabase client (gitignored, paste keys from `.env`)
+- `supabase-config.js` — Supabase client (**committed to git** — anon key is public/safe; protected by RLS)
 
 ## Design System
 ```
@@ -110,16 +110,27 @@ p7: Build Your Own            — Creator      — Claude Code, Your Stack
 - Counts `['p1','p2','p3','p4','p5','p6','p7']`
 
 ## Environment & Keys
-- `.env` holds the Supabase keys as the source of truth (gitignored)
-- `supabase-config.js` is also gitignored — paste the values from `.env` into it manually
+- `.env` holds keys as source of truth (gitignored): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CONSOLE_CLIENT_SECRET`
+- `supabase-config.js` is committed to git — anon key is a public client-side key, safe to expose, protected by RLS
 - Plain HTML can't auto-read `.env`, so `supabase-config.js` is the runtime config file
 
 ## Auth (Supabase)
 - `supabase-config.js` must be loaded before any inline auth scripts
-- `signUp` stores `full_name` in user metadata
-- On successful login, redirect to `dashboard.html`
+- **Email/password:** `signUp` stores `full_name` in user metadata; on success redirects to `dashboard.html`
+- **Google OAuth:** `signInWithOAuth({ provider: 'google', options: { redirectTo: origin + '/dashboard.html' } })`
+  - Google Cloud Console app name: "Zero to Shipped" (Branding page)
+  - Authorized redirect URI in Google Console: `https://acpzzaikuoyjyfayqxic.supabase.co/auth/v1/callback`
+  - Supabase: Authentication → Providers → Google — Client ID + Secret configured
+  - Publishing status: Production (Audience page in Google Console)
+- Email confirmation: **disabled** in Supabase (Authentication → Sign In / Providers → Confirm email off)
 - All protected pages check session on load and redirect to `login.html` if none
-- Signup shows success message in-place (Supabase requires email confirmation by default)
+- Both login.html and signup.html have "Continue with Google" button (Google SVG logo, white background)
+
+## Deployment
+- **GitHub:** https://github.com/sethhauben-prog/FINAL-Zero-to-Shipped (public repo, main branch)
+- **Vercel:** https://final-zero-to-shipped.vercel.app (auto-deploys on every `git push`)
+- To deploy changes: `git add . && git commit -m "message" && git push`
+- Supabase Site URL: `https://final-zero-to-shipped.vercel.app`
 
 ## Conventions
 - All CSS lives in `<style>` blocks within each HTML file — no separate stylesheet

@@ -153,44 +153,61 @@ body {
 .orientation {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 0 24px;
+  padding: 24px 24px 0;
 }
 .orientation-inner {
   max-width: 960px;
   margin: 0 auto;
 }
-.orient-item {
-  border-bottom: 1px solid var(--border);
-}
-.orient-item:last-child { border-bottom: none; }
-.orient-trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
+.orient-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0;
   cursor: pointer;
   user-select: none;
 }
+@media (max-width: 640px) { .orient-row { grid-template-columns: 1fr 1fr; } }
+.orient-item {
+  padding: 0 24px 16px;
+  border-left: 1px solid var(--border);
+}
+.orient-item:first-child { padding-left: 0; border-left: none; }
 .orient-trigger strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
+  margin-bottom: 0;
 }
 .orient-chevron {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-dim);
   transition: transform 0.2s;
   flex-shrink: 0;
 }
-.orient-item.open .orient-chevron { transform: rotate(180deg); }
+.orientation.open .orient-chevron { transform: rotate(180deg); }
 .orient-body {
   display: none;
-  padding-bottom: 14px;
+  margin-top: 6px;
   font-size: 12px;
   color: var(--text-muted);
   line-height: 1.65;
 }
-.orient-item.open .orient-body { display: block; }
+.orientation.open .orient-body { display: block; }
+.orient-expand-row {
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding: 8px 0;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.orient-expand-row:hover { color: var(--text-muted); }
 
 /* COMPLETION BADGE */
 .completion-badge {
@@ -397,35 +414,33 @@ footer .ft {
   <p class="dash-sub">Pick a track below. Each one takes you from zero experience to shipping real software — one project at a time.</p>
 </section>
 
-<section class="orientation">
+<section class="orientation" id="orientation">
   <div class="orientation-inner">
-    <div class="orient-item">
-      <div class="orient-trigger">
-        <strong>Follow a structured path</strong>
-        <span class="orient-chevron">▼</span>
+    <div class="orient-row" id="orient-trigger">
+      <div class="orient-item">
+        <div class="orient-trigger">
+          <strong>Follow a structured path <span class="orient-chevron">▼</span></strong>
+        </div>
+        <div class="orient-body">Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</div>
       </div>
-      <div class="orient-body">Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</div>
-    </div>
-    <div class="orient-item">
-      <div class="orient-trigger">
-        <strong>Learn by building real things</strong>
-        <span class="orient-chevron">▼</span>
+      <div class="orient-item">
+        <div class="orient-trigger">
+          <strong>Learn by building real things <span class="orient-chevron">▼</span></strong>
+        </div>
+        <div class="orient-body">Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</div>
       </div>
-      <div class="orient-body">Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</div>
-    </div>
-    <div class="orient-item">
-      <div class="orient-trigger">
-        <strong>Develop the skills to ship</strong>
-        <span class="orient-chevron">▼</span>
+      <div class="orient-item">
+        <div class="orient-trigger">
+          <strong>Develop the skills to ship <span class="orient-chevron">▼</span></strong>
+        </div>
+        <div class="orient-body">By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</div>
       </div>
-      <div class="orient-body">By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</div>
-    </div>
-    <div class="orient-item">
-      <div class="orient-trigger">
-        <strong>Build anything you envision</strong>
-        <span class="orient-chevron">▼</span>
+      <div class="orient-item">
+        <div class="orient-trigger">
+          <strong>Build anything you envision <span class="orient-chevron">▼</span></strong>
+        </div>
+        <div class="orient-body">Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</div>
       </div>
-      <div class="orient-body">Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</div>
     </div>
   </div>
 </section>
@@ -507,11 +522,9 @@ footer .ft {
 
 })();
 
-// Orientation accordions
-document.querySelectorAll('.orient-trigger').forEach(function(trigger) {
-  trigger.addEventListener('click', function() {
-    trigger.closest('.orient-item').classList.toggle('open');
-  });
+// Orientation — clicking any item toggles all
+document.getElementById('orient-trigger').addEventListener('click', function() {
+  document.getElementById('orientation').classList.toggle('open');
 });
 
 // Update Web Apps completion count from localStorage

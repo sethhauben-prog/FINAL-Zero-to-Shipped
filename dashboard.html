@@ -153,44 +153,44 @@ body {
 .orientation {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 32px 24px;
+  padding: 0 24px;
 }
 .orientation-inner {
   max-width: 960px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap: 24px;
 }
 .orient-item {
+  border-bottom: 1px solid var(--border);
+}
+.orient-item:last-child { border-bottom: none; }
+.orient-trigger {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding-left: 24px;
-  border-left: 1px solid var(--border);
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  cursor: pointer;
+  user-select: none;
 }
-.orient-item:first-child {
-  padding-left: 0;
-  border-left: none;
-}
-.orient-text strong {
-  display: block;
+.orient-trigger strong {
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 3px;
 }
-.orient-text span {
+.orient-chevron {
+  font-size: 11px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.orient-item.open .orient-chevron { transform: rotate(180deg); }
+.orient-body {
+  display: none;
+  padding-bottom: 14px;
   font-size: 12px;
   color: var(--text-muted);
   line-height: 1.65;
 }
-@media (max-width: 900px) {
-  .orientation-inner { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 560px) {
-  .orientation-inner { grid-template-columns: 1fr; gap: 16px; }
-}
+.orient-item.open .orient-body { display: block; }
 
 /* COMPLETION BADGE */
 .completion-badge {
@@ -400,28 +400,32 @@ footer .ft {
 <section class="orientation">
   <div class="orientation-inner">
     <div class="orient-item">
-      <div class="orient-text">
+      <div class="orient-trigger">
         <strong>Follow a structured path</strong>
-        <span>Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</span>
+        <span class="orient-chevron">▼</span>
       </div>
+      <div class="orient-body">Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</div>
     </div>
     <div class="orient-item">
-      <div class="orient-text">
+      <div class="orient-trigger">
         <strong>Learn by building real things</strong>
-        <span>Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</span>
+        <span class="orient-chevron">▼</span>
       </div>
+      <div class="orient-body">Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</div>
     </div>
     <div class="orient-item">
-      <div class="orient-text">
+      <div class="orient-trigger">
         <strong>Develop the skills to ship</strong>
-        <span>By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</span>
+        <span class="orient-chevron">▼</span>
       </div>
+      <div class="orient-body">By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</div>
     </div>
     <div class="orient-item">
-      <div class="orient-text">
+      <div class="orient-trigger">
         <strong>Build anything you envision</strong>
-        <span>Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</span>
+        <span class="orient-chevron">▼</span>
       </div>
+      <div class="orient-body">Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</div>
     </div>
   </div>
 </section>
@@ -502,6 +506,13 @@ footer .ft {
   });
 
 })();
+
+// Orientation accordions
+document.querySelectorAll('.orient-trigger').forEach(function(trigger) {
+  trigger.addEventListener('click', function() {
+    trigger.closest('.orient-item').classList.toggle('open');
+  });
+});
 
 // Update Web Apps completion count from localStorage
 (function () {

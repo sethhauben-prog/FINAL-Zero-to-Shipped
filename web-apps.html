@@ -2006,6 +2006,8 @@ eas submit --platform android</span></span></div></div></div>
 (async function () {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = 'login.html'; return; }
+  // Sync any existing localStorage completions to Supabase on load
+  syncProfileToSupabase();
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';

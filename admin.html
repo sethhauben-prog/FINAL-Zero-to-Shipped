@@ -25,49 +25,26 @@
 body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
 /* NAV */
-.site-nav {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  height: 60px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
+.site-nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 60px; position: sticky; top: 0; z-index: 50; }
 .nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
 .nav-logo em { color: var(--royal); }
-.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
 .nav-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--royal); color: #fff; padding: 4px 10px; border-radius: 2px; }
 .nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
 .nav-btn:hover { background: var(--surface2); }
 
 /* HERO */
-.page-hero {
-  background: var(--royal);
-  color: #fff;
-  padding: 36px 24px 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.page-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%);
-}
+.page-hero { background: var(--royal); color: #fff; padding: 36px 24px 40px; text-align: center; position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%); }
 .hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; position: relative; }
 .hero-heading { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
 .hero-heading em { font-style: italic; color: var(--gold); }
 .hero-sub { font-size: 14px; color: rgba(255,255,255,0.6); max-width: 460px; margin: 0 auto; line-height: 1.7; position: relative; }
 
 /* MAIN */
-.main-section { flex: 1; max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
+.main-section { flex: 1; max-width: 1200px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
 
-/* STATS ROW */
+/* STATS */
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
 @media (max-width: 760px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
@@ -77,27 +54,102 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .stat-value.gold { color: var(--gold); }
 .stat-value.green { color: var(--green); }
 
-/* SECTION */
-.section-heading { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+/* SECTION HEADING */
+.section-heading { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; margin-top: 48px; }
+.section-heading:first-of-type { margin-top: 0; }
+
+/* CONTROLS */
+.table-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.search-input { font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 9px 14px; outline: none; transition: border-color 0.15s; width: 260px; }
+.search-input:focus { border-color: var(--royal); }
+.search-input::placeholder { color: var(--text-dim); }
+.control-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); }
+.user-count-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-dim); margin-left: auto; }
 
 /* TABLE */
-.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 40px; }
-table { width: 100%; border-collapse: collapse; }
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
 thead { background: var(--surface2); }
-th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); padding: 12px 20px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
-td { font-size: 13px; color: var(--text-muted); padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; user-select: none; }
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--royal); }
+th.sort-active { color: var(--royal); }
+.sort-arrow { margin-left: 4px; font-size: 9px; }
+td { font-size: 13px; color: var(--text-muted); padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: #faf9f7; }
-.td-name { font-weight: 700; color: var(--text); }
-.td-email { font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
-.role-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
-.role-admin { background: rgba(26,61,181,0.1); border: 1px solid rgba(26,61,181,0.25); color: var(--royal); }
-.role-user { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
-.role-select { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; cursor: pointer; }
-.role-select:focus { outline: none; border-color: var(--royal); }
+tr.deactivated td { opacity: 0.45; }
+.td-email { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text); }
+.td-mono { font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
 
-/* LOADING / EMPTY */
-.loading { text-align: center; padding: 48px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+/* BADGES */
+.badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 7px; border-radius: 2px; }
+.badge-admin { background: rgba(26,61,181,0.1); border: 1px solid rgba(26,61,181,0.25); color: var(--royal); }
+.badge-user { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+.badge-free { background: var(--surface2); border: 1px solid var(--border); color: var(--text-dim); }
+.badge-paid { background: rgba(26,122,74,0.1); border: 1px solid rgba(26,122,74,0.3); color: var(--green); }
+.badge-deactivated { background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.25); color: var(--red); }
+
+/* PROJECT PILLS */
+.proj-pills { display: flex; flex-wrap: wrap; gap: 3px; }
+.proj-pill { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 2px 6px; border-radius: 2px; background: rgba(26,61,181,0.08); border: 1px solid rgba(26,61,181,0.2); color: var(--royal); }
+.proj-pill.gold { background: rgba(201,146,42,0.08); border-color: rgba(201,146,42,0.25); color: var(--gold); }
+.proj-pill.green { background: rgba(26,122,74,0.08); border-color: rgba(26,122,74,0.2); color: var(--green); }
+
+/* MINI STARS */
+.mini-stars { color: var(--gold); font-size: 11px; letter-spacing: 1px; }
+.mini-stars-dim { color: var(--border); }
+
+/* ACTION BUTTONS */
+.action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.action-btn { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; white-space: nowrap; }
+.action-btn:hover { background: var(--surface2); }
+.action-btn.btn-reset:hover { background: rgba(26,61,181,0.08); color: var(--royal); border-color: rgba(26,61,181,0.3); }
+.action-btn.btn-deactivate:hover { background: rgba(192,57,43,0.08); color: var(--red); border-color: rgba(192,57,43,0.3); }
+.action-btn.btn-reactivate { color: var(--green); border-color: rgba(26,122,74,0.3); }
+.action-btn.btn-reactivate:hover { background: rgba(26,122,74,0.08); }
+.action-btn.btn-view:hover { background: rgba(201,146,42,0.08); color: var(--gold); border-color: rgba(201,146,42,0.3); }
+
+/* STAR REVIEWS SECTION */
+.reviews-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 960px) { .reviews-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .reviews-grid { grid-template-columns: 1fr; } }
+.review-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.review-proj-num { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+.review-proj-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
+.review-avg { display: flex; align-items: baseline; gap: 6px; margin-bottom: 8px; }
+.review-avg-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; }
+.review-avg-max { font-size: 12px; color: var(--text-dim); }
+.review-stars { font-size: 16px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
+.review-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 12px; }
+.review-dist { display: flex; flex-direction: column; gap: 4px; }
+.dist-row { display: flex; align-items: center; gap: 6px; }
+.dist-star { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); width: 14px; text-align: right; }
+.dist-bar-wrap { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.dist-bar { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.4s; }
+.dist-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); width: 16px; }
+.review-empty { font-size: 12px; color: var(--text-dim); font-style: italic; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: 10px; padding: 32px; width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+.modal-project-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.modal-project-row:last-child { border-bottom: none; }
+.modal-project-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.modal-project-rating { font-size: 13px; color: var(--gold); }
+.modal-project-url { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--royal); text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; display: block; }
+.modal-project-url:hover { text-decoration: underline; }
+.modal-close { width: 100%; padding: 12px; background: var(--surface2); color: var(--text-muted); font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; margin-top: 20px; transition: background 0.15s; }
+.modal-close:hover { background: var(--border); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; padding: 12px 24px; border-radius: 6px; z-index: 999; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+.loading-msg { text-align: center; padding: 48px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 
 footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 12px; }
 footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
@@ -122,43 +174,67 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
 
 <section class="main-section">
 
+  <!-- STATS -->
   <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-label">Total Users</div>
-      <div class="stat-value blue" id="stat-users">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Admins</div>
-      <div class="stat-value gold" id="stat-admins">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Joined This Week</div>
-      <div class="stat-value green" id="stat-week">—</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Joined Today</div>
-      <div class="stat-value" id="stat-today">—</div>
-    </div>
+    <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value blue" id="stat-users">—</div></div>
+    <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-value green" id="stat-week">—</div></div>
+    <div class="stat-card"><div class="stat-label">Projects Completed</div><div class="stat-value gold" id="stat-completions">—</div></div>
+    <div class="stat-card"><div class="stat-label">Projects Shared</div><div class="stat-value" id="stat-shared">—</div></div>
   </div>
 
-  <div class="section-heading">All Users</div>
+  <!-- USER TABLE -->
+  <div class="section-heading">Users</div>
+  <div class="table-controls">
+    <input class="search-input" type="text" id="search-input" placeholder="Search by email…" />
+    <span class="control-label">Sort by</span>
+    <select id="sort-select" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;outline:none;cursor:pointer;">
+      <option value="created_at-desc">Signup Date (newest)</option>
+      <option value="created_at-asc">Signup Date (oldest)</option>
+      <option value="last_login-desc">Last Login (recent)</option>
+      <option value="last_login-asc">Last Login (oldest)</option>
+      <option value="login_count-desc">Total Logins (most)</option>
+      <option value="login_count-asc">Total Logins (least)</option>
+    </select>
+    <span class="user-count-label" id="user-count-label"></span>
+  </div>
   <div class="table-wrap">
-    <div class="loading" id="table-loading">Loading users…</div>
+    <div class="loading-msg" id="table-loading">Loading users…</div>
     <table id="users-table" style="display:none;">
       <thead>
         <tr>
-          <th>Name</th>
           <th>Email</th>
-          <th>Role</th>
-          <th>Joined</th>
-          <th>Change Role</th>
+          <th>Signup Date</th>
+          <th>Last Login</th>
+          <th>Logins</th>
+          <th>Plan</th>
+          <th>Projects Completed</th>
+          <th>Posted Project</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="users-tbody"></tbody>
     </table>
   </div>
 
+  <!-- STAR REVIEWS -->
+  <div class="section-heading">Star Reviews by Project</div>
+  <div class="reviews-grid" id="reviews-grid">
+    <div class="loading-msg" style="grid-column:1/-1;">Loading reviews…</div>
+  </div>
+
 </section>
+
+<!-- COMPLETIONS MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">User Completions</div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div id="modal-body"></div>
+    <button class="modal-close" id="modal-close">Close</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <footer>
   <div class="ft">Zero to Shipped</div>
@@ -168,31 +244,251 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script>
-(async function () {
+const PROJECT_META = {
+  p1: 'Your First Dashboard',
+  p2: 'Dashboard with Claude Code',
+  p3: 'Dashboard Creator App',
+  p4: 'Admin Dashboard',
+  p5: 'Monetization — Stripe',
+  p6: 'Mobile App',
+  p7: 'Build Your Own'
+};
+const ORDER = ['p1','p2','p3','p4','p5','p6','p7'];
 
-  // ── AUTH GUARD ──
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
+let allUsers = [];
 
-  // ── ROLE CHECK ──
-  const { data: profile } = await supabaseClient
-    .from('profiles')
-    .select('role')
-    .eq('id', session.user.id)
-    .single();
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
 
-  if (!profile || profile.role !== 'admin') {
-    window.location.href = 'dashboard.html';
+// ── MODAL ──
+document.getElementById('modal-close').addEventListener('click', function() {
+  document.getElementById('modal-overlay').classList.remove('open');
+});
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+function openCompletionsModal(user) {
+  document.getElementById('modal-title').textContent = user.full_name || user.email;
+  document.getElementById('modal-sub').textContent = user.email;
+  const completed = user.projects_completed || [];
+  const ratings = user.project_ratings || {};
+  const body = document.getElementById('modal-body');
+  if (completed.length === 0) {
+    body.innerHTML = '<p style="font-size:13px;color:var(--text-dim);font-style:italic;padding:12px 0;">No projects completed yet.</p>';
+  } else {
+    body.innerHTML = completed.map(function(pid) {
+      const rating = ratings[pid];
+      const stars = rating ? '★'.repeat(rating) + '<span style="color:var(--border)">★</span>'.repeat(5 - rating) : '—';
+      const url = '';
+      return '<div class="modal-project-row">' +
+        '<div><div class="modal-project-name">' + (PROJECT_META[pid] || pid) + '</div></div>' +
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">' +
+          '<span style="font-size:14px;color:var(--gold);">' + stars + '</span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// ── FORMAT DATE ──
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// ── PROJECT PILL COLOR ──
+function pillClass(pid) {
+  if (pid === 'p7') return 'green';
+  if (['p4','p5','p6'].includes(pid)) return 'gold';
+  return '';
+}
+
+// ── STARS HTML ──
+function starsHtml(avg) {
+  if (!avg) return '<span class="review-empty">No ratings yet</span>';
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    html += i <= Math.round(avg) ? '★' : '<span class="mini-stars-dim">★</span>';
+  }
+  return html;
+}
+
+// ── RENDER TABLE ROW ──
+function renderRow(user) {
+  const tr = document.createElement('tr');
+  if (user.deactivated) tr.classList.add('deactivated');
+  tr.dataset.id = user.id;
+
+  const completed = user.projects_completed || [];
+  const shared = user.projects_shared || [];
+  const hasPosted = shared.length > 0;
+
+  const projPills = completed.length === 0
+    ? '<span style="color:var(--text-dim);font-size:11px;">—</span>'
+    : '<div class="proj-pills">' + completed.map(function(pid) {
+        return '<span class="proj-pill ' + pillClass(pid) + '">' + pid + '</span>';
+      }).join('') + '</div>';
+
+  const planBadge = user.plan === 'paid'
+    ? '<span class="badge badge-paid">paid</span>'
+    : '<span class="badge badge-free">free</span>';
+
+  const deactivatedBadge = user.deactivated ? ' <span class="badge badge-deactivated">off</span>' : '';
+
+  tr.innerHTML =
+    '<td class="td-email">' + (user.email || '—') + deactivatedBadge + '</td>' +
+    '<td class="td-mono">' + fmtDate(user.created_at) + '</td>' +
+    '<td class="td-mono">' + fmtDate(user.last_login) + '</td>' +
+    '<td class="td-mono" style="text-align:center;">' + (user.login_count || 0) + '</td>' +
+    '<td>' + planBadge + '</td>' +
+    '<td>' + projPills + '</td>' +
+    '<td style="text-align:center;">' + (hasPosted ? '<span style="color:var(--green);font-weight:700;font-size:13px;">Yes</span>' : '<span style="color:var(--text-dim);font-size:12px;">No</span>') + '</td>' +
+    '<td><div class="action-btns">' +
+      '<button class="action-btn btn-reset" data-id="' + user.id + '" data-email="' + (user.email||'') + '">Reset PW</button>' +
+      '<button class="action-btn btn-view" data-id="' + user.id + '">Completions</button>' +
+      (user.deactivated
+        ? '<button class="action-btn btn-reactivate" data-id="' + user.id + '">Reactivate</button>'
+        : '<button class="action-btn btn-deactivate" data-id="' + user.id + '">Deactivate</button>') +
+    '</div></td>';
+  return tr;
+}
+
+// ── RENDER TABLE ──
+function renderTable(users) {
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = '';
+  users.forEach(function(u) { tbody.appendChild(renderRow(u)); });
+  document.getElementById('user-count-label').textContent = users.length + ' user' + (users.length !== 1 ? 's' : '');
+  document.getElementById('table-loading').style.display = 'none';
+  document.getElementById('users-table').style.display = 'table';
+}
+
+// ── FILTER + SORT ──
+function applyFilterSort() {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const [sortKey, sortDir] = document.getElementById('sort-select').value.split('-');
+  let filtered = allUsers.filter(function(u) {
+    return !query || (u.email || '').toLowerCase().includes(query);
+  });
+  filtered.sort(function(a, b) {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'login_count') { av = av || 0; bv = bv || 0; }
+    else { av = av ? new Date(av) : new Date(0); bv = bv ? new Date(bv) : new Date(0); }
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+  renderTable(filtered);
+}
+
+document.getElementById('search-input').addEventListener('input', applyFilterSort);
+document.getElementById('sort-select').addEventListener('change', applyFilterSort);
+
+// ── RENDER REVIEWS ──
+function renderReviews(users) {
+  const grid = document.getElementById('reviews-grid');
+  grid.innerHTML = '';
+  ORDER.forEach(function(pid) {
+    const ratings = [];
+    users.forEach(function(u) {
+      const r = (u.project_ratings || {})[pid];
+      if (r) ratings.push(r);
+    });
+    const avg = ratings.length ? (ratings.reduce(function(a,b){return a+b;},0) / ratings.length) : 0;
+    const dist = [0,0,0,0,0];
+    ratings.forEach(function(r) { if (r >= 1 && r <= 5) dist[r-1]++; });
+    const maxDist = Math.max(...dist, 1);
+
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML =
+      '<div class="review-proj-num">Project ' + pid.replace('p','') + '</div>' +
+      '<div class="review-proj-name">' + PROJECT_META[pid] + '</div>' +
+      (ratings.length === 0
+        ? '<div class="review-empty">No ratings yet</div>'
+        : '<div class="review-avg"><span class="review-avg-num">' + avg.toFixed(1) + '</span><span class="review-avg-max">/ 5</span></div>' +
+          '<div class="review-stars">' + starsHtml(avg) + '</div>' +
+          '<div class="review-count">' + ratings.length + ' review' + (ratings.length !== 1 ? 's' : '') + '</div>' +
+          '<div class="review-dist">' +
+            [5,4,3,2,1].map(function(star) {
+              const count = dist[star-1];
+              const pct = Math.round((count / maxDist) * 100);
+              return '<div class="dist-row">' +
+                '<span class="dist-star">' + star + '</span>' +
+                '<div class="dist-bar-wrap"><div class="dist-bar" style="width:' + pct + '%"></div></div>' +
+                '<span class="dist-count">' + count + '</span>' +
+              '</div>';
+            }).join('') +
+          '</div>');
+    grid.appendChild(card);
+  });
+}
+
+// ── TABLE ACTIONS ──
+document.getElementById('users-tbody').addEventListener('click', async function(e) {
+  const btn = e.target.closest('.action-btn');
+  if (!btn) return;
+  const userId = btn.dataset.id;
+
+  // Password reset
+  if (btn.classList.contains('btn-reset')) {
+    const email = btn.dataset.email;
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/login.html'
+    });
+    showToast(error ? 'Error: ' + error.message : 'Password reset email sent to ' + email);
     return;
   }
 
-  // ── LOGOUT ──
-  document.getElementById('logout-btn').addEventListener('click', async function () {
+  // View completions
+  if (btn.classList.contains('btn-view')) {
+    const user = allUsers.find(function(u) { return u.id === userId; });
+    if (user) openCompletionsModal(user);
+    return;
+  }
+
+  // Deactivate
+  if (btn.classList.contains('btn-deactivate')) {
+    if (!confirm('Deactivate this user? They will be redirected on next visit.')) return;
+    const { error } = await supabaseClient.from('profiles').update({ deactivated: true }).eq('id', userId);
+    if (error) { showToast('Error: ' + error.message); return; }
+    const user = allUsers.find(function(u) { return u.id === userId; });
+    if (user) user.deactivated = true;
+    applyFilterSort();
+    showToast('User deactivated.');
+    return;
+  }
+
+  // Reactivate
+  if (btn.classList.contains('btn-reactivate')) {
+    const { error } = await supabaseClient.from('profiles').update({ deactivated: false }).eq('id', userId);
+    if (error) { showToast('Error: ' + error.message); return; }
+    const user = allUsers.find(function(u) { return u.id === userId; });
+    if (user) user.deactivated = false;
+    applyFilterSort();
+    showToast('User reactivated.');
+    return;
+  }
+});
+
+// ── INIT ──
+(async function () {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+  if (!myProfile || myProfile.role !== 'admin') { window.location.href = 'dashboard.html'; return; }
+
+  document.getElementById('logout-btn').addEventListener('click', async function() {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';
   });
 
-  // ── LOAD USERS ──
   const { data: users, error } = await supabaseClient
     .from('profiles')
     .select('*')
@@ -203,57 +499,21 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     return;
   }
 
-  // ── STATS ──
+  allUsers = users;
+
+  // Stats
   const now = new Date();
   const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const totalCompletions = users.reduce(function(sum, u) { return sum + ((u.projects_completed || []).length); }, 0);
+  const totalShared = users.reduce(function(sum, u) { return sum + ((u.projects_shared || []).length > 0 ? 1 : 0); }, 0);
 
   document.getElementById('stat-users').textContent = users.length;
-  document.getElementById('stat-admins').textContent = users.filter(function(u) { return u.role === 'admin'; }).length;
   document.getElementById('stat-week').textContent = users.filter(function(u) { return new Date(u.created_at) >= weekAgo; }).length;
-  document.getElementById('stat-today').textContent = users.filter(function(u) { return new Date(u.created_at) >= todayStart; }).length;
+  document.getElementById('stat-completions').textContent = totalCompletions;
+  document.getElementById('stat-shared').textContent = totalShared;
 
-  // ── RENDER TABLE ──
-  const tbody = document.getElementById('users-tbody');
-  users.forEach(function(user) {
-    const tr = document.createElement('tr');
-    const joined = new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    tr.innerHTML =
-      '<td class="td-name">' + (user.full_name || '—') + '</td>' +
-      '<td class="td-email">' + (user.email || '—') + '</td>' +
-      '<td><span class="role-badge role-' + user.role + '">' + user.role + '</span></td>' +
-      '<td>' + joined + '</td>' +
-      '<td>' +
-        '<select class="role-select" data-id="' + user.id + '">' +
-          '<option value="user"' + (user.role === 'user' ? ' selected' : '') + '>user</option>' +
-          '<option value="admin"' + (user.role === 'admin' ? ' selected' : '') + '>admin</option>' +
-        '</select>' +
-      '</td>';
-    tbody.appendChild(tr);
-  });
-
-  // ── ROLE CHANGE ──
-  tbody.addEventListener('change', async function(e) {
-    if (!e.target.classList.contains('role-select')) return;
-    const userId = e.target.dataset.id;
-    const newRole = e.target.value;
-    const { error } = await supabaseClient
-      .from('profiles')
-      .update({ role: newRole })
-      .eq('id', userId);
-    if (error) {
-      alert('Failed to update role: ' + error.message);
-      return;
-    }
-    // Update badge in same row
-    const badge = e.target.closest('tr').querySelector('.role-badge');
-    badge.className = 'role-badge role-' + newRole;
-    badge.textContent = newRole;
-  });
-
-  document.getElementById('table-loading').style.display = 'none';
-  document.getElementById('users-table').style.display = 'table';
-
+  applyFilterSort();
+  renderReviews(users);
 })();
 </script>
 

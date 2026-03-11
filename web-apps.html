@@ -2177,6 +2177,23 @@ function saveCompletion(projectId, data) {
   localStorage.setItem(COMPLETION_KEY, JSON.stringify(all));
 }
 
+async function syncProfileToSupabase() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return;
+    const all = getCompletion();
+    const completed = ORDER.filter(function(id) { return all[id] && all[id].done; });
+    const shared = ORDER.filter(function(id) { return all[id] && all[id].share; });
+    const ratings = {};
+    ORDER.forEach(function(id) { if (all[id] && all[id].rating) ratings[id] = all[id].rating; });
+    await supabaseClient.from('profiles').update({
+      projects_completed: completed,
+      projects_shared: shared,
+      project_ratings: ratings
+    }).eq('id', session.user.id);
+  } catch(e) { /* silent fail — localStorage is source of truth */ }
+}
+
 // Inject "Project completed" checkbox into each selector card
 function initCompletionCards() {
   ORDER.forEach(function(id) {
@@ -2284,6 +2301,7 @@ function initProjectCompletion(projectId) {
       s.classList.toggle('active', parseInt(s.dataset.val) <= val);
     });
     saveCompletion(projectId, { rating: val });
+    syncProfileToSupabase();
   });
 
   el.querySelector('#comp-done-row-' + projectId).addEventListener('click', function() {
@@ -2302,6 +2320,7 @@ function initProjectCompletion(projectId) {
     }
     saveCompletion(projectId, { done: isDone });
     syncCardDoneUI(projectId);
+    syncProfileToSupabase();
   });
 
   urlInput.addEventListener('change', function() {
@@ -2320,6 +2339,7 @@ function initProjectCompletion(projectId) {
     shareCheck.classList.toggle('done', isShare);
     saveCompletion(projectId, { share: isShare });
     updateLibraryShareFlag(projectId, isShare);
+    syncProfileToSupabase();
   });
 
   if (nextBtn) {

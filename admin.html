@@ -327,8 +327,7 @@ function renderRow(user) {
   tr.dataset.id = user.id;
 
   const completed = user.projects_completed || [];
-  const shared = user.projects_shared || [];
-  const hasPosted = shared.length > 0;
+  const hasPosted = (user._sharedCount || 0) > 0;
 
   const projPills = completed.length === 0
     ? '<span style="color:var(--text-dim);font-size:11px;">—</span>'
@@ -508,6 +507,17 @@ document.getElementById('users-tbody').addEventListener('click', async function(
     document.getElementById('table-loading').textContent = 'Failed to load users.';
     return;
   }
+
+  // Fetch shared project counts per user
+  const { data: sharedRows } = await supabaseClient
+    .from('shared_projects')
+    .select('user_id');
+
+  const sharedCountMap = {};
+  (sharedRows || []).forEach(function(r) {
+    sharedCountMap[r.user_id] = (sharedCountMap[r.user_id] || 0) + 1;
+  });
+  users.forEach(function(u) { u._sharedCount = sharedCountMap[u.id] || 0; });
 
   allUsers = users;
 

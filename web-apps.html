@@ -2149,6 +2149,30 @@ function updateLibraryShareFlag(projectId, isShare) {
   }
 }
 
+async function syncSharedProject(projectId, isShare) {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) return;
+    if (isShare) {
+      const comp = getCompletion()[projectId] || {};
+      const meta = PROJECT_META[projectId];
+      await supabaseClient.from('shared_projects').upsert({
+        user_id: session.user.id,
+        project_id: projectId,
+        url: comp.url || '',
+        tools: meta ? meta.tools : [],
+        description: meta ? meta.title + ' · ' + meta.level : '',
+        shared_at: new Date().toISOString()
+      }, { onConflict: 'user_id,project_id' });
+    } else {
+      await supabaseClient.from('shared_projects')
+        .delete()
+        .eq('user_id', session.user.id)
+        .eq('project_id', projectId);
+    }
+  } catch(e) { /* silent fail */ }
+}
+
 // ── CONFETTI ──
 function fireConfetti() {
   var count = 180;
@@ -2339,6 +2363,7 @@ function initProjectCompletion(projectId) {
     shareCheck.classList.toggle('done', isShare);
     saveCompletion(projectId, { share: isShare });
     updateLibraryShareFlag(projectId, isShare);
+    syncSharedProject(projectId, isShare);
     syncProfileToSupabase();
   });
 

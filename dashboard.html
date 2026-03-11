@@ -173,21 +173,11 @@ body {
 }
 .orient-item:first-child { padding-left: 0; border-left: none; }
 .orient-trigger strong {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 0;
+  white-space: nowrap;
 }
-.orient-chevron {
-  font-size: 10px;
-  color: var(--text-dim);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-.orientation.open .orient-chevron { transform: rotate(180deg); }
 .orient-body {
   display: none;
   margin-top: 6px;
@@ -196,18 +186,32 @@ body {
   line-height: 1.65;
 }
 .orientation.open .orient-body { display: block; }
-.orient-expand-row {
+.orient-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-top: 1px solid var(--border);
   margin-top: 16px;
-  padding: 8px 0;
-  text-align: center;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--text-dim);
+  padding: 6px 0 10px;
   cursor: pointer;
 }
-.orient-expand-row:hover { color: var(--text-muted); }
+.orient-toggle-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1;
+  transition: background 0.15s;
+}
+.orient-toggle:hover .orient-toggle-icon { background: var(--border); }
+.orientation.open .orient-toggle-icon { content: '−'; }
 
 /* COMPLETION BADGE */
 .completion-badge {
@@ -416,31 +420,26 @@ footer .ft {
 
 <section class="orientation" id="orientation">
   <div class="orientation-inner">
-    <div class="orient-row" id="orient-trigger">
+    <div class="orient-row">
       <div class="orient-item">
-        <div class="orient-trigger">
-          <strong>Follow a structured path <span class="orient-chevron">▼</span></strong>
-        </div>
+        <div class="orient-trigger"><strong>Follow a structured path</strong></div>
         <div class="orient-body">Each track is a sequence of projects designed to build on each other — start at Project 1 and work your way up.</div>
       </div>
       <div class="orient-item">
-        <div class="orient-trigger">
-          <strong>Learn by building real things <span class="orient-chevron">▼</span></strong>
-        </div>
+        <div class="orient-trigger"><strong>Learn by building real things</strong></div>
         <div class="orient-body">Every project produces something live and functional — not toy exercises. You ship it, then move to the next level.</div>
       </div>
       <div class="orient-item">
-        <div class="orient-trigger">
-          <strong>Develop the skills to ship <span class="orient-chevron">▼</span></strong>
-        </div>
+        <div class="orient-trigger"><strong>Develop the skills to ship</strong></div>
         <div class="orient-body">By the end of a track you'll have the full skill set — from blank page to live, monetized software — using AI as your co-pilot.</div>
       </div>
       <div class="orient-item">
-        <div class="orient-trigger">
-          <strong>Build anything you envision <span class="orient-chevron">▼</span></strong>
-        </div>
+        <div class="orient-trigger"><strong>Build anything you envision</strong></div>
         <div class="orient-body">Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</div>
       </div>
+    </div>
+    <div class="orient-toggle" id="orient-trigger">
+      <div class="orient-toggle-icon" id="orient-icon">+</div>
     </div>
   </div>
 </section>
@@ -522,9 +521,11 @@ footer .ft {
 
 })();
 
-// Orientation — clicking any item toggles all
+// Orientation — + toggle expands all details
 document.getElementById('orient-trigger').addEventListener('click', function() {
-  document.getElementById('orientation').classList.toggle('open');
+  var section = document.getElementById('orientation');
+  section.classList.toggle('open');
+  document.getElementById('orient-icon').textContent = section.classList.contains('open') ? '−' : '+';
 });
 
 // Update Web Apps completion count from localStorage

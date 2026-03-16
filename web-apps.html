@@ -48,6 +48,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
   z-index: 100;
 }
 .nav-left { display: flex; align-items: center; }
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
 .nav-back {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
@@ -800,10 +804,15 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
 
 <!-- NAV -->
 <nav class="site-nav">
-  <div class="nav-left">
-    <a href="web-apps.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <a href="dashboard.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs">
+      <a class="page-tab" href="dashboard.html">My Dashboard</a>
+      <a class="page-tab active" href="web-apps.html">My Projects</a>
+      <a class="page-tab disabled" style="opacity:0.4;cursor:default;pointer-events:none;">My Profile</a>
+    </div>
+    <button class="nav-btn" id="logout-btn" style="align-self:center;">Log Out</button>
   </div>
-  <button class="nav-btn" id="logout-btn">Log Out</button>
 </nav>
 
 <!-- ══════════════════════════════════════
@@ -2018,6 +2027,17 @@ eas submit --platform android</span></span></div></div></div>
   if (!session) { window.location.href = 'login.html'; return; }
   // Sync any existing localStorage completions to Supabase on load
   syncProfileToSupabase();
+  // Inject Admin tab if admin
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+  if (myProfile && myProfile.role === 'admin') {
+    var tabs = document.querySelector('.page-tabs');
+    var adminTab = document.createElement('a');
+    adminTab.href = 'admin.html';
+    adminTab.className = 'page-tab';
+    adminTab.textContent = 'Admin';
+    adminTab.style.color = 'var(--gold)';
+    tabs.appendChild(adminTab);
+  }
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';

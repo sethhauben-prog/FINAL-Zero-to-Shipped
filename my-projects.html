@@ -304,6 +304,16 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
   }
   const session = await getSessionWithRetry();
   if (!session) { window.location.href = 'login.html'; return; }
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+  if (myProfile && myProfile.role === 'admin') {
+    var tabs = document.querySelector('.page-tabs');
+    var adminTab = document.createElement('a');
+    adminTab.href = 'admin.html';
+    adminTab.className = 'page-tab';
+    adminTab.textContent = 'Admin';
+    adminTab.style.color = 'var(--gold)';
+    tabs.appendChild(adminTab);
+  }
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';

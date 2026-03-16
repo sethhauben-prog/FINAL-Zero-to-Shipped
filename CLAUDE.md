@@ -65,8 +65,8 @@ Admin tab (gold color) is injected into dashboard nav after role check — only 
 ## Web Apps Track — Projects
 ```
 p1: Chat, Build & Ship         — Starter      — Claude Free, GitHub, Vercel  (< 45 min badge on selector card)
-p2: Dashboard with Claude Code — Beginner    — Claude Code, GitHub, Vercel, Terminal
-p3: Dashboard Creator App     — Intermediate — Claude Code, Supabase, React
+p2: Build and Deploy with Claude Code — Beginner    — Claude Code, GitHub, Vercel, Terminal
+p3: Add Logins & a Database           — Intermediate — Claude Code, Supabase, React
 p4: Admin Dashboard           — Advanced     — Claude Code, Supabase
 p5: Monetization — Stripe     — Pro          — Claude Code, Stripe, Supabase
 p6: Mobile App                — Ninja        — React Native, Expo

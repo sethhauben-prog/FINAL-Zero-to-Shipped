@@ -42,7 +42,7 @@ A plain HTML/CSS/JS learning platform with no build step or framework. Open file
 ## Layout Patterns
 - **Landing page:** sticky white nav with tab bar (Project Library | Testimonials) + Login/Sign Up buttons top-right; blue hero below; rocket SVG easter egg
 - **Auth pages:** full-viewport split — left panel (55%, royal blue) with headline + testimonial, right panel (45%, cream) with form
-- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip with dividers, 2-column track cards
+- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip (headers only by default; single centered `+` button expands all 4 detail texts simultaneously), 2-column track cards
 - **Web Apps track:** two-mode page — selector view (7 project cards in 2-column grid, p7 centered when alone) and project view (individual project with accordions). Controlled by `showProject(id)` / `showSelector()` JS. URL hash routing (`#p1`–`#p7`).
 - **My Projects / Project Library / Testimonials:** sticky white nav with same public tabs, blue hero, card grid
 - **Eyebrows:** IBM Plex Mono, 10px, uppercase, `letter-spacing: 0.18em`
@@ -116,16 +116,18 @@ p7: Build Your Own            — Creator      — Claude Code, Your Stack
 ## Supabase Database Tables
 
 ### `profiles`
-Auto-created on signup via trigger `on_auth_user_created`.
+Auto-created on signup via trigger `on_auth_user_created` (uses `ON CONFLICT DO NOTHING`; safe for both email and OAuth users).
 - `id` (uuid, FK auth.users)
+- `email` (text) — copied from auth.users on signup, backfilled for existing users
 - `role` (text, default 'user') — set to 'admin' manually for admin users
 - `last_login` (timestamptz) — updated by trigger `on_auth_user_login`
-- `login_count` (int)
+- `login_count` (int, default 0)
 - `plan` (text, default 'free')
-- `projects_completed` (text[])
-- `projects_shared` (text[])
-- `project_ratings` (jsonb)
+- `projects_completed` (text[], default '{}')
+- `projects_shared` (text[], default '{}')
+- `project_ratings` (jsonb, default '{}')
 - `is_active` (bool, default true)
+- `deactivated` (bool)
 
 ### `shared_projects`
 Stores projects users share with the public library.
@@ -139,12 +141,15 @@ Stores projects users share with the public library.
 
 ### RLS / Functions
 - `is_admin()` Postgres function (security definer) — returns true if current user's `profiles.role = 'admin'`
-- Admin panel uses anon key but RLS on `profiles` allows admins to see all rows via `is_admin()`
+- RLS policies on `profiles`: users read/update own row; admins read all rows via `is_admin()` (separate policies to avoid infinite recursion)
+- `handle_new_user()` trigger — inserts profile on auth.users INSERT, `security definer set search_path = public`
+- `handle_user_login()` trigger — updates `last_login` + increments `login_count` on auth.users UPDATE when `last_sign_in_at` changes; includes `EXCEPTION WHEN OTHERS THEN RETURN NEW` to prevent OAuth failures
 
 ## Admin Panel (`admin.html`)
 - Auth guard + role check: non-admins redirected to `dashboard.html`
 - Stats row: Total Users, Joined This Week, Projects Completed, Projects Shared
 - User table: Email, Signup Date, Last Login, Logins, Plan, Projects Completed (colored pills), Posted Project, Actions
+- Posted Project column reads from `shared_projects` table (count per user_id) — not `profiles.projects_shared`
 - Search by email (live filter) + sort dropdown (signup date / last login / login count asc/desc)
 - Per-user actions: Reset Password (sends email), View Completions (modal), Deactivate/Reactivate
 - Star Reviews by Project section: 7 cards with avg rating, distribution bars, review count
@@ -168,6 +173,8 @@ Stores projects users share with the public library.
   - Supabase: Authentication → Providers → Google — Client ID + Secret configured
   - Publishing status: Production (Audience page in Google Console)
 - Email confirmation: **disabled** in Supabase (Authentication → Sign In / Providers → Confirm email off)
+- All protected pages use `getSessionWithRetry()` — calls `getSession()` first, then waits up to 3s via `onAuthStateChange` for OAuth redirect to complete before redirecting to login
+- Supabase client uses `{ auth: { flowType: 'implicit' } }` for compatibility with static site OAuth (token in URL hash, not PKCE code exchange)
 - All protected pages check session on load and redirect to `login.html` if none
 - Both login.html and signup.html have "Continue with Google" button (Google SVG logo, white background)
 

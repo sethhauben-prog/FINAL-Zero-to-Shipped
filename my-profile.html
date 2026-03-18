@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile — Zero to Shipped</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --royal: #1a3db5;
+  --royal-dark: #142e8a;
+  --gold: #c9922a;
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+  --red: #c0392b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* NAV */
+.site-nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 60px; position: sticky; top: 0; z-index: 50; }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--royal); }
+.nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+.nav-btn:hover { background: var(--surface2); }
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
+
+/* HERO */
+.page-hero { background: var(--royal); color: #fff; padding: 36px 24px 40px; text-align: center; position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%); }
+.hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 14px; border-radius: 2px; margin-bottom: 16px; position: relative; }
+.hero-heading { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
+.hero-heading em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,0.6); max-width: 460px; margin: 0 auto; line-height: 1.7; position: relative; }
+
+/* MAIN */
+.main-section { flex: 1; max-width: 640px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
+
+/* CARDS */
+.profile-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px 32px; margin-bottom: 20px; }
+.card-heading { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+
+/* FIELDS */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field:last-of-type { margin-bottom: 0; }
+.field-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+.field-input { font-family: 'Manrope', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; outline: none; transition: border-color 0.15s, box-shadow 0.15s; width: 100%; }
+.field-input:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
+.field-input:disabled { color: var(--text-muted); cursor: default; background: var(--surface2); }
+.field-hint { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+
+/* PROVIDER BADGE */
+.provider-badge { display: inline-flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 4px 10px; border-radius: 2px; margin-bottom: 20px; }
+
+/* BUTTONS */
+.btn-primary { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 22px; background: var(--royal); color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.btn-primary:hover { background: var(--royal-dark); }
+.btn-ghost { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; padding: 10px 22px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+.btn-ghost:hover { background: var(--surface2); }
+.btn-row { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+
+/* FEEDBACK */
+.msg { font-size: 12px; margin-top: 12px; padding: 10px 14px; border-radius: 6px; display: none; }
+.msg.success { background: rgba(26,122,74,0.08); border: 1px solid rgba(26,122,74,0.2); color: var(--green); display: block; }
+.msg.error { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.2); color: var(--red); display: block; }
+
+/* SUBSCRIPTION */
+.plan-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.plan-row:last-child { border-bottom: none; padding-bottom: 0; }
+.plan-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.plan-value { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); }
+.plan-badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.plan-badge.paid { background: rgba(26,122,74,0.1); border-color: rgba(26,122,74,0.3); color: var(--green); }
+.coming-note { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 16px; }
+
+footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 28px 24px; font-size: 12px; }
+footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="dashboard.html" class="nav-logo">Zero to <em>Shipped</em></a>
+  <div style="display:flex;align-items:stretch;gap:16px;height:100%;">
+    <div class="page-tabs" id="nav-tabs">
+      <a class="page-tab" href="dashboard.html">My Dashboard</a>
+      <a class="page-tab" href="my-projects.html">My Projects</a>
+      <a class="page-tab active" href="my-profile.html">My Profile</a>
+    </div>
+    <button class="nav-btn" id="logout-btn" style="align-self:center;">Log Out</button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="hero-eyebrow">✦ Account</div>
+  <h1 class="hero-heading">My <em>Profile</em></h1>
+  <p class="hero-sub">Manage your account details, password, and plan.</p>
+</section>
+
+<section class="main-section">
+
+  <!-- EMAIL -->
+  <div class="profile-card" id="card-email">
+    <div class="card-heading">Email Address</div>
+    <div class="card-sub">Your login email. A confirmation will be sent to the new address before it takes effect.</div>
+    <div class="field">
+      <label class="field-label">Current Email</label>
+      <input class="field-input" id="current-email" type="email" disabled />
+    </div>
+    <div class="field">
+      <label class="field-label">New Email</label>
+      <input class="field-input" id="new-email" type="email" placeholder="Enter new email address" />
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="update-email-btn">Update Email</button>
+    </div>
+    <div class="msg" id="email-msg"></div>
+  </div>
+
+  <!-- PASSWORD -->
+  <div class="profile-card" id="card-password">
+    <div class="card-heading">Password</div>
+    <div class="card-sub" id="password-sub">Change your password or send a reset link to your email.</div>
+    <div id="password-fields">
+      <div class="field">
+        <label class="field-label">New Password</label>
+        <input class="field-input" id="new-password" type="password" placeholder="At least 6 characters" />
+      </div>
+      <div class="field">
+        <label class="field-label">Confirm New Password</label>
+        <input class="field-input" id="confirm-password" type="password" placeholder="Repeat new password" />
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary" id="update-password-btn">Update Password</button>
+        <button class="btn-ghost" id="reset-password-btn">Send Reset Email</button>
+      </div>
+    </div>
+    <div id="oauth-password-note" style="display:none;">
+      <div class="provider-badge" id="provider-badge">Google Account</div>
+      <p style="font-size:13px;color:var(--text-muted);line-height:1.7;">You signed in with Google — password management is handled through your Google account.</p>
+      <div class="btn-row">
+        <button class="btn-ghost" id="reset-password-btn-oauth">Send Reset Email</button>
+      </div>
+    </div>
+    <div class="msg" id="password-msg"></div>
+  </div>
+
+  <!-- SUBSCRIPTION -->
+  <div class="profile-card">
+    <div class="card-heading">Plan & Subscription</div>
+    <div class="card-sub">Your current plan and billing details.</div>
+    <div class="plan-row">
+      <span class="plan-label">Current Plan</span>
+      <span class="plan-badge" id="plan-badge">Free</span>
+    </div>
+    <div class="plan-row">
+      <span class="plan-label">Member Since</span>
+      <span class="plan-value" id="member-since">—</span>
+    </div>
+    <p class="coming-note">Paid plans with additional tracks and features coming soon.</p>
+  </div>
+
+</section>
+
+<footer>
+  <div class="ft">Zero to Shipped</div>
+  Build Real Things with AI · Created with Claude
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+(async function () {
+  async function getSessionWithRetry() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) return session;
+    return new Promise(function(resolve) {
+      var timeout = setTimeout(function() { resolve(null); }, 3000);
+      supabaseClient.auth.onAuthStateChange(function(event, s) {
+        if (s) { clearTimeout(timeout); resolve(s); }
+      });
+    });
+  }
+
+  const session = await getSessionWithRetry();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const user = session.user;
+
+  // Inject Admin tab if admin
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role, plan, created_at').eq('id', user.id).single();
+  if (myProfile && myProfile.role === 'admin') {
+    var tabs = document.getElementById('nav-tabs');
+    var adminTab = document.createElement('a');
+    adminTab.href = 'admin.html';
+    adminTab.className = 'page-tab';
+    adminTab.textContent = 'Admin';
+    adminTab.style.color = 'var(--gold)';
+    tabs.appendChild(adminTab);
+  }
+
+  // Populate email
+  document.getElementById('current-email').value = user.email || '';
+
+  // Detect provider (Google vs email)
+  const isOAuth = user.app_metadata && user.app_metadata.provider && user.app_metadata.provider !== 'email';
+  if (isOAuth) {
+    document.getElementById('password-fields').style.display = 'none';
+    document.getElementById('oauth-password-note').style.display = 'block';
+    var providerName = user.app_metadata.provider.charAt(0).toUpperCase() + user.app_metadata.provider.slice(1);
+    document.getElementById('provider-badge').textContent = providerName + ' Account';
+  }
+
+  // Plan badge
+  var plan = (myProfile && myProfile.plan) || 'free';
+  var planBadge = document.getElementById('plan-badge');
+  planBadge.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+  if (plan === 'paid') planBadge.classList.add('paid');
+
+  // Member since
+  var createdAt = (myProfile && myProfile.created_at) || user.created_at;
+  if (createdAt) {
+    document.getElementById('member-since').textContent = new Date(createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+
+  // ── UPDATE EMAIL ──
+  document.getElementById('update-email-btn').addEventListener('click', async function () {
+    var newEmail = document.getElementById('new-email').value.trim();
+    var msg = document.getElementById('email-msg');
+    msg.className = 'msg';
+    if (!newEmail) { showMsg(msg, 'Please enter a new email address.', 'error'); return; }
+    if (newEmail === user.email) { showMsg(msg, 'That is already your current email.', 'error'); return; }
+    var { error } = await supabaseClient.auth.updateUser({ email: newEmail });
+    if (error) { showMsg(msg, error.message, 'error'); return; }
+    showMsg(msg, 'Confirmation sent to ' + newEmail + '. Check your inbox to complete the change.', 'success');
+    document.getElementById('new-email').value = '';
+  });
+
+  // ── UPDATE PASSWORD ──
+  document.getElementById('update-password-btn') && document.getElementById('update-password-btn').addEventListener('click', async function () {
+    var newPw = document.getElementById('new-password').value;
+    var confirmPw = document.getElementById('confirm-password').value;
+    var msg = document.getElementById('password-msg');
+    msg.className = 'msg';
+    if (!newPw) { showMsg(msg, 'Please enter a new password.', 'error'); return; }
+    if (newPw.length < 6) { showMsg(msg, 'Password must be at least 6 characters.', 'error'); return; }
+    if (newPw !== confirmPw) { showMsg(msg, 'Passwords do not match.', 'error'); return; }
+    var { error } = await supabaseClient.auth.updateUser({ password: newPw });
+    if (error) { showMsg(msg, error.message, 'error'); return; }
+    showMsg(msg, 'Password updated successfully.', 'success');
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+  });
+
+  // ── SEND RESET EMAIL ──
+  function sendResetEmail() {
+    var msg = document.getElementById('password-msg');
+    msg.className = 'msg';
+    supabaseClient.auth.resetPasswordForEmail(user.email, {
+      redirectTo: window.location.origin + '/my-profile.html'
+    }).then(function(res) {
+      if (res.error) { showMsg(msg, res.error.message, 'error'); return; }
+      showMsg(msg, 'Password reset email sent to ' + user.email, 'success');
+    });
+  }
+  document.getElementById('reset-password-btn') && document.getElementById('reset-password-btn').addEventListener('click', sendResetEmail);
+  document.getElementById('reset-password-btn-oauth') && document.getElementById('reset-password-btn-oauth').addEventListener('click', sendResetEmail);
+
+  function showMsg(el, text, type) {
+    el.textContent = text;
+    el.className = 'msg ' + type;
+  }
+})();
+</script>
+
+</body>
+</html>

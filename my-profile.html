@@ -30,6 +30,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .nav-logo em { color: var(--royal); }
 .nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
 .nav-btn:hover { background: var(--surface2); }
+.nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: 8px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.2s; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 49; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.mobile-menu.open { display: flex; }
+.mobile-menu-link { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); text-decoration: none; padding: 16px 20px; border-bottom: 1px solid var(--border); display: block; transition: background 0.15s; }
+.mobile-menu-link:hover, .mobile-menu-link.active { background: var(--surface2); color: var(--royal); }
+.mobile-menu-actions { padding: 16px 20px; }
+.mobile-menu-actions .nav-btn { width: 100%; text-align: center; display: block; }
+@media (max-width: 700px) {
+  .site-nav { padding: 0 16px; position: relative; }
+  .page-tabs { display: none; }
+  .site-nav > div > button, .site-nav > div > .nav-btn { display: none; }
+  .nav-hamburger { display: flex; }
+}
 .page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
 .page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
 .page-tab:hover { color: var(--text); background: var(--surface2); border-bottom-color: var(--border); }
@@ -104,7 +121,18 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     </div>
     <button class="nav-btn" id="logout-btn" style="align-self:center;">Log Out</button>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="dashboard.html" class="mobile-menu-link">My Dashboard</a>
+  <a href="web-apps.html" class="mobile-menu-link">My Projects</a>
+  <a href="my-profile.html" class="mobile-menu-link active">My Profile</a>
+  <div class="mobile-menu-actions">
+    <button class="nav-btn" id="mobile-logout-btn">Log Out</button>
+  </div>
+</div>
 
 <section class="page-hero">
   <div class="hero-eyebrow">✦ Account</div>
@@ -294,6 +322,11 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     window.location.href = 'login.html';
   });
 
+  document.getElementById('mobile-logout-btn').addEventListener('click', async function () {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+
   // ── UPDATE EMAIL ──
   document.getElementById('update-email-btn').addEventListener('click', async function () {
     var newEmail = document.getElementById('new-email').value.trim();
@@ -342,6 +375,21 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     el.className = 'msg ' + type;
   }
 })();
+
+function toggleMobileMenu() {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }
+});
 </script>
 
 </body>

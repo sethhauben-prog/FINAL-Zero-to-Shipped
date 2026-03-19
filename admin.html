@@ -32,6 +32,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .nav-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--royal); color: #fff; padding: 4px 10px; border-radius: 2px; }
 .nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
 .nav-btn:hover { background: var(--surface2); }
+.nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: 8px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.2s; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 49; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.mobile-menu.open { display: flex; }
+.mobile-menu-link { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); text-decoration: none; padding: 16px 20px; border-bottom: 1px solid var(--border); display: block; transition: background 0.15s; }
+.mobile-menu-link:hover { background: var(--surface2); color: var(--royal); }
+.mobile-menu-actions { padding: 16px 20px; }
+.mobile-menu-actions .nav-btn { width: 100%; text-align: center; display: block; }
+@media (max-width: 700px) {
+  .site-nav { padding: 0 16px; position: relative; }
+  .nav-right { display: none; }
+  .nav-hamburger { display: flex; }
+}
 
 /* HERO */
 .page-hero { background: var(--royal); color: #fff; padding: 36px 24px 40px; text-align: center; position: relative; overflow: hidden; }
@@ -164,7 +180,16 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     <a href="dashboard.html" class="nav-btn">← Dashboard</a>
     <button class="nav-btn" id="logout-btn">Log Out</button>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="dashboard.html" class="mobile-menu-link">← Dashboard</a>
+  <div class="mobile-menu-actions">
+    <button class="nav-btn" id="mobile-logout-btn">Log Out</button>
+  </div>
+</div>
 
 <section class="page-hero">
   <div class="hero-eyebrow">✦ Admin Panel</div>
@@ -496,6 +521,24 @@ document.getElementById('users-tbody').addEventListener('click', async function(
   document.getElementById('logout-btn').addEventListener('click', async function() {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';
+  });
+  document.getElementById('mobile-logout-btn').addEventListener('click', async function() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+  function toggleMobileMenu() {
+    var btn = document.getElementById('nav-hamburger');
+    var menu = document.getElementById('mobile-menu');
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    var btn = document.getElementById('nav-hamburger');
+    var menu = document.getElementById('mobile-menu');
+    if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+    }
   });
 
   const { data: users, error } = await supabaseClient

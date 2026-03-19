@@ -183,9 +183,19 @@ body {
   user-select: none;
 }
 @media (max-width: 700px) {
-  .orient-row { grid-template-columns: 1fr; }
+  .orient-row { grid-template-columns: 1fr; display: none; }
+  .orientation.open .orient-row { display: grid; }
   .orient-item { border-left: none !important; border-top: 1px solid var(--border); padding: 12px 0 12px !important; }
   .orient-item:first-child { border-top: none; }
+  .orient-summary { display: block; }
+  .orientation.open .orient-summary { display: none; }
+}
+.orient-summary {
+  display: none;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  padding-bottom: 16px;
 }
 .orient-item {
   padding: 0 24px 16px;
@@ -456,6 +466,7 @@ footer .ft {
 
 <section class="orientation" id="orientation">
   <div class="orientation-inner">
+    <p class="orient-summary">Follow a structured path of real projects — from zero to shipping live, monetized software using AI as your co-pilot.</p>
     <div class="orient-row">
       <div class="orient-item">
         <div class="orient-trigger"><strong>Follow a structured path</strong></div>

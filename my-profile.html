@@ -168,7 +168,11 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
       <span class="plan-label">Member Since</span>
       <span class="plan-value" id="member-since">—</span>
     </div>
-    <p class="coming-note">Paid plans with additional tracks and features coming soon.</p>
+    <div id="cancel-row" style="display:none; margin-top:20px;">
+      <button id="cancel-btn" style="font-family:'Manrope',sans-serif;font-size:13px;font-weight:700;padding:10px 22px;border-radius:6px;border:1px solid rgba(192,57,43,0.35);background:rgba(192,57,43,0.06);color:var(--red);cursor:pointer;transition:background 0.15s;">Cancel Subscription</button>
+      <div class="msg" id="cancel-msg" style="margin-top:12px;"></div>
+    </div>
+    <p class="coming-note" id="free-note">Paid plans with additional tracks and features coming soon.</p>
   </div>
 
 </section>
@@ -226,7 +230,48 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
   var plan = (myProfile && myProfile.plan) || 'free';
   var planBadge = document.getElementById('plan-badge');
   planBadge.textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
-  if (plan === 'paid') planBadge.classList.add('paid');
+  if (plan === 'paid') {
+    planBadge.classList.add('paid');
+    document.getElementById('cancel-row').style.display = 'block';
+    document.getElementById('free-note').style.display = 'none';
+  }
+
+  // Cancel subscription
+  document.getElementById('cancel-btn').addEventListener('click', async function () {
+    if (!confirm('Are you sure you want to cancel your subscription? You will lose access to Project 7 immediately.')) return;
+
+    var btn = document.getElementById('cancel-btn');
+    var msg = document.getElementById('cancel-msg');
+    btn.textContent = 'Cancelling…';
+    btn.disabled = true;
+    msg.className = 'msg';
+
+    try {
+      var res = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id })
+      });
+      var data = await res.json();
+
+      if (data.cancelled) {
+        // Update plan in Supabase via user's own session
+        await supabaseClient.from('profiles').update({ plan: 'free' }).eq('id', user.id);
+
+        planBadge.textContent = 'Free';
+        planBadge.classList.remove('paid');
+        document.getElementById('cancel-row').style.display = 'none';
+        document.getElementById('free-note').style.display = 'block';
+        showMsg(msg, 'Subscription cancelled. Your plan has been downgraded to Free.', 'success');
+      } else {
+        throw new Error(data.error || 'Cancellation failed');
+      }
+    } catch (err) {
+      btn.textContent = 'Cancel Subscription';
+      btn.disabled = false;
+      showMsg(msg, 'Error: ' + err.message, 'error');
+    }
+  });
 
   // Member since
   var createdAt = (myProfile && myProfile.created_at) || user.created_at;

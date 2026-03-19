@@ -14,12 +14,31 @@ A plain HTML/CSS/JS learning platform with no build step or framework. Open file
 - `signup.html` — Sign up page (split layout, email + Google OAuth)
 - `login.html` — Login page (split layout, email + Google OAuth)
 - `dashboard.html` — Post-login track selector (My Dashboard / My Projects / My Profile tabs; Admin tab injected for admin users)
-- `web-apps.html` — Web Apps track (project selector + individual project views, 7 projects)
+- `web-apps.html` — Web Apps track (project selector + individual project views, 8 projects)
 - `my-projects.html` — Authenticated user's saved project library (add, edit, delete cards)
 - `project-library.html` — Public showcase of projects shared with the Zero to Shipped community (reads from Supabase `shared_projects` table)
 - `testimonials.html` — Public testimonials page
+- `pricing.html` — Public pricing page (Free vs Creator $10/mo, comparison table, FAQ)
+- `privacy-policy.html` — Privacy policy
+- `terms.html` — Terms & Conditions
 - `admin.html` — Admin-only panel (role-gated via `profiles.role`)
 - `supabase-config.js` — Supabase client (**committed to git** — anon key is public/safe; protected by RLS)
+
+## API (Vercel Serverless Functions — `/api/*.js`)
+All functions use native `fetch` with REST APIs — **zero npm dependencies**.
+- `api/create-checkout.js` — Creates Stripe Checkout session (subscription mode, $10/mo)
+- `api/verify-payment.js` — Verifies Stripe session payment status, returns `{ paid: true/false }`
+- `api/webhook.js` — Stripe webhook handler (manual HMAC-SHA256 sig verification via Node `crypto`); handles `checkout.session.completed`, `customer.subscription.deleted`, `invoice.payment_failed`
+- `api/cancel-subscription.js` — Cancels all active Stripe subscriptions for a user
+- `api/claude.js` — AI site audit: scrapes homepage + up to 5 sub-pages via Jina Reader (`r.jina.ai`), sends to `claude-sonnet-4-6`, returns structured JSON audit
+
+### Webhook config (CRITICAL)
+`handler.config = { api: { bodyParser: false } }` must be set **before** `module.exports = handler` — setting it after overwrites it.
+
+### vercel.json
+```json
+{ "functions": { "api/*.js": { "maxDuration": 60 } } }
+```
 
 ## Design System
 ```
@@ -34,22 +53,23 @@ A plain HTML/CSS/JS learning platform with no build step or framework. Open file
 --text-muted: #6b6660
 --text-dim: #a09b94
 --green: #1a7a4a
+--p8: #7c3aed          (Expert/p8 purple)
 ```
 - Headings: Playfair Display (serif, italic for accents)
 - Mono labels/eyebrows: IBM Plex Mono
 - Body/buttons: Manrope
 
 ## Layout Patterns
-- **Landing page:** sticky white nav with tab bar (Project Library | Testimonials) + Login/Sign Up buttons top-right; blue hero below; rocket SVG easter egg
+- **Landing page:** sticky white nav with tab bar (Project Library | Testimonials | Pricing) + Login/Sign Up buttons top-right; blue hero below; rocket SVG easter egg
 - **Auth pages:** full-viewport split — left panel (55%, royal blue) with headline + testimonial, right panel (45%, cream) with form
-- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip (headers only by default; single centered `+` button expands all 4 detail texts simultaneously), 2-column track cards
-- **Web Apps track:** two-mode page — selector view (7 project cards in 2-column grid, p7 centered when alone) and project view (individual project with accordions). Controlled by `showProject(id)` / `showSelector()` JS. URL hash routing (`#p1`–`#p7`).
-- **My Projects / Project Library / Testimonials:** sticky white nav with same public tabs, blue hero, card grid
+- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip, 2-column track cards
+- **Web Apps track:** two-mode page — selector view (8 project cards) and project view (individual project with accordions). Controlled by `showProject(id)` / `showSelector()` JS. URL hash routing (`#p1`–`#p8`).
+- **My Projects / Project Library / Testimonials / Pricing:** sticky white nav with same public tabs, blue hero, content
 - **Eyebrows:** IBM Plex Mono, 10px, uppercase, `letter-spacing: 0.18em`
 - **Buttons:** pill shape (`border-radius: 50px`) for nav; rectangular (`border-radius: 6px`) for form submits
 
 ## Nav Tab Pattern
-Public pages (index, project-library, testimonials) share a sticky white nav:
+Public pages (index, project-library, testimonials, pricing) share a sticky white nav:
 - Logo left
 - `.page-tabs` center — tabs with `border-bottom: 2px solid transparent` / `.active` uses `var(--royal)`
 - Login + Sign Up buttons right
@@ -60,69 +80,91 @@ Admin tab (gold color) is injected into dashboard nav after role check — only 
 - Projects 1–3: `--royal` (blue)
 - Projects 4–6: `--gold`
 - Project 7: `--green` (Creator tier)
-- All `--p-color` CSS variables map to one of these three per project
+- Project 8: `#7c3aed` (Expert/purple)
+- All `--p-color` CSS variables map to one of these per project
 
 ## Web Apps Track — Projects
 ```
-p1: Chat, Build & Ship         — Starter      — Claude Free, GitHub, Vercel  (< 45 min badge on selector card)
-p2: Build and Deploy with Claude Code — Beginner    — Claude Code, GitHub, Vercel, Terminal
-p3: Add Logins & a Database           — Intermediate — Claude Code, Supabase, React
-p4: Admin Dashboard           — Advanced     — Claude Code, Supabase
-p5: Monetization — Stripe     — Pro          — Claude Code, Stripe, Supabase
-p6: Mobile App                — Ninja        — React Native, Expo
-p7: Build Your Own            — Creator      — Claude Code, Your Stack
+p1: Chat, Build & Ship                        — Starter      — Claude Free, GitHub, Vercel
+p2: Build and Deploy with Claude Code         — Beginner     — Claude Code, GitHub, Vercel, Terminal
+p3: Add Logins, a Database & Integrations     — Intermediate — Claude Code, Supabase, React
+p4: Admin Dashboard                           — Advanced     — Claude Code, Supabase
+p5: Monetization — Stripe                     — Pro          — Claude Code, Stripe, Supabase
+p6: Mobile App                                — Ninja        — React Native, Expo
+p7: Build Your Own                            — Creator      — Claude Code, Your Stack
+p8: Launch Checklist                          — Expert       — Claude API, Custom Domain, Vercel, Legal Pages
 ```
-- `ORDER = ['p1','p2','p3','p4','p5','p6','p7']`
-- `LABELS` map each id to "Project X of 7 · Level"
-- p7 selector card is centered in the 2-col grid when alone (CSS: `grid-column: 1 / -1; max-width: calc(50% - 10px); margin: 0 auto`)
+- `ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8']`
+- `LABELS` map each id to "Project X of 8 · Level"
+- p7 selector card is centered in the 2-col grid when alone
+
+## Pricing / Paywall
+- **Free:** Projects p1 and p2 only (first 2 of every track are always free)
+- **Creator — $10/mo:** Unlocks p3–p8 and all future tracks
+- `profiles.plan` column: `'free'` (default) or `'paid'`
+- `profiles.stripe_customer_id` column: Stripe customer ID stored on subscription
+- Payment flow: `startCheckout()` → `/api/create-checkout` → Stripe Checkout → `verifyAndUnlock(sessionId)` → `/api/verify-payment` → client updates Supabase `profiles.plan = 'paid'`
+- Webhook also updates plan on `checkout.session.completed` and resets on `customer.subscription.deleted`
+- p7 has a lock UI (small badge + unlock button replacing CTA bar) — title/description always visible
+- Cancellation on My Profile page: calls `/api/cancel-subscription`, then updates plan client-side
 
 ## Project Cards (web-apps.html selector)
 - Each card has a "Project Completed" checkbox injected by `initCompletionCards()` on load (iterates `ORDER`)
 - Completion state syncs with the individual project view
 
 ## Individual Project View Features
-- Step checkboxes with progress counters in accordion headers (localStorage: `zts_p1`–`zts_p7`)
+- Step checkboxes with progress counters in accordion headers (localStorage: `zts_p1`–`zts_p8`)
 - Copy buttons on all code blocks
 - Read progress bar (fixed, top of page)
-- **Completion section** at the bottom of each project:
-  - "Yes, I completed this project" checkbox + inline star rating (1 Hard, 5 Easy) — "How easy were the steps to follow?"
+- **Completion section** dynamically injected by `initProjectCompletion(projectId)` — skips p8
+  - "Yes, I completed this project" checkbox + inline star rating (1 Hard, 5 Easy)
   - Live project URL input
-  - "Save to my Project Library" + "Share with the Zero to Shipped Project Library" checkboxes (two-column row)
+  - "Save to my Project Library" + "Share with the Zero to Shipped Project Library" checkboxes
   - ← Back to Projects / Next Project → nav buttons
-  - Confetti fires on first completion (localStorage: `zts_confetti_p1`–`zts_confetti_p7`)
+  - Confetti fires on first completion
 - Completion data stored in localStorage: `zts_completion` — `{ p1: { done, url, save, share, rating }, ... }`
 - `syncProfileToSupabase()` called on done/share/rating changes — syncs to `profiles` table
 - `syncSharedProject(projectId, isShare)` called on share toggle — upserts/deletes from `shared_projects` table
+
+## p8 — Launch Checklist (Special Structure)
+- No completion section (p8 is skipped in `initProjectCompletion`)
+- Step 1 accordion: Connect a Custom Domain
+- Step 2 accordion: Add a Privacy Policy & Terms
+- Step 3 is NOT an accordion — always-open `<div class="audit-section-wrap">` with purple border/gradient
+- AI Site Audit tool:
+  - URL input → `runAudit()` → POST `/api/claude`
+  - After results: input hides, action bar shows audited URL + page count badge + "↻ Refresh Score" + "✕ New URL" buttons
+  - `clearAudit()` resets to input state
+  - Results persist until user clicks New URL or navigates away
+  - Claude API model: `claude-sonnet-4-6`
+  - Jina Reader scrapes homepage (8000 chars) + up to 5 sub-pages (4000 chars each), 30k total
+  - Prompt explicitly lists all discovered pages so Claude doesn't flag existing pages as missing
 
 ## My Projects Library (`my-projects.html`)
 - Reads/writes `zts_my_projects` in localStorage — array of project objects
 - Project object shape: `{ id, trackId, title, level, tools[], url, description, notes, share, savedAt }`
 - Track projects saved via `saveToProjectLibrary(projectId, true/false)` in web-apps.html
 - Manually added projects get id `'manual-' + Date.now()`
-- Cards show: iframe preview thumbnail (1280×800 scaled to 0.28), tools, URL, notes, saved date — no title or level badge
-- Each card has an **Edit** button (royal blue, IBM Plex Mono) and a delete (✕) button
+- Cards show: iframe preview thumbnail, tools, URL, notes, saved date
+- Each card has an **Edit** button and a delete (✕) button
 - `+ Add Project` modal — fields: Project Name, What did you build, Live URL, Tools Used, Notes, Share checkbox
-- Edit reuses the same modal pre-populated with existing data; modal title/save button text update accordingly
-- Share checkbox in modal: on save, upserts to `shared_projects` in Supabase; on uncheck, deletes from `shared_projects`
-- `updateLibraryShareFlag(projectId, isShare)` syncs the `share` flag in localStorage
+- Share checkbox: on save, upserts to `shared_projects` in Supabase; on uncheck, deletes from `shared_projects`
 
 ## Project Library (`project-library.html`)
 - Public page (no auth required)
 - Reads from Supabase `shared_projects` table (ordered by `shared_at` desc) — **not** localStorage
-- Loads Supabase CDN + `supabase-config.js`
-- Shows cards for all rows where `url` is present
-- Same card layout as my-projects.html but without edit/delete buttons
 
 ## Supabase Database Tables
 
 ### `profiles`
-Auto-created on signup via trigger `on_auth_user_created` (uses `ON CONFLICT DO NOTHING`; safe for both email and OAuth users).
+Auto-created on signup via trigger `on_auth_user_created`.
 - `id` (uuid, FK auth.users)
-- `email` (text) — copied from auth.users on signup, backfilled for existing users
-- `role` (text, default 'user') — set to 'admin' manually for admin users
-- `last_login` (timestamptz) — updated by trigger `on_auth_user_login`
+- `email` (text)
+- `role` (text, default 'user') — set to 'admin' manually
+- `last_login` (timestamptz)
 - `login_count` (int, default 0)
-- `plan` (text, default 'free')
+- `plan` (text, default 'free') — `'free'` or `'paid'`
+- `stripe_customer_id` (text) — set by webhook on checkout
 - `projects_completed` (text[], default '{}')
 - `projects_shared` (text[], default '{}')
 - `project_ratings` (jsonb, default '{}')
@@ -130,64 +172,53 @@ Auto-created on signup via trigger `on_auth_user_created` (uses `ON CONFLICT DO 
 - `deactivated` (bool)
 
 ### `shared_projects`
-Stores projects users share with the public library.
-- `id` (uuid)
-- `user_id` (uuid, FK auth.users)
-- `project_id` (text) — e.g. 'p1', 'manual-1234'
-- `url`, `tools` (text[]), `description`, `notes` (text)
-- `shared_at` (timestamptz)
+- `id` (uuid), `user_id` (uuid, FK auth.users), `project_id` (text)
+- `url`, `tools` (text[]), `description`, `notes` (text), `shared_at` (timestamptz)
 - Unique constraint: `(user_id, project_id)`
 - RLS: public SELECT, authenticated INSERT/UPDATE/DELETE own rows
 
 ### RLS / Functions
-- `is_admin()` Postgres function (security definer) — returns true if current user's `profiles.role = 'admin'`
-- RLS policies on `profiles`: users read/update own row; admins read all rows via `is_admin()` (separate policies to avoid infinite recursion)
-- `handle_new_user()` trigger — inserts profile on auth.users INSERT, `security definer set search_path = public`
-- `handle_user_login()` trigger — updates `last_login` + increments `login_count` on auth.users UPDATE when `last_sign_in_at` changes; includes `EXCEPTION WHEN OTHERS THEN RETURN NEW` to prevent OAuth failures
+- `is_admin()` Postgres function (security definer)
+- `handle_new_user()` trigger — inserts profile on signup
+- `handle_user_login()` trigger — updates `last_login` + increments `login_count`
 
 ## Admin Panel (`admin.html`)
 - Auth guard + role check: non-admins redirected to `dashboard.html`
 - Stats row: Total Users, Joined This Week, Projects Completed, Projects Shared
-- User table: Email, Signup Date, Last Login, Logins, Plan, Projects Completed (colored pills), Posted Project, Actions
-- Posted Project column reads from `shared_projects` table (count per user_id) — not `profiles.projects_shared`
-- Search by email (live filter) + sort dropdown (signup date / last login / login count asc/desc)
-- Per-user actions: Reset Password (sends email), View Completions (modal), Deactivate/Reactivate
-- Star Reviews by Project section: 7 cards with avg rating, distribution bars, review count
+- User table: Email, Signup Date, Last Login, Logins, Plan, Projects Completed, Posted Project, Actions
+- Search by email + sort dropdown
+- Per-user actions: Reset Password, View Completions, Deactivate/Reactivate
+- Star Reviews by Project section: 8 cards
 
 ## Dashboard Completion Badge
-- Web Apps track card shows "X / 7 completed" badge (`id="web-completion-badge"`)
-- Reads `zts_completion` from localStorage on page load (plain IIFE, not inside async auth guard)
-- Counts `['p1','p2','p3','p4','p5','p6','p7']`
+- Web Apps track card shows "X / 8 completed" badge (`id="web-completion-badge"`)
+- Counts `['p1','p2','p3','p4','p5','p6','p7','p8']`
 
 ## Environment & Keys
-- `.env` holds keys as source of truth (gitignored): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CONSOLE_CLIENT_SECRET`
-- `supabase-config.js` is committed to git — anon key is a public client-side key, safe to expose, protected by RLS
-- Plain HTML can't auto-read `.env`, so `supabase-config.js` is the runtime config file
+- `.env` (gitignored): `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CONSOLE_CLIENT_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`, `ZERO2SHIPPEDKEY`
+- `supabase-config.js` is committed to git — anon key is safe, protected by RLS
+- `ZERO2SHIPPEDKEY` is the Anthropic API key (note: has leading space in .env — code uses `.trim()`)
 
 ## Auth (Supabase)
 - `supabase-config.js` must be loaded before any inline auth scripts
-- **Email/password:** `signUp` stores `full_name` in user metadata; on success redirects to `dashboard.html`
+- **Email/password:** `signUp` stores `full_name` in user metadata
 - **Google OAuth:** `signInWithOAuth({ provider: 'google', options: { redirectTo: origin + '/dashboard.html' } })`
-  - Google Cloud Console app name: "Zero to Shipped" (Branding page)
-  - Authorized redirect URI in Google Console: `https://acpzzaikuoyjyfayqxic.supabase.co/auth/v1/callback`
-  - Supabase: Authentication → Providers → Google — Client ID + Secret configured
-  - Publishing status: Production (Audience page in Google Console)
-- Email confirmation: **disabled** in Supabase (Authentication → Sign In / Providers → Confirm email off)
-- All protected pages use `getSessionWithRetry()` — calls `getSession()` first, then waits up to 3s via `onAuthStateChange` for OAuth redirect to complete before redirecting to login
-- Supabase client uses `{ auth: { flowType: 'implicit' } }` for compatibility with static site OAuth (token in URL hash, not PKCE code exchange)
-- All protected pages check session on load and redirect to `login.html` if none
-- Both login.html and signup.html have "Continue with Google" button (Google SVG logo, white background)
+  - Authorized redirect URI: `https://acpzzaikuoyjyfayqxic.supabase.co/auth/v1/callback`
+- Email confirmation: **disabled** in Supabase
+- All protected pages use `getSessionWithRetry()` — waits up to 3s for OAuth redirect
+- Supabase client uses `{ auth: { flowType: 'implicit' } }`
 
 ## Deployment
 - **GitHub:** https://github.com/sethhauben-prog/FINAL-Zero-to-Shipped (public repo, main branch)
 - **Vercel:** https://final-zero-to-shipped.vercel.app (auto-deploys on every `git push`)
-- To deploy changes: `git add . && git commit -m "message" && git push`
+- To deploy: `git add . && git commit -m "message" && git push`
 - Supabase Site URL: `https://final-zero-to-shipped.vercel.app`
 
 ## Conventions
 - All CSS lives in `<style>` blocks within each HTML file — no separate stylesheet
 - No external JS dependencies except Supabase CDN, canvas-confetti CDN, and Google Fonts
 - Each page is fully self-contained
-- Responsive breakpoint at 860px (auth pages stack to single column); 640px for track card grids
+- Responsive breakpoint at 860px (auth pages stack); 640px for track card grids
 - Do not add a build system, framework, or package.json unless explicitly requested
 - localStorage key prefix: `zts_` for all user progress data
+- API functions use native `fetch` only — no npm packages

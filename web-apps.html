@@ -1804,31 +1804,32 @@ Before coding, explain your plan for the webhook and how it connects Stripe to S
                 <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
                   <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
                     <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">1</span>
-                    <div>In the Stripe dashboard, click <strong>Developers</strong> in the top-right corner (it looks like a wrench icon). In the left panel that opens, click <strong>Webhooks</strong>.</div>
+                    <div>In the Stripe dashboard, click <strong>Developers</strong> in the bottom-left corner. In the panel that opens, click <strong>Webhooks</strong>, then <strong>+ Add destination</strong>.</div>
                   </div>
                   <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
                     <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">2</span>
-                    <div>Click <strong>+ Add destination</strong>, then choose <strong>Webhook endpoint</strong>.</div>
-                  </div>
-                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
-                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">3</span>
-                    <div>In the <strong>Endpoint URL</strong> field, paste your Vercel URL followed by <code>/api/webhook</code>. Example: <code>https://your-app.vercel.app/api/webhook</code></div>
-                  </div>
-                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
-                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">4</span>
-                    <div>Under <strong>Select events</strong>, search for and check these three events:<br>
+                    <div><strong>Step 1 — Select events:</strong> Click <strong>Your account</strong> (the left card). Then use the search box to find and check these three events:<br>
                       <code>checkout.session.completed</code><br>
                       <code>customer.subscription.deleted</code><br>
-                      <code>invoice.payment_failed</code>
+                      <code>invoice.payment_failed</code><br>
+                      Click <strong>Continue →</strong>
                     </div>
                   </div>
                   <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">3</span>
+                    <div><strong>Step 2 — Choose destination type:</strong> Select <strong>Webhook endpoint</strong>. Click <strong>Continue →</strong>.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">4</span>
+                    <div><strong>Step 3 — Configure:</strong> In the <strong>Endpoint URL</strong> field, paste your Vercel URL + <code>/api/webhook</code>:<br><code>https://your-app.vercel.app/api/webhook</code><br>Click <strong>Add destination</strong> to save.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
                     <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">5</span>
-                    <div>Click <strong>Add destination</strong> to save. On the next screen you'll see your new webhook listed. Click into it and look for <strong>Signing secret</strong> — click <strong>Reveal</strong>. It starts with <code>whsec_</code>. Copy it.</div>
+                    <div>You'll land on the webhook detail page. Find <strong>Signing secret</strong> and click <strong>Reveal</strong>. It starts with <code>whsec_</code> — copy it.</div>
                   </div>
                   <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
                     <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">6</span>
-                    <div>In your Vercel project → <strong>Settings → Environment Variables</strong>, add a new variable named <code>STRIPE_WEBHOOK_SECRET</code> and paste the <code>whsec_</code> value. Redeploy for it to take effect.</div>
+                    <div>In Vercel → <strong>Settings → Environment Variables</strong>, add <code>STRIPE_WEBHOOK_SECRET</code> and paste the <code>whsec_</code> value. Redeploy.</div>
                   </div>
                 </div>
               </div>

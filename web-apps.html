@@ -2396,109 +2396,72 @@ eas submit --platform android</span></span></div></div></div>
         </div>
       </div>
 
-      <div class="accordion open">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🔍</span>
-          <span class="acc-title">Step 3 — Run Your AI Site Audit</span>
-          <span class="acc-chevron">▾</span>
+      <div class="audit-section-wrap" style="margin-top:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <span style="font-size:18px;">🔍</span>
+          <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--text);">Step 3 — Run Your AI Site Audit</span>
         </div>
-        <div class="accordion-body">
-          <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Enter your project URL below and Claude will audit your site across six dimensions — design, content, trust, SEO, conversion, and performance — then give you a prioritised list of exactly what to fix before you start marketing.</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Enter your project URL below and Claude will audit your site across six dimensions — design, content, trust, SEO, conversion, and performance — then give you a prioritised list of exactly what to fix before you start marketing.</p>
 
-          <div class="audit-wrap">
-            <div class="audit-input-row">
-              <input type="url" id="audit-url" class="audit-url-input" placeholder="https://your-project.vercel.app" />
-              <button class="audit-run-btn" id="audit-run-btn" onclick="runAudit()">Run Audit →</button>
-            </div>
-
-            <div id="audit-loading" style="display:none;" class="audit-loading">
-              <div class="audit-loading-spinner"></div>
-              <p>Auditing your site with Claude — this takes about 15 seconds…</p>
-            </div>
-
-            <div id="audit-results" class="audit-results" style="display:none;">
-              <!-- Score card -->
-              <div class="audit-score-card">
-                <div class="audit-score-big">
-                  <span class="audit-score-num" id="ar-score">—</span>
-                  <span class="audit-score-denom">/100</span>
-                </div>
-                <div>
-                  <div class="audit-verdict-title" id="ar-verdict">—</div>
-                  <div class="audit-verdict-summary" id="ar-summary">—</div>
-                </div>
-              </div>
-
-              <!-- Subscores -->
-              <div class="audit-subscores" id="ar-subscores"></div>
-
-              <!-- Tabs -->
-              <div class="audit-tabs">
-                <button class="audit-tab-btn active" onclick="showAuditTab('overview', this)">Overview</button>
-                <button class="audit-tab-btn" onclick="showAuditTab('gaps', this)">Product Gaps</button>
-                <button class="audit-tab-btn" onclick="showAuditTab('trust', this)">Trust & Conversion</button>
-                <button class="audit-tab-btn" onclick="showAuditTab('seo', this)">SEO & Discoverability</button>
-                <button class="audit-tab-btn" onclick="showAuditTab('checklist', this)">Launch Checklist</button>
-              </div>
-
-              <div id="audit-tab-overview" class="audit-tab-pane active">
-                <div class="audit-section-label">What's working well</div>
-                <div id="ar-working"></div>
-              </div>
-              <div id="audit-tab-gaps" class="audit-tab-pane">
-                <div class="audit-section-label">Product gaps to address</div>
-                <div id="ar-gaps"></div>
-              </div>
-              <div id="audit-tab-trust" class="audit-tab-pane">
-                <div class="audit-section-label">Trust & conversion issues</div>
-                <div id="ar-trust"></div>
-              </div>
-              <div id="audit-tab-seo" class="audit-tab-pane">
-                <div class="audit-section-label">SEO & discoverability issues</div>
-                <div id="ar-seo"></div>
-              </div>
-              <div id="audit-tab-checklist" class="audit-tab-pane">
-                <div class="audit-section-label">Prioritised launch checklist — click to check off</div>
-                <div id="ar-checklist"></div>
-              </div>
-            </div>
-
-            <div id="audit-error" style="display:none;" class="callout callout-warn" style="margin-top:16px;"></div>
+        <div class="audit-wrap">
+          <div class="audit-input-row">
+            <input type="url" id="audit-url" class="audit-url-input" placeholder="https://your-project.vercel.app" />
+            <button class="audit-run-btn" id="audit-run-btn" onclick="runAudit()">Run Audit →</button>
           </div>
-        </div>
-      </div>
 
-      <!-- COMPLETION -->
-      <div class="completion-section" id="comp-p8">
-        <div class="comp-check-row">
-          <div class="comp-check" id="comp-check-p8"></div>
-          <div class="comp-check-label">Yes, I completed this project</div>
-        </div>
-        <div id="comp-details-p8" style="display:none;">
-          <div class="comp-rating-row">
-            <span class="comp-rating-label">How easy were the steps to follow?</span>
-            <div class="comp-stars" id="comp-stars-p8">
-              <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
-              <span class="star-label"><span id="comp-star-label-p8">—</span></span>
+          <div id="audit-loading" style="display:none;" class="audit-loading">
+            <div class="audit-loading-spinner"></div>
+            <p>Auditing your site with Claude — this takes about 15 seconds…</p>
+          </div>
+
+          <div id="audit-results" class="audit-results" style="display:none;">
+            <!-- Score card -->
+            <div class="audit-score-card">
+              <div class="audit-score-big">
+                <span class="audit-score-num" id="ar-score">—</span>
+                <span class="audit-score-denom">/100</span>
+              </div>
+              <div>
+                <div class="audit-verdict-title" id="ar-verdict">—</div>
+                <div class="audit-verdict-summary" id="ar-summary">—</div>
+              </div>
+            </div>
+
+            <!-- Subscores -->
+            <div class="audit-subscores" id="ar-subscores"></div>
+
+            <!-- Tabs -->
+            <div class="audit-tabs">
+              <button class="audit-tab-btn active" onclick="showAuditTab('overview', this)">Overview</button>
+              <button class="audit-tab-btn" onclick="showAuditTab('gaps', this)">Product Gaps</button>
+              <button class="audit-tab-btn" onclick="showAuditTab('trust', this)">Trust & Conversion</button>
+              <button class="audit-tab-btn" onclick="showAuditTab('seo', this)">SEO & Discoverability</button>
+              <button class="audit-tab-btn" onclick="showAuditTab('checklist', this)">Launch Checklist</button>
+            </div>
+
+            <div id="audit-tab-overview" class="audit-tab-pane active">
+              <div class="audit-section-label">What's working well</div>
+              <div id="ar-working"></div>
+            </div>
+            <div id="audit-tab-gaps" class="audit-tab-pane">
+              <div class="audit-section-label">Product gaps to address</div>
+              <div id="ar-gaps"></div>
+            </div>
+            <div id="audit-tab-trust" class="audit-tab-pane">
+              <div class="audit-section-label">Trust & conversion issues</div>
+              <div id="ar-trust"></div>
+            </div>
+            <div id="audit-tab-seo" class="audit-tab-pane">
+              <div class="audit-section-label">SEO & discoverability issues</div>
+              <div id="ar-seo"></div>
+            </div>
+            <div id="audit-tab-checklist" class="audit-tab-pane">
+              <div class="audit-section-label">Prioritised launch checklist — click to check off</div>
+              <div id="ar-checklist"></div>
             </div>
           </div>
-          <div class="comp-url-row">
-            <label class="comp-url-label">Your live project URL</label>
-            <input type="url" class="comp-url-input" id="comp-url-p8" placeholder="https://your-project.com" />
-          </div>
-          <div class="comp-share-grid">
-            <div class="comp-share-row" id="comp-save-row-p8">
-              <div class="comp-share-check" id="comp-save-check-p8"></div>
-              <div><div class="comp-share-title">Save to my Project Library</div><div class="comp-share-sub">Saves this project to your personal library with the URL and tools used.</div></div>
-            </div>
-            <div class="comp-share-row" id="comp-share-row-p8">
-              <div class="comp-share-check" id="comp-share-check-p8"></div>
-              <div><div class="comp-share-title">Share with the Zero to Shipped Project Library</div><div class="comp-share-sub">Makes your project visible in the community showcase.</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="comp-nav">
-          <button class="comp-back" onclick="showSelector()">← All Projects</button>
+
+          <div id="audit-error" style="display:none;" class="callout callout-warn" style="margin-top:16px;"></div>
         </div>
       </div>
 

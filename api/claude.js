@@ -65,18 +65,24 @@ module.exports = async function handler(req, res) {
 
     const combinedContent = pageSections.join('\n\n').slice(0, 20000);
 
-    const scrapedPaths = pageSections.map(s => s.split('\n')[0].replace('## ', ''));
+    const scrapedUrls = toScrape.filter((u, i) => subContents[i]);
+    const allPageUrls = [url, ...scrapedUrls];
 
     const prompt = `You are an expert web product auditor. Analyze this website and provide a thorough, honest audit.
 
 Website URL: ${url}
 
-Pages successfully scraped and included below:
-${scrapedPaths.map(p => '- ' + p).join('\n')}
+The following pages were discovered via internal links and successfully scraped. They ALL exist and are part of the site:
+${allPageUrls.map(u => '- ' + u).join('\n')}
 
-IMPORTANT: Base your audit ONLY on what you actually observe in the content below. Do NOT flag something as missing if it exists in any of the scraped pages. For example, if a pricing page was scraped and contains pricing tiers, do not say pricing is missing. If privacy policy and terms pages are present, do not say legal pages are missing.
+CRITICAL RULES — read carefully before auditing:
+- A page that appears in the list above EXISTS. Do not say it is missing, hidden, or hard to find.
+- If a /pricing page is in the list, the site HAS a pricing page. Do not flag pricing as missing.
+- If /privacy-policy or /terms pages are in the list, the site HAS legal pages. Do not flag them as missing.
+- Judge each issue only on evidence from the actual scraped content below.
+- Do not invent problems that contradict what the content shows.
 
-Website content:
+Website content (all pages combined):
 ${combinedContent}
 
 Return a JSON object with this EXACT structure (no other text, just valid JSON):
@@ -133,7 +139,7 @@ Rules:
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: 'claude-sonnet-4-5',
         max_tokens: 4000,
         messages: [{ role: 'user', content: prompt }]
       })

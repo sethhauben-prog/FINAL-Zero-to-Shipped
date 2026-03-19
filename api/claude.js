@@ -54,16 +54,16 @@ module.exports = async function handler(req, res) {
     const toScrape = internalLinks.slice(0, 5);
     const subContents = await Promise.all(toScrape.map(u => scrapeJina(u)));
 
-    // 3. Build combined content — 1500 chars per page to stay within token budget
-    const pageSections = [`## ${url} (homepage)\n${homeContent.slice(0, 1500)}`];
+    // 3. Build combined content — homepage gets more space, sub-pages share the rest
+    const pageSections = [`## ${url} (homepage)\n${homeContent.slice(0, 8000)}`];
     toScrape.forEach((u, i) => {
       if (subContents[i]) {
         const path = new URL(u).pathname;
-        pageSections.push(`## ${path}\n${subContents[i].slice(0, 1500)}`);
+        pageSections.push(`## ${path}\n${subContents[i].slice(0, 4000)}`);
       }
     });
 
-    const combinedContent = pageSections.join('\n\n').slice(0, 12000);
+    const combinedContent = pageSections.join('\n\n').slice(0, 30000);
 
     const scrapedUrls = toScrape.filter((u, i) => subContents[i]);
     const allPageUrls = [url, ...scrapedUrls];
@@ -140,7 +140,7 @@ Rules:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
+        max_tokens: 5000,
         messages: [{ role: 'user', content: prompt }]
       })
     });

@@ -10,19 +10,40 @@ module.exports = async function handler(req, res) {
   if (!url) return res.status(400).json({ error: 'Missing url' });
 
   try {
-    // Scrape site content via Jina Reader
-    const jinaRes = await fetch(`https://r.jina.ai/${url}`, {
-      headers: { 'Accept': 'text/plain', 'X-Timeout': '15' }
+    // Derive common sub-pages to also scrape
+    const base = url.replace(/\/$/, '');
+    const extraPaths = ['/pricing', '/about', '/features'];
+
+    // Scrape homepage + extra pages in parallel
+    const scrapeJina = async (u) => {
+      try {
+        const r = await fetch(`https://r.jina.ai/${u}`, {
+          headers: { 'Accept': 'text/plain', 'X-Timeout': '10' }
+        });
+        const t = await r.text();
+        // Only include if it returned real content (not a 404 page)
+        return t.length > 200 ? t.slice(0, 3000) : null;
+      } catch { return null; }
+    };
+
+    const [homeContent, ...extraContents] = await Promise.all([
+      scrapeJina(url),
+      ...extraPaths.map(p => scrapeJina(base + p))
+    ]);
+
+    const pageSections = [`## Homepage (${url})\n${homeContent || '(no content)'}`];
+    extraPaths.forEach((p, i) => {
+      if (extraContents[i]) pageSections.push(`## ${p} page (${base + p})\n${extraContents[i]}`);
     });
-    const siteContent = await jinaRes.text();
-    const truncated = siteContent.slice(0, 8000);
+
+    const combinedContent = pageSections.join('\n\n').slice(0, 12000);
 
     const prompt = `You are an expert web product auditor. Analyze this website and provide a thorough, honest audit.
 
 Website URL: ${url}
 
-Website content:
-${truncated}
+Website content (homepage + key sub-pages scraped):
+${combinedContent}
 
 Return a JSON object with this EXACT structure (no other text, just valid JSON):
 {

@@ -10,39 +10,67 @@ module.exports = async function handler(req, res) {
   if (!url) return res.status(400).json({ error: 'Missing url' });
 
   try {
-    // Derive common sub-pages to also scrape
-    const base = url.replace(/\/$/, '');
-    const extraPaths = ['/pricing', '/about', '/features'];
+    const base = new URL(url).origin;
 
-    // Scrape homepage + extra pages in parallel
     const scrapeJina = async (u) => {
       try {
         const r = await fetch(`https://r.jina.ai/${u}`, {
-          headers: { 'Accept': 'text/plain', 'X-Timeout': '10' }
+          headers: { 'Accept': 'text/plain', 'X-Timeout': '12' }
         });
         const t = await r.text();
-        // Only include if it returned real content (not a 404 page)
-        return t.length > 200 ? t.slice(0, 3000) : null;
+        return t.length > 200 ? t : null;
       } catch { return null; }
     };
 
-    const [homeContent, ...extraContents] = await Promise.all([
-      scrapeJina(url),
-      ...extraPaths.map(p => scrapeJina(base + p))
-    ]);
+    // Extract internal links from homepage markdown
+    const extractInternalLinks = (markdown, baseOrigin) => {
+      const seen = new Set();
+      const links = [];
+      // Match markdown links [text](url) and bare hrefs
+      const mdLinks = [...markdown.matchAll(/\]\((https?:\/\/[^\s)]+)\)/g)].map(m => m[1]);
+      const relLinks = [...markdown.matchAll(/\]\((\/[^\s)]*)\)/g)].map(m => baseOrigin + m[1]);
+      for (const link of [...mdLinks, ...relLinks]) {
+        try {
+          const u = new URL(link);
+          // Same origin only, ignore anchors, query strings, and asset files
+          if (u.origin === baseOrigin && !seen.has(u.pathname) && u.pathname !== '/') {
+            const ext = u.pathname.split('.').pop().toLowerCase();
+            if (!['png','jpg','jpeg','gif','svg','ico','css','js','woff','woff2'].includes(ext)) {
+              seen.add(u.pathname);
+              links.push(u.origin + u.pathname);
+            }
+          }
+        } catch {}
+      }
+      return links;
+    };
 
-    const pageSections = [`## Homepage (${url})\n${homeContent || '(no content)'}`];
-    extraPaths.forEach((p, i) => {
-      if (extraContents[i]) pageSections.push(`## ${p} page (${base + p})\n${extraContents[i]}`);
+    // 1. Scrape homepage
+    const homeContent = await scrapeJina(url);
+    if (!homeContent) throw new Error('Could not fetch the page. Make sure the URL is publicly accessible.');
+
+    // 2. Discover internal links and scrape up to 10 sub-pages in parallel
+    const internalLinks = extractInternalLinks(homeContent, base);
+    const toScrape = internalLinks.slice(0, 10);
+    const subContents = await Promise.all(toScrape.map(u => scrapeJina(u)));
+
+    // 3. Build combined content — 2500 chars per page to stay within token budget
+    const pageSections = [`## ${url} (homepage)\n${homeContent.slice(0, 2500)}`];
+    toScrape.forEach((u, i) => {
+      if (subContents[i]) {
+        const path = new URL(u).pathname;
+        pageSections.push(`## ${path}\n${subContents[i].slice(0, 2500)}`);
+      }
     });
 
-    const combinedContent = pageSections.join('\n\n').slice(0, 12000);
+    const combinedContent = pageSections.join('\n\n').slice(0, 20000);
 
     const prompt = `You are an expert web product auditor. Analyze this website and provide a thorough, honest audit.
 
 Website URL: ${url}
+Pages scraped: ${pageSections.length} (homepage + ${pageSections.length - 1} sub-pages)
 
-Website content (homepage + key sub-pages scraped):
+Website content:
 ${combinedContent}
 
 Return a JSON object with this EXACT structure (no other text, just valid JSON):
@@ -85,6 +113,7 @@ Return a JSON object with this EXACT structure (no other text, just valid JSON):
 
 Rules:
 - Be specific and actionable, not generic
+- Base your audit on ALL pages scraped, not just the homepage
 - Provide 3-5 items per section
 - whats_working should have 2-4 genuine strengths
 - overall_score should be a realistic weighted average of the 6 subscores
@@ -112,6 +141,8 @@ Rules:
     if (!jsonMatch) throw new Error('Could not parse audit response');
 
     const audit = JSON.parse(jsonMatch[0]);
+    // Include page count so the UI can show it
+    audit.pages_scraped = pageSections.length;
     return res.status(200).json(audit);
 
   } catch (err) {

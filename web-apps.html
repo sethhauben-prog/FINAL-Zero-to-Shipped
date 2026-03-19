@@ -714,6 +714,7 @@ ul.plain-list li:last-child { border-bottom: none; }
 .audit-results { margin-top: 24px; }
 .audit-action-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; flex-wrap: wrap; }
 .audit-audited-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.audit-pages-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--green); background: rgba(26,122,74,0.08); border: 1px solid rgba(26,122,74,0.2); padding: 2px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
 .audit-action-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 6px; cursor: pointer; border: 1.5px solid; transition: background 0.15s, opacity 0.15s; white-space: nowrap; }
 .audit-action-btn--refresh { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); color: #7c3aed; }
 .audit-action-btn--refresh:hover { background: rgba(124,58,237,0.15); }
@@ -2426,6 +2427,7 @@ eas submit --platform android</span></span></div></div></div>
             <!-- Action bar -->
             <div class="audit-action-bar">
               <span class="audit-audited-url" id="ar-audited-url"></span>
+              <span class="audit-pages-count" id="ar-pages-count"></span>
               <div style="display:flex;gap:8px;flex-shrink:0;">
                 <button class="audit-action-btn audit-action-btn--refresh" onclick="runAudit()">↻ Refresh Score</button>
                 <button class="audit-action-btn audit-action-btn--clear" onclick="clearAudit()">✕ New URL</button>
@@ -2868,6 +2870,7 @@ async function runAudit() {
     }).join('');
 
     document.getElementById('ar-audited-url').textContent = url;
+    if (data.pages_scraped) document.getElementById('ar-pages-count').textContent = data.pages_scraped + ' pages scanned';
     document.getElementById('audit-results').style.display = 'block';
     showAuditTab('overview', document.querySelector('.audit-tab-btn'));
 

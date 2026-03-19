@@ -606,6 +606,72 @@ ul.plain-list li:last-child { border-bottom: none; }
 .p6 { --p-color: var(--p6); }
 .p7 { --p-color: var(--p7); }
 
+/* ─── P7 LOCK OVERLAY ─── */
+.proj-card-locked { cursor: default !important; }
+.proj-card-locked .proj-cta { opacity: 0.35; pointer-events: none; }
+.proj-lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(248,246,241,0.72);
+  backdrop-filter: blur(3px);
+  border-radius: 8px;
+  z-index: 5;
+}
+.proj-lock-icon { font-size: 30px; line-height: 1; }
+.proj-lock-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.proj-lock-btn {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 11px 26px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.proj-lock-btn:hover { opacity: 0.85; }
+
+/* ─── PAYMENT BANNER ─── */
+.payment-banner {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: #fff;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.3s ease;
+}
+.payment-banner.cancelled { background: var(--text-muted); }
+.payment-banner-close { cursor: pointer; font-size: 16px; opacity: 0.7; }
+.payment-banner-close:hover { opacity: 1; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* ─── CARD COMPLETION BADGE ─── */
 .proj-card { position: relative; }
 .card-done-wrap {
@@ -958,7 +1024,7 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
       </div>
 
       <!-- P7 -->
-      <div class="proj-card" data-pid="p7" onclick="showProject('p7')">
+      <div class="proj-card" data-pid="p7" id="p7-selector-card" onclick="handleP7Click()">
         <div class="proj-card-header">
           <div class="proj-badge">
             <div class="proj-num" style="background:var(--green)">7</div>
@@ -1686,7 +1752,22 @@ git push</span></span></div></div></div>
           <div class="step-list" style="margin-top:16px;">
             <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create a free Stripe account</div><div class="step-desc">Go to <strong>stripe.com</strong> and sign up. You don't need a business name or bank account to start testing.</div></div></div>
             <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Make sure you're in Test Mode</div><div class="step-desc">Check the top right of your Stripe dashboard — make sure <strong>Test mode</strong> is ON.<div class="callout callout-warn" style="margin-top:8px;"><strong>Important:</strong> Test keys start with <code>sk_test_</code> and <code>pk_test_</code>. Live keys start with <code>sk_live_</code> and <code>pk_live_</code>. Always double-check.</div></div></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Create a $1 product in Stripe</div><div class="step-desc">Left sidebar → <strong>Product Catalog → + Add Product</strong>. Name it "Premium Dashboard Widget". Set price to <strong>$1</strong>, One time. Save. Copy the <code>price_</code> ID from the Pricing section.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Create a $1 product and find your Price ID</div>
+              <div class="step-desc">
+                In the left sidebar go to <strong>Product Catalog → + Add Product</strong>. Fill in:
+                <ul class="plain-list" style="margin-top:10px;">
+                  <li>Name: <em>Premium Access</em> (or whatever fits your app)</li>
+                  <li>Pricing model: <strong>Standard pricing</strong></li>
+                  <li>Price: <strong>$1.00</strong></li>
+                  <li>Billing period: <strong>Monthly</strong> (for a recurring subscription) or <strong>One time</strong></li>
+                </ul>
+                <div class="callout callout-info" style="margin-top:12px;">
+                  <strong>Where to find your Price ID:</strong><br><br>
+                  After clicking Save, you'll land on the product detail page. Scroll down to the <strong>Pricing</strong> section — there's a table listing your price. In the far right column you'll see a value that starts with <code>price_</code> — for example: <code>price_1ABcDeFgHiJkLm</code>.<br><br>
+                  Click the copy icon next to it. <strong>This is your Price ID.</strong> Paste it into your code where you see <code>priceId</code> or <code>STRIPE_PRICE_ID</code>. Don't confuse it with the Product ID, which starts with <code>prod_</code>.
+                </div>
+              </div>
+            </div></div>
             <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Get your test API keys</div><div class="step-desc">Go to <strong>Developers → API Keys</strong>. Copy your <strong>Publishable key</strong> (<code>pk_test_...</code>) and <strong>Secret key</strong> (<code>sk_test_...</code>). The secret key goes in your .env file only.</div></div></div>
           </div>
         </div>
@@ -1714,7 +1795,44 @@ Store the secret key in .env
 
 Before coding, explain your plan for the webhook and how it connects Stripe to Supabase."</span></span></div></div></div>
             <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Test with Stripe's test card</div><div class="step-desc">Use card number <code>4242 4242 4242 4242</code>, any future expiry date, and any 3-digit CVV. No real money is charged.</div></div></div>
-            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set up the webhook endpoint in Stripe</div><div class="step-desc">Go to <strong>Developers → Workbench → Webhooks → + Add destination → Webhook endpoint</strong>. Enter your local dev server URL + <code>/api/webhook</code>. Select <code>checkout.session.completed</code>. Copy the <code>whsec_</code> signing secret and add to .env as <code>STRIPE_WEBHOOK_SECRET</code>.</div></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Set up the webhook endpoint in Stripe</div>
+              <div class="step-desc">
+                A webhook is how Stripe tells your app "the payment went through." Here's how to register it:
+                <div class="callout callout-warn" style="margin-top:10px;margin-bottom:10px;">
+                  <strong>Important:</strong> Webhooks need a real public URL — Stripe can't reach <code>localhost</code>. Push your app to Vercel first (even a test deploy is fine), then use that URL here.
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">1</span>
+                    <div>In the Stripe dashboard, click <strong>Developers</strong> in the top-right corner (it looks like a wrench icon). In the left panel that opens, click <strong>Webhooks</strong>.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">2</span>
+                    <div>Click <strong>+ Add destination</strong>, then choose <strong>Webhook endpoint</strong>.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">3</span>
+                    <div>In the <strong>Endpoint URL</strong> field, paste your Vercel URL followed by <code>/api/webhook</code>. Example: <code>https://your-app.vercel.app/api/webhook</code></div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">4</span>
+                    <div>Under <strong>Select events</strong>, search for and check these three events:<br>
+                      <code>checkout.session.completed</code><br>
+                      <code>customer.subscription.deleted</code><br>
+                      <code>invoice.payment_failed</code>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">5</span>
+                    <div>Click <strong>Add destination</strong> to save. On the next screen you'll see your new webhook listed. Click into it and look for <strong>Signing secret</strong> — click <strong>Reveal</strong>. It starts with <code>whsec_</code>. Copy it.</div>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-muted);line-height:1.6;">
+                    <span style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--p-color);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;">6</span>
+                    <div>In your Vercel project → <strong>Settings → Environment Variables</strong>, add a new variable named <code>STRIPE_WEBHOOK_SECRET</code> and paste the <code>whsec_</code> value. Redeploy for it to take effect.</div>
+                  </div>
+                </div>
+              </div>
+            </div></div>
           </div>
         </div>
       </div>
@@ -2025,10 +2143,28 @@ eas submit --platform android</span></span></div></div></div>
   }
   const session = await getSessionWithRetry();
   if (!session) { window.location.href = 'login.html'; return; }
+
   // Sync any existing localStorage completions to Supabase on load
   syncProfileToSupabase();
+
+  // Fetch profile (role + plan)
+  const { data: myProfile } = await supabaseClient
+    .from('profiles')
+    .select('role, plan')
+    .eq('id', session.user.id)
+    .single();
+
+  // Store user info globally for checkout
+  window._userId = session.user.id;
+  window._userEmail = session.user.email;
+  window._userPlan = (myProfile && myProfile.plan) || 'free';
+
+  // Lock p7 for free users
+  if (window._userPlan !== 'paid') {
+    lockP7();
+  }
+
   // Inject Admin tab if admin
-  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
   if (myProfile && myProfile.role === 'admin') {
     var tabs = document.querySelector('.page-tabs');
     var adminTab = document.createElement('a');
@@ -2038,11 +2174,108 @@ eas submit --platform android</span></span></div></div></div>
     adminTab.style.color = 'var(--gold)';
     tabs.appendChild(adminTab);
   }
+
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';
   });
+
+  // Handle payment redirect
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    showPaymentBanner('success');
+    // Poll for plan update (webhook may be slightly delayed)
+    pollForPlanUpgrade(session.user.id);
+    history.replaceState({}, '', window.location.pathname + window.location.hash);
+  } else if (params.get('payment') === 'cancelled') {
+    showPaymentBanner('cancelled');
+    history.replaceState({}, '', window.location.pathname + window.location.hash);
+  }
 })();
+
+// ── P7 LOCK / UNLOCK ──
+function lockP7() {
+  var card = document.getElementById('p7-selector-card');
+  if (!card) return;
+  card.classList.add('proj-card-locked');
+
+  var overlay = document.createElement('div');
+  overlay.className = 'proj-lock-overlay';
+  overlay.id = 'p7-lock-overlay';
+  overlay.innerHTML =
+    '<div class="proj-lock-icon">🔒</div>' +
+    '<div class="proj-lock-label">Creator Tier</div>' +
+    '<button class="proj-lock-btn" onclick="event.stopPropagation();startCheckout()">Unlock for $1/mo →</button>';
+  card.appendChild(overlay);
+}
+
+function unlockP7() {
+  var card = document.getElementById('p7-selector-card');
+  if (!card) return;
+  card.classList.remove('proj-card-locked');
+  var overlay = document.getElementById('p7-lock-overlay');
+  if (overlay) overlay.remove();
+  window._userPlan = 'paid';
+}
+
+function handleP7Click() {
+  if (window._userPlan !== 'paid') {
+    startCheckout();
+  } else {
+    showProject('p7');
+  }
+}
+
+async function startCheckout() {
+  if (!window._userId) return;
+  try {
+    var btn = document.querySelector('.proj-lock-btn');
+    if (btn) { btn.textContent = 'Redirecting…'; btn.disabled = true; }
+
+    var res = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: window._userId, user_email: window._userEmail })
+    });
+    var data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Could not start checkout: ' + (data.error || 'Unknown error'));
+      if (btn) { btn.textContent = 'Unlock for $1/mo →'; btn.disabled = false; }
+    }
+  } catch (err) {
+    alert('Checkout error: ' + err.message);
+  }
+}
+
+async function pollForPlanUpgrade(userId) {
+  for (var i = 0; i < 6; i++) {
+    await new Promise(function(r) { setTimeout(r, 2000); });
+    var { data } = await supabaseClient
+      .from('profiles')
+      .select('plan')
+      .eq('id', userId)
+      .single();
+    if (data && data.plan === 'paid') {
+      unlockP7();
+      break;
+    }
+  }
+}
+
+// ── PAYMENT BANNER ──
+function showPaymentBanner(type) {
+  var banner = document.createElement('div');
+  banner.className = 'payment-banner' + (type === 'cancelled' ? ' cancelled' : '');
+  if (type === 'success') {
+    banner.innerHTML = '<span>🎉</span><span>Payment successful! Project 7 is now unlocked.</span><span class="payment-banner-close" onclick="this.parentElement.remove()">✕</span>';
+  } else {
+    banner.innerHTML = '<span>Payment cancelled.</span><span class="payment-banner-close" onclick="this.parentElement.remove()">✕</span>';
+  }
+  document.body.appendChild(banner);
+  setTimeout(function() { if (banner.parentNode) banner.remove(); }, 6000);
+}
 
 // ── ACCORDION ──
 function toggle(header) {
@@ -2064,6 +2297,11 @@ const LABELS = {
 let currentProject = null;
 
 function showProject(id) {
+  // Block p7 for free users
+  if (id === 'p7' && window._userPlan !== 'paid') {
+    startCheckout();
+    return;
+  }
   // Hide selector, show project views
   document.getElementById('selector-view').style.display = 'none';
   document.getElementById('project-views').style.display = 'block';

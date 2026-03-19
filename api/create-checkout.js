@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
       customer_email: user_email || undefined,
       metadata: { user_id },
       subscription_data: { metadata: { user_id } },
-      success_url: `${origin}/web-apps.html?payment=success`,
+      success_url: `${origin}/web-apps.html?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/web-apps.html?payment=cancelled`
     });
 

@@ -2188,8 +2188,12 @@ eas submit --platform android</span></span></div></div></div>
   const params = new URLSearchParams(window.location.search);
   if (params.get('payment') === 'success') {
     showPaymentBanner('success');
-    // Poll for plan update (webhook may be slightly delayed)
-    pollForPlanUpgrade(session.user.id);
+    var sessionId = params.get('session_id');
+    if (sessionId) {
+      verifyAndUnlock(sessionId);
+    } else {
+      pollForPlanUpgrade(session.user.id);
+    }
     history.replaceState({}, '', window.location.pathname + window.location.hash);
   } else if (params.get('payment') === 'cancelled') {
     showPaymentBanner('cancelled');
@@ -2258,6 +2262,24 @@ async function startCheckout() {
     }
   } catch (err) {
     alert('Checkout error: ' + err.message);
+  }
+}
+
+async function verifyAndUnlock(sessionId) {
+  try {
+    var res = await fetch('/api/verify-payment?session_id=' + sessionId);
+    var data = await res.json();
+    if (data.paid) {
+      window._userPlan = 'paid';
+      unlockP7();
+      var banner = document.querySelector('.payment-banner');
+      if (banner) {
+        var msg = banner.querySelector('span:nth-child(2)');
+        if (msg) msg.textContent = 'Project 7 unlocked! Welcome to Creator tier. 🎉';
+      }
+    }
+  } catch (err) {
+    console.error('Verify payment error:', err);
   }
 }
 

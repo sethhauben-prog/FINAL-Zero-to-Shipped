@@ -78,11 +78,25 @@ body {
 .nav-btn--ghost:hover { background: var(--surface2); }
 .nav-btn--primary { background: var(--royal); color: #fff; border: 1px solid transparent; }
 .nav-btn--primary:hover { opacity: 0.88; }
+.nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: 8px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.2s; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 49; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.mobile-menu.open { display: flex; }
+.mobile-menu-link { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); text-decoration: none; padding: 16px 20px; border-bottom: 1px solid var(--border); display: block; transition: background 0.15s; }
+.mobile-menu-link:hover { background: var(--surface2); color: var(--text); }
+.mobile-menu-link.active { color: var(--royal); }
+.mobile-menu-link.primary { color: var(--royal); }
+.mobile-menu-divider { height: 1px; background: var(--border); }
+.mobile-menu-actions { display: flex; gap: 10px; padding: 16px 20px; }
+.mobile-menu-actions .nav-btn { flex: 1; text-align: center; }
 @media (max-width: 700px) {
-  .site-nav { padding: 0 16px; }
+  .site-nav { padding: 0 16px; position: relative; }
   .page-tabs { display: none; }
-  .nav-btn--ghost { display: none; }
-  .nav-btn { padding: 8px 16px; font-size: 12px; }
+  .nav-actions { display: none; }
+  .nav-hamburger { display: flex; }
 }
 
 /* HERO */
@@ -407,7 +421,19 @@ footer .ft {
       <a href="signup.html" class="nav-btn nav-btn--primary">Sign Up</a>
     </div>
   </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="project-library.html" class="mobile-menu-link">Project Library</a>
+  <a href="testimonials.html" class="mobile-menu-link">Testimonials</a>
+  <a href="pricing.html" class="mobile-menu-link">Pricing</a>
+  <div class="mobile-menu-actions">
+    <a href="login.html" class="nav-btn nav-btn--ghost">Log In</a>
+    <a href="signup.html" class="nav-btn nav-btn--primary">Sign Up Free</a>
+  </div>
+</div>
 
 <section class="hero">
   <div class="eyebrow">✦ 100% Project-Based Learning ✦</div>
@@ -537,6 +563,22 @@ footer .ft {
   </div>
 </footer>
 
+<script>
+function toggleMobileMenu() {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }
+});
+</script>
 <script>
 (function() {
   const wrap = document.querySelector('.rocket-wrap');

@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
     const scrapeJina = async (u) => {
       try {
         const r = await fetch(`https://r.jina.ai/${u}`, {
-          headers: { 'Accept': 'text/plain', 'X-Timeout': '12' }
+          headers: { 'Accept': 'text/plain', 'X-Timeout': '8' }
         });
         const t = await r.text();
         return t.length > 200 ? t : null;
@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
 
     // 2. Discover internal links and scrape up to 10 sub-pages in parallel
     const internalLinks = extractInternalLinks(homeContent, base);
-    const toScrape = internalLinks.slice(0, 10);
+    const toScrape = internalLinks.slice(0, 5);
     const subContents = await Promise.all(toScrape.map(u => scrapeJina(u)));
 
     // 3. Build combined content — 1500 chars per page to stay within token budget

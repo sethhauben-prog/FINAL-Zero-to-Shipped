@@ -1,11 +1,6 @@
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 
-// Disable body parsing so we get the raw bytes for signature verification
-module.exports.config = {
-  api: { bodyParser: false }
-};
-
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -15,7 +10,7 @@ function getRawBody(req) {
   });
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -82,4 +77,12 @@ module.exports = async function handler(req, res) {
   }
 
   res.status(200).json({ received: true });
+}
+
+// Config must be set on the function BEFORE exporting — setting it on
+// module.exports first and then overwriting module.exports loses the config.
+handler.config = {
+  api: { bodyParser: false }
 };
+
+module.exports = handler;

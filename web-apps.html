@@ -2262,7 +2262,7 @@ async function startCheckout() {
 }
 
 async function pollForPlanUpgrade(userId) {
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < 8; i++) {
     await new Promise(function(r) { setTimeout(r, 2000); });
     var { data } = await supabaseClient
       .from('profiles')
@@ -2271,6 +2271,12 @@ async function pollForPlanUpgrade(userId) {
       .single();
     if (data && data.plan === 'paid') {
       unlockP7();
+      // Update the banner text to confirm
+      var banner = document.querySelector('.payment-banner');
+      if (banner) {
+        var msg = banner.querySelector('span:nth-child(2)');
+        if (msg) msg.textContent = 'Project 7 unlocked! Welcome to Creator tier.';
+      }
       break;
     }
   }
@@ -2281,7 +2287,7 @@ function showPaymentBanner(type) {
   var banner = document.createElement('div');
   banner.className = 'payment-banner' + (type === 'cancelled' ? ' cancelled' : '');
   if (type === 'success') {
-    banner.innerHTML = '<span>🎉</span><span>Payment successful! Project 7 is now unlocked.</span><span class="payment-banner-close" onclick="this.parentElement.remove()">✕</span>';
+    banner.innerHTML = '<span>🎉</span><span>Payment successful! Unlocking Project 7…</span><span class="payment-banner-close" onclick="this.parentElement.remove()">✕</span>';
   } else {
     banner.innerHTML = '<span>Payment cancelled.</span><span class="payment-banner-close" onclick="this.parentElement.remove()">✕</span>';
   }

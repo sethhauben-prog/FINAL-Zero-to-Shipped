@@ -2268,23 +2268,28 @@ async function startCheckout() {
 async function verifyAndUnlock(sessionId) {
   try {
     var res = await fetch('/api/verify-payment?session_id=' + sessionId);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
     var data = await res.json();
+
     if (data.paid) {
+      // Update plan directly from client using user's own auth session (RLS allows this)
+      await supabaseClient
+        .from('profiles')
+        .update({ plan: 'paid' })
+        .eq('id', window._userId);
+
       window._userPlan = 'paid';
       unlockP7();
+
       var banner = document.querySelector('.payment-banner');
       if (banner) {
         var msg = banner.querySelector('span:nth-child(2)');
         if (msg) msg.textContent = 'Project 7 unlocked! Welcome to Creator tier. 🎉';
       }
     } else {
-      // Not confirmed yet — fall back to polling
       pollForPlanUpgrade(window._userId);
     }
   } catch (err) {
     console.error('Verify payment error:', err);
-    // Fall back to polling on any error
     if (window._userId) pollForPlanUpgrade(window._userId);
   }
 }

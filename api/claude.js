@@ -54,16 +54,16 @@ module.exports = async function handler(req, res) {
     const toScrape = internalLinks.slice(0, 10);
     const subContents = await Promise.all(toScrape.map(u => scrapeJina(u)));
 
-    // 3. Build combined content — 2500 chars per page to stay within token budget
-    const pageSections = [`## ${url} (homepage)\n${homeContent.slice(0, 2500)}`];
+    // 3. Build combined content — 1500 chars per page to stay within token budget
+    const pageSections = [`## ${url} (homepage)\n${homeContent.slice(0, 1500)}`];
     toScrape.forEach((u, i) => {
       if (subContents[i]) {
         const path = new URL(u).pathname;
-        pageSections.push(`## ${path}\n${subContents[i].slice(0, 2500)}`);
+        pageSections.push(`## ${path}\n${subContents[i].slice(0, 1500)}`);
       }
     });
 
-    const combinedContent = pageSections.join('\n\n').slice(0, 20000);
+    const combinedContent = pageSections.join('\n\n').slice(0, 12000);
 
     const scrapedUrls = toScrape.filter((u, i) => subContents[i]);
     const allPageUrls = [url, ...scrapedUrls];
@@ -145,12 +145,19 @@ Rules:
       })
     });
 
-    const claudeData = await claudeRes.json();
-    if (claudeData.error) throw new Error(claudeData.error.message);
+    const rawText = await claudeRes.text();
+    let claudeData;
+    try {
+      claudeData = JSON.parse(rawText);
+    } catch {
+      console.error('Claude raw response:', rawText.slice(0, 500));
+      throw new Error('Claude API error: ' + rawText.slice(0, 200));
+    }
+    if (claudeData.error) throw new Error(claudeData.error.message || JSON.stringify(claudeData.error));
 
     const text = claudeData.content?.[0]?.text || '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Could not parse audit response');
+    if (!jsonMatch) throw new Error('Could not parse audit response. Raw: ' + text.slice(0, 200));
 
     const audit = JSON.parse(jsonMatch[0]);
     // Include page count so the UI can show it

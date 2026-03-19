@@ -49,6 +49,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
 .page-tab:hover { color: var(--text); background: var(--surface2); border-bottom-color: var(--border); }
 .page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
+@media (max-width: 700px) {
+  .site-nav { padding: 0 16px; }
+  .page-tabs { display: none; }
+  .nav-btn { padding: 8px 16px; font-size: 12px; }
+}
 
 /* HERO */
 .page-hero {

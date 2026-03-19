@@ -78,6 +78,12 @@ body {
 .nav-btn--ghost:hover { background: var(--surface2); }
 .nav-btn--primary { background: var(--royal); color: #fff; border: 1px solid transparent; }
 .nav-btn--primary:hover { opacity: 0.88; }
+@media (max-width: 700px) {
+  .site-nav { padding: 0 16px; }
+  .page-tabs { display: none; }
+  .nav-btn--ghost { display: none; }
+  .nav-btn { padding: 8px 16px; font-size: 12px; }
+}
 
 /* HERO */
 .hero {

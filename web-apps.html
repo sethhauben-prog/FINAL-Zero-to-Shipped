@@ -3032,6 +3032,7 @@ function initCompletionCards() {
 
 // Inject completion section at the bottom of a project view
 function initProjectCompletion(projectId) {
+  if (projectId === 'p8') return;
   const section = document.getElementById(projectId);
   if (!section || section.querySelector('.proj-complete-section')) return;
   const data = getCompletion()[projectId] || {};

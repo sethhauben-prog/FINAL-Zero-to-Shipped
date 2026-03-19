@@ -65,10 +65,16 @@ module.exports = async function handler(req, res) {
 
     const combinedContent = pageSections.join('\n\n').slice(0, 20000);
 
+    const scrapedPaths = pageSections.map(s => s.split('\n')[0].replace('## ', ''));
+
     const prompt = `You are an expert web product auditor. Analyze this website and provide a thorough, honest audit.
 
 Website URL: ${url}
-Pages scraped: ${pageSections.length} (homepage + ${pageSections.length - 1} sub-pages)
+
+Pages successfully scraped and included below:
+${scrapedPaths.map(p => '- ' + p).join('\n')}
+
+IMPORTANT: Base your audit ONLY on what you actually observe in the content below. Do NOT flag something as missing if it exists in any of the scraped pages. For example, if a pricing page was scraped and contains pricing tiers, do not say pricing is missing. If privacy policy and terms pages are present, do not say legal pages are missing.
 
 Website content:
 ${combinedContent}

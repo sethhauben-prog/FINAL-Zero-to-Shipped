@@ -712,6 +712,13 @@ ul.plain-list li:last-child { border-bottom: none; }
 @keyframes audit-spin { to { transform: rotate(360deg); } }
 .audit-loading p { font-size: 13px; color: var(--text-muted); }
 .audit-results { margin-top: 24px; }
+.audit-action-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 20px; flex-wrap: wrap; }
+.audit-audited-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.audit-action-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 6px; cursor: pointer; border: 1.5px solid; transition: background 0.15s, opacity 0.15s; white-space: nowrap; }
+.audit-action-btn--refresh { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.3); color: #7c3aed; }
+.audit-action-btn--refresh:hover { background: rgba(124,58,237,0.15); }
+.audit-action-btn--clear { background: transparent; border-color: var(--border); color: var(--text-muted); }
+.audit-action-btn--clear:hover { background: var(--surface); }
 .audit-score-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -2405,7 +2412,7 @@ eas submit --platform android</span></span></div></div></div>
         <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Enter your project URL below and Claude will audit your site across six dimensions — design, content, trust, SEO, conversion, and performance — then give you a prioritised list of exactly what to fix before you start marketing.</p>
 
         <div class="audit-wrap">
-          <div class="audit-input-row">
+          <div class="audit-input-row" id="audit-input-row">
             <input type="url" id="audit-url" class="audit-url-input" placeholder="https://your-project.vercel.app" />
             <button class="audit-run-btn" id="audit-run-btn" onclick="runAudit()">Run Audit →</button>
           </div>
@@ -2416,6 +2423,15 @@ eas submit --platform android</span></span></div></div></div>
           </div>
 
           <div id="audit-results" class="audit-results" style="display:none;">
+            <!-- Action bar -->
+            <div class="audit-action-bar">
+              <span class="audit-audited-url" id="ar-audited-url"></span>
+              <div style="display:flex;gap:8px;flex-shrink:0;">
+                <button class="audit-action-btn audit-action-btn--refresh" onclick="runAudit()">↻ Refresh Score</button>
+                <button class="audit-action-btn audit-action-btn--clear" onclick="clearAudit()">✕ New URL</button>
+              </div>
+            </div>
+
             <!-- Score card -->
             <div class="audit-score-card">
               <div class="audit-score-big">
@@ -2775,6 +2791,14 @@ function showAuditTab(tab, btn) {
   if (btn) btn.classList.add('active');
 }
 
+function clearAudit() {
+  document.getElementById('audit-results').style.display = 'none';
+  document.getElementById('audit-error').style.display = 'none';
+  document.getElementById('audit-url').value = '';
+  document.getElementById('audit-input-row').style.display = 'flex';
+  document.getElementById('audit-url').focus();
+}
+
 async function runAudit() {
   var url = document.getElementById('audit-url').value.trim();
   if (!url) { alert('Please enter a URL to audit.'); return; }
@@ -2783,6 +2807,7 @@ async function runAudit() {
   var btn = document.getElementById('audit-run-btn');
   btn.disabled = true;
   btn.textContent = 'Auditing…';
+  document.getElementById('audit-input-row').style.display = 'none';
   document.getElementById('audit-loading').style.display = 'block';
   document.getElementById('audit-results').style.display = 'none';
   document.getElementById('audit-error').style.display = 'none';
@@ -2842,6 +2867,7 @@ async function runAudit() {
       return '<div class="audit-checklist-item" id="cl-' + i + '" onclick="toggleChecklist(this)"><div class="audit-check-box"></div><div><div class="audit-item-title" style="font-size:13px;">' + item.item + ' ' + priorityPill(item.priority) + '</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.6;">' + item.description + '</div></div></div>';
     }).join('');
 
+    document.getElementById('ar-audited-url').textContent = url;
     document.getElementById('audit-results').style.display = 'block';
     showAuditTab('overview', document.querySelector('.audit-tab-btn'));
 
@@ -2849,6 +2875,7 @@ async function runAudit() {
     var errEl = document.getElementById('audit-error');
     errEl.style.display = 'block';
     errEl.textContent = 'Audit failed: ' + err.message + '. Make sure the URL is publicly accessible.';
+    document.getElementById('audit-input-row').style.display = 'flex';
   } finally {
     document.getElementById('audit-loading').style.display = 'none';
     btn.disabled = false;

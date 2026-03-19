@@ -327,7 +327,9 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script>
-// ── AUTH GUARD ──
+// ── AUTH GUARD + LOAD ──
+var currentUserId = null;
+
 (async function () {
   async function getSessionWithRetry() {
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -341,7 +343,9 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
   }
   const session = await getSessionWithRetry();
   if (!session) { window.location.href = 'login.html'; return; }
-  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+  currentUserId = session.user.id;
+
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role, my_projects').eq('id', currentUserId).single();
   if (myProfile && myProfile.role === 'admin') {
     var tabs = document.querySelector('.page-tabs');
     var adminTab = document.createElement('a');
@@ -351,11 +355,23 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     adminTab.style.color = 'var(--gold)';
     tabs.appendChild(adminTab);
   }
+
+  // Merge cloud + local, cloud wins on conflicts, local-only items get pushed up
+  var cloud = (myProfile && Array.isArray(myProfile.my_projects)) ? myProfile.my_projects : [];
+  var local = JSON.parse(localStorage.getItem('zts_my_projects') || '[]');
+  var cloudIds = new Set(cloud.map(function(p) { return p.id; }));
+  var merged = cloud.slice();
+  local.forEach(function(p) { if (!cloudIds.has(p.id)) merged.push(p); });
+  localStorage.setItem('zts_my_projects', JSON.stringify(merged));
+  if (merged.length > cloud.length) {
+    await supabaseClient.from('profiles').update({ my_projects: merged }).eq('id', currentUserId);
+  }
+  render();
+
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';
   });
-
   document.getElementById('mobile-logout-btn').addEventListener('click', async function () {
     await supabaseClient.auth.signOut();
     window.location.href = 'login.html';
@@ -387,6 +403,9 @@ function getProjects() {
 }
 function saveProjects(list) {
   localStorage.setItem('zts_my_projects', JSON.stringify(list));
+  if (currentUserId) {
+    supabaseClient.from('profiles').update({ my_projects: list }).eq('id', currentUserId).then(function(){});
+  }
 }
 
 function formatDate(iso) {
@@ -586,8 +605,6 @@ document.getElementById('modal-save').addEventListener('click', async function()
   closeModal();
   render();
 });
-
-render();
 </script>
 
 </body>

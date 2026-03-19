@@ -1,6 +1,3 @@
-const Stripe = require('stripe');
-const { createClient } = require('@supabase/supabase-js');
-
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -9,41 +6,40 @@ module.exports = async function handler(req, res) {
   const { session_id } = req.query;
   if (!session_id) return res.status(400).json({ error: 'Missing session_id' });
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
-
   try {
-    const session = await stripe.checkout.sessions.retrieve(session_id);
+    // Retrieve session from Stripe REST API — no npm package needed
+    const stripeRes = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions/${session_id}`,
+      { headers: { 'Authorization': `Bearer ${process.env.STRIPE_SECRET_KEY}` } }
+    );
+    const session = await stripeRes.json();
 
-    if (session.payment_status === 'paid' || session.status === 'complete') {
-      const user_id = session.metadata?.user_id;
-      const customer_id = session.customer;
+    if (session.error) throw new Error(session.error.message);
 
-      if (user_id) {
-        // Update plan — do this first, separately, so it always succeeds
-        await supabase
-          .from('profiles')
-          .update({ plan: 'paid' })
-          .eq('id', user_id);
+    const isPaid = session.payment_status === 'paid' || session.status === 'complete';
+    if (!isPaid) return res.status(200).json({ paid: false });
 
-        // Best-effort: store stripe customer id (column may not exist yet)
-        if (customer_id) {
-          await supabase
-            .from('profiles')
-            .update({ stripe_customer_id: customer_id })
-            .eq('id', user_id);
+    const user_id = session.metadata?.user_id;
+    if (user_id) {
+      // Update plan via Supabase REST API — no npm package needed
+      await fetch(
+        `${process.env.SUPABASE_URL}/rest/v1/profiles?id=eq.${user_id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': process.env.SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({ plan: 'paid' }),
         }
-      }
-
-      return res.status(200).json({ paid: true });
+      );
     }
 
-    return res.status(200).json({ paid: false });
+    return res.status(200).json({ paid: true });
   } catch (err) {
-    console.error('Verify payment error:', err);
+    console.error('Verify payment error:', err.message);
     return res.status(500).json({ error: err.message });
   }
 };

@@ -1,5 +1,4 @@
-const Stripe = require('stripe');
-const { createClient } = require('@supabase/supabase-js');
+// Webhook handler using no npm packages — pure Node.js + native fetch
 
 function getRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -10,79 +9,76 @@ function getRawBody(req) {
   });
 }
 
+// Minimal Stripe webhook signature verification without the npm package
+async function verifyStripeSignature(rawBody, sigHeader, secret) {
+  const crypto = require('crypto');
+  const parts = sigHeader.split(',').reduce((acc, part) => {
+    const [k, v] = part.split('=');
+    acc[k] = v;
+    return acc;
+  }, {});
+
+  const timestamp = parts['t'];
+  const signature = parts['v1'];
+  if (!timestamp || !signature) throw new Error('Missing signature parts');
+
+  const payload = `${timestamp}.${rawBody.toString('utf8')}`;
+  const expected = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+
+  if (expected !== signature) throw new Error('Signature mismatch');
+
+  // Reject if older than 5 minutes
+  if (Math.abs(Date.now() / 1000 - parseInt(timestamp)) > 300) {
+    throw new Error('Timestamp too old');
+  }
+}
+
+async function updateSupabase(path, body) {
+  return fetch(`${process.env.SUPABASE_URL}/rest/v1/${path}`, {
+    method: 'PATCH',
+    headers: {
+      'apikey': process.env.SUPABASE_SERVICE_ROLE_KEY,
+      'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify(body),
+  });
+}
+
 async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
-
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  );
 
   const rawBody = await getRawBody(req);
   const sig = req.headers['stripe-signature'];
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    await verifyStripeSignature(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = JSON.parse(rawBody.toString('utf8'));
   } catch (err) {
-    console.error('Webhook signature error:', err.message);
+    console.error('Webhook error:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // ── Payment successful → upgrade user to paid
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
     const user_id = session.metadata?.user_id;
-    const customer_id = session.customer;
-
     if (user_id) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ plan: 'paid', stripe_customer_id: customer_id })
-        .eq('id', user_id);
-
-      if (error) console.error('Supabase update error:', error);
+      await updateSupabase(`profiles?id=eq.${user_id}`, { plan: 'paid' });
     }
   }
 
-  // ── Subscription cancelled → downgrade to free
-  if (event.type === 'customer.subscription.deleted') {
-    const sub = event.data.object;
-    const customer_id = sub.customer;
-
+  if (event.type === 'customer.subscription.deleted' || event.type === 'invoice.payment_failed') {
+    const obj = event.data.object;
+    const customer_id = obj.customer;
     if (customer_id) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ plan: 'free' })
-        .eq('stripe_customer_id', customer_id);
-
-      if (error) console.error('Supabase update error:', error);
+      await updateSupabase(`profiles?stripe_customer_id=eq.${customer_id}`, { plan: 'free' });
     }
   }
 
-  // ── Payment failed → downgrade to free
-  if (event.type === 'invoice.payment_failed') {
-    const invoice = event.data.object;
-    const customer_id = invoice.customer;
-
-    if (customer_id) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ plan: 'free' })
-        .eq('stripe_customer_id', customer_id);
-
-      if (error) console.error('Supabase update error:', error);
-    }
-  }
-
-  res.status(200).json({ received: true });
+  return res.status(200).json({ received: true });
 }
 
-// Config must be set on the function BEFORE exporting — setting it on
-// module.exports first and then overwriting module.exports loses the config.
-handler.config = {
-  api: { bodyParser: false }
-};
-
+handler.config = { api: { bodyParser: false } };
 module.exports = handler;

@@ -182,7 +182,11 @@ body {
   cursor: pointer;
   user-select: none;
 }
-@media (max-width: 640px) { .orient-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) {
+  .orient-row { grid-template-columns: 1fr; }
+  .orient-item { border-left: none !important; border-top: 1px solid var(--border); padding: 12px 0 12px !important; }
+  .orient-item:first-child { border-top: none; }
+}
 .orient-item {
   padding: 0 24px 16px;
   border-left: 1px solid var(--border);

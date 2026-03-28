@@ -286,11 +286,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 /* ─── PROJECT VIEW ─── */
 #project-views { display: none; }
 /* UNSTUCK CALLOUT */
-.unstuck-callout { display: flex; align-items: flex-start; gap: 12px; background: #eef3fd; border: 1px solid rgba(26,61,181,0.2); border-left: 3px solid var(--royal); border-radius: 4px; padding: 14px 18px; margin: 0 0 20px 0; }
-.unstuck-callout-text { flex: 1; font-size: 13px; color: var(--text); line-height: 1.8; }
+.unstuck-callout { background: #eef3fd; border: 1px solid rgba(26,61,181,0.2); border-left: 3px solid var(--royal); border-radius: 4px; padding: 14px 18px; margin: 0 0 20px 0; }
+.unstuck-callout-text { font-size: 13px; color: var(--text); line-height: 1.8; }
 .unstuck-callout-text strong { font-weight: 700; }
-.unstuck-callout-dismiss { background: none; border: none; font-size: 15px; color: var(--text-dim); cursor: pointer; padding: 0; line-height: 1; opacity: 0.6; flex-shrink: 0; margin-top: 2px; }
-.unstuck-callout-dismiss:hover { opacity: 1; }
 
 .project-nav-bar {
   background: var(--surface);
@@ -1476,7 +1474,6 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
 
   <div class="unstuck-callout" id="unstuck-callout" style="display:none;">
     <div class="unstuck-callout-text">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
-    <button class="unstuck-callout-dismiss" onclick="dismissUnstuckBar()" title="Dismiss">✕</button>
   </div>
 
   <main class="container">
@@ -2984,14 +2981,7 @@ function showProject(id) {
   initProjectCompletion(id);
 }
 
-function dismissUnstuckBar() {
-  var el = document.getElementById('unstuck-callout');
-  if (el) el.style.display = 'none';
-  localStorage.setItem('zts_unstuck_dismissed', '1');
-}
-
 function placeUnstuckCallout(projectId) {
-  if (localStorage.getItem('zts_unstuck_dismissed') === '1') return;
   var el = document.getElementById('unstuck-callout');
   if (!el) return;
   var section = document.getElementById(projectId);

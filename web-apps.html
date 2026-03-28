@@ -904,6 +904,55 @@ ul.plain-list li:last-child { border-bottom: none; }
   padding: 28px 32px;
   background: var(--surface);
 }
+.achievement-badge-wrap {
+  display: none;
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #1a3db5 0%, #142e8a 100%);
+  border-radius: 8px;
+  color: #fff;
+}
+.achievement-badge-wrap.visible { display: block; }
+.achievement-badge-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.achievement-badge-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.achievement-badge-title em { font-style: italic; color: var(--gold); }
+.achievement-badge-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 16px;
+}
+.achievement-share-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.achievement-btn {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.achievement-btn:hover { opacity: 0.85; }
+.achievement-btn--download { background: var(--gold); color: #fff; }
+.achievement-btn--copy { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.achievement-btn--copied { background: #1a7a4a; color: #fff; }
 .proj-complete-title {
   font-family: 'Playfair Display', serif;
   font-size: 22px;
@@ -3144,6 +3193,16 @@ function initProjectCompletion(projectId) {
       </div>
     </div>
 
+    <div class="achievement-badge-wrap${data.done ? ' visible' : ''}" id="comp-badge-${projectId}">
+      <div class="achievement-badge-eyebrow">✦ Project Shipped</div>
+      <div class="achievement-badge-title">I just shipped <em>Project ${idx + 1}</em> with GoLive Labs</div>
+      <div class="achievement-badge-sub">goliveailabs.com · Web Apps Track · ${PROJECT_META[projectId] ? PROJECT_META[projectId].level : ''}</div>
+      <div class="achievement-share-btns">
+        <button class="achievement-btn achievement-btn--download" onclick="downloadBadge('${projectId}')">⬇ Download Badge</button>
+        <button class="achievement-btn achievement-btn--copy" id="comp-copy-btn-${projectId}" onclick="copyLinkedInPost('${projectId}')">Copy LinkedIn Post</button>
+      </div>
+    </div>
+
     <div class="complete-nav">
       <button class="complete-nav-btn complete-nav-btn--ghost" onclick="showSelector()">← Back to Projects</button>
       <button class="complete-nav-btn complete-nav-btn--primary${isLast ? ' hidden' : ''}" id="comp-next-${projectId}">Next Project →</button>
@@ -3178,6 +3237,7 @@ function initProjectCompletion(projectId) {
     urlWrap.classList.toggle('visible', isDone);
     starsWrap.classList.toggle('visible', isDone);
     libraryRow.classList.toggle('visible', isDone);
+    el.querySelector('#comp-badge-' + projectId).classList.toggle('visible', isDone);
     if (isDone) {
       const shown = JSON.parse(localStorage.getItem('zts_confetti') || '{}');
       if (!shown[projectId]) {
@@ -3216,6 +3276,92 @@ function initProjectCompletion(projectId) {
       nextProject();
     });
   }
+}
+
+// ── ACHIEVEMENT BADGE ──
+function downloadBadge(projectId) {
+  const meta = PROJECT_META[projectId] || {};
+  const idx = ORDER.indexOf(projectId);
+  const canvas = document.createElement('canvas');
+  canvas.width = 800; canvas.height = 420;
+  const ctx = canvas.getContext('2d');
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 800, 420);
+  grad.addColorStop(0, '#1a3db5');
+  grad.addColorStop(1, '#142e8a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 800, 420);
+
+  // Gold accent bar
+  ctx.fillStyle = '#c9922a';
+  ctx.fillRect(0, 0, 800, 4);
+
+  // Eyebrow
+  ctx.font = '500 13px monospace';
+  ctx.fillStyle = '#c9922a';
+  ctx.letterSpacing = '3px';
+  ctx.fillText('✦  PROJECT SHIPPED  ✦', 56, 72);
+
+  // Main title
+  ctx.font = 'bold 42px serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('I just shipped Project ' + (idx + 1), 56, 140);
+
+  // Subtitle
+  ctx.font = 'italic bold 42px serif';
+  ctx.fillStyle = '#c9922a';
+  ctx.fillText('with GoLive Labs', 56, 195);
+
+  // Project name
+  ctx.font = '500 18px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText(meta.title || '', 56, 250);
+
+  // Level badge background
+  ctx.fillStyle = 'rgba(201,146,42,0.2)';
+  ctx.beginPath();
+  ctx.roundRect(56, 272, 120, 28, 4);
+  ctx.fill();
+  ctx.font = '700 11px monospace';
+  ctx.fillStyle = '#c9922a';
+  ctx.fillText((meta.level || '').toUpperCase(), 66, 291);
+
+  // Divider
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fillRect(56, 330, 688, 1);
+
+  // Footer
+  ctx.font = '500 14px monospace';
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('goliveailabs.com  ·  Web Apps Track', 56, 370);
+
+  // Rocket
+  ctx.font = '52px serif';
+  ctx.fillText('🚀', 700, 200);
+
+  const link = document.createElement('a');
+  link.download = 'golive-labs-project-' + (idx + 1) + '-badge.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function copyLinkedInPost(projectId) {
+  const meta = PROJECT_META[projectId] || {};
+  const idx = ORDER.indexOf(projectId);
+  const data = getCompletion()[projectId] || {};
+  const urlLine = data.url ? '\n\nCheck it out: ' + data.url : '';
+  const text = '🚀 Just shipped Project ' + (idx + 1) + ' — "' + (meta.title || '') + '" — with GoLive Labs!\n\nBuilding real products with AI, one project at a time.' + urlLine + '\n\n#GoLiveLabs #BuildWithAI #Shipped #AITools';
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById('comp-copy-btn-' + projectId);
+    if (!btn) return;
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('achievement-btn--copied');
+    setTimeout(function() {
+      btn.textContent = 'Copy LinkedIn Post';
+      btn.classList.remove('achievement-btn--copied');
+    }, 2500);
+  });
 }
 
 // Keep selector card in sync when project view checkbox is toggled

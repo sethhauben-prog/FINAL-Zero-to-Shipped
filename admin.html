@@ -146,6 +146,19 @@ tr.deactivated td { opacity: 0.45; }
 .dist-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); width: 16px; }
 .review-empty { font-size: 12px; color: var(--text-dim); font-style: italic; }
 
+/* PROJECT LIBRARY POSTS */
+.lib-post-list { display: flex; flex-direction: column; gap: 10px; }
+.lib-post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; }
+.lib-post-info { flex: 1; min-width: 0; }
+.lib-post-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.lib-post-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
+.lib-post-url { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--royal); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 320px; }
+.lib-post-url:hover { text-decoration: underline; }
+.lib-post-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+.lib-delete-btn { font-family: 'Manrope', sans-serif; font-size: 11px; font-weight: 700; padding: 6px 14px; border-radius: 4px; border: 1px solid rgba(192,57,43,0.3); background: transparent; color: var(--red); cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
+.lib-delete-btn:hover { background: rgba(192,57,43,0.08); }
+.lib-empty { font-size: 13px; color: var(--text-dim); font-style: italic; padding: 24px 0; text-align: center; }
+
 /* PAYWALL CONFIG */
 .paywall-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; }
 .paywall-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
@@ -265,6 +278,12 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     <div class="loading-msg" style="grid-column:1/-1;">Loading reviews…</div>
   </div>
 
+  <!-- PROJECT LIBRARY POSTS -->
+  <div class="section-heading">Project Library Posts</div>
+  <div class="lib-post-list" id="lib-post-list">
+    <div class="loading-msg">Loading posts…</div>
+  </div>
+
   <!-- PAYWALL CONFIG -->
   <div class="section-heading">Paywall Configuration</div>
   <div class="paywall-card">
@@ -321,6 +340,71 @@ const PAYWALL_PROJECTS = [
   { id: 'p8', level: 'Expert' }
 ];
 let currentLockedProjects = ['p3','p4','p5','p6','p7','p8'];
+
+// ── PROJECT LIBRARY ──
+let allLibPosts = [];
+
+function fmtDateShort(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function renderLibPosts() {
+  const list = document.getElementById('lib-post-list');
+  if (allLibPosts.length === 0) {
+    list.innerHTML = '<div class="lib-empty">No posts in the project library yet.</div>';
+    return;
+  }
+  list.innerHTML = allLibPosts.map(function(p) {
+    const projName = PROJECT_META[p.project_id] || p.project_id || 'Project';
+    const email = p.profiles ? p.profiles.email : (p.user_id || '');
+    const desc = p.description ? '<div class="lib-post-desc">' + p.description.substring(0, 120) + (p.description.length > 120 ? '…' : '') + '</div>' : '';
+    return '<div class="lib-post-card" id="lib-post-' + p.id + '">' +
+      '<div class="lib-post-info">' +
+        '<div class="lib-post-title">' + projName + '</div>' +
+        '<div class="lib-post-meta">' + email + ' · Shared ' + fmtDateShort(p.shared_at) + '</div>' +
+        (p.url ? '<a class="lib-post-url" href="' + p.url + '" target="_blank" rel="noopener">' + p.url + '</a>' : '') +
+        desc +
+      '</div>' +
+      '<button class="lib-delete-btn" data-post-id="' + p.id + '">Delete</button>' +
+    '</div>';
+  }).join('');
+
+  list.addEventListener('click', async function(e) {
+    const btn = e.target.closest('.lib-delete-btn');
+    if (!btn) return;
+    if (!confirm('Delete this post from the public project library?')) return;
+    const postId = btn.dataset.postId;
+    btn.textContent = 'Deleting…';
+    btn.disabled = true;
+    const { error } = await supabaseClient.from('shared_projects').delete().eq('id', postId);
+    if (error) {
+      showToast('Error: ' + error.message);
+      btn.textContent = 'Delete';
+      btn.disabled = false;
+    } else {
+      document.getElementById('lib-post-' + postId).remove();
+      allLibPosts = allLibPosts.filter(function(p) { return p.id !== postId; });
+      if (allLibPosts.length === 0) {
+        list.innerHTML = '<div class="lib-empty">No posts in the project library yet.</div>';
+      }
+      showToast('Post deleted.');
+    }
+  });
+}
+
+async function loadLibPosts() {
+  const { data, error } = await supabaseClient
+    .from('shared_projects')
+    .select('*, profiles(email)')
+    .order('shared_at', { ascending: false });
+  if (error) {
+    document.getElementById('lib-post-list').innerHTML = '<div class="lib-empty">Failed to load posts.</div>';
+    return;
+  }
+  allLibPosts = data || [];
+  renderLibPosts();
+}
 
 function renderPaywallConfig() {
   const grid = document.getElementById('paywall-grid');
@@ -663,6 +747,7 @@ document.getElementById('users-tbody').addEventListener('click', async function(
 
   applyFilterSort();
   renderReviews(users);
+  loadLibPosts();
 
   // Load paywall config
   const { data: pwRow } = await supabaseClient

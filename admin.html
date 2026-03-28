@@ -146,6 +146,24 @@ tr.deactivated td { opacity: 0.45; }
 .dist-count { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); width: 16px; }
 .review-empty { font-size: 12px; color: var(--text-dim); font-style: italic; }
 
+/* PAYWALL CONFIG */
+.paywall-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px 28px; }
+.paywall-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+.paywall-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+@media (max-width: 760px) { .paywall-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .paywall-grid { grid-template-columns: 1fr; } }
+.paywall-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: background 0.15s; user-select: none; }
+.paywall-item:hover { background: var(--surface2); }
+.paywall-item input[type="checkbox"] { margin-top: 2px; accent-color: var(--royal); width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; }
+.paywall-item-label { flex: 1; }
+.paywall-proj-id { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px; }
+.paywall-proj-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.paywall-footer { display: flex; align-items: center; gap: 14px; }
+.paywall-save-btn { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 6px; border: 1px solid var(--royal); background: var(--royal); color: #fff; cursor: pointer; transition: background 0.15s; }
+.paywall-save-btn:hover { background: var(--royal-dark); }
+.paywall-save-status { font-size: 12px; color: var(--green); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+.paywall-save-status.show { opacity: 1; }
+
 /* MODAL */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
 .modal-overlay.open { display: flex; }
@@ -247,6 +265,17 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
     <div class="loading-msg" style="grid-column:1/-1;">Loading reviews…</div>
   </div>
 
+  <!-- PAYWALL CONFIG -->
+  <div class="section-heading">Paywall Configuration</div>
+  <div class="paywall-card">
+    <p class="paywall-desc">Check the projects that require a paid plan. Paid users always get access to everything — these locks only apply to free accounts.</p>
+    <div class="paywall-grid" id="paywall-grid"></div>
+    <div class="paywall-footer">
+      <button class="paywall-save-btn" id="paywall-save-btn">Save Configuration</button>
+      <span class="paywall-save-status" id="paywall-save-status">Saved ✓</span>
+    </div>
+  </div>
+
 </section>
 
 <!-- COMPLETIONS MODAL -->
@@ -270,15 +299,72 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
 <script src="supabase-config.js"></script>
 <script>
 const PROJECT_META = {
-  p1: 'Your First Dashboard',
-  p2: 'Dashboard with Claude Code',
-  p3: 'Dashboard Creator App',
+  p1: 'Chat, Build & Ship',
+  p2: 'Build and Deploy with Claude Code',
+  p3: 'Add Logins, Database & Integrations',
   p4: 'Admin Dashboard',
   p5: 'Monetization — Stripe',
   p6: 'Mobile App',
-  p7: 'Build Your Own'
+  p7: 'Build Your Own',
+  p8: 'Launch Checklist'
 };
-const ORDER = ['p1','p2','p3','p4','p5','p6','p7'];
+const ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8'];
+
+const PAYWALL_PROJECTS = [
+  { id: 'p1', level: 'Starter' },
+  { id: 'p2', level: 'Beginner' },
+  { id: 'p3', level: 'Intermediate' },
+  { id: 'p4', level: 'Advanced' },
+  { id: 'p5', level: 'Pro' },
+  { id: 'p6', level: 'Ninja' },
+  { id: 'p7', level: 'Creator' },
+  { id: 'p8', level: 'Expert' }
+];
+let currentLockedProjects = ['p3','p4','p5','p6','p7','p8'];
+
+function renderPaywallConfig() {
+  const grid = document.getElementById('paywall-grid');
+  if (!grid) return;
+  grid.innerHTML = PAYWALL_PROJECTS.map(function(p) {
+    const checked = currentLockedProjects.includes(p.id) ? 'checked' : '';
+    return '<label class="paywall-item">' +
+      '<input type="checkbox" id="pw-' + p.id + '" ' + checked + '>' +
+      '<div class="paywall-item-label">' +
+        '<div class="paywall-proj-id">' + p.id.toUpperCase() + ' · ' + p.level + '</div>' +
+        '<div class="paywall-proj-name">' + PROJECT_META[p.id] + '</div>' +
+      '</div>' +
+    '</label>';
+  }).join('');
+}
+
+async function savePaywallConfig() {
+  const locked = PAYWALL_PROJECTS.filter(function(p) {
+    var cb = document.getElementById('pw-' + p.id);
+    return cb && cb.checked;
+  }).map(function(p) { return p.id; });
+
+  const btn = document.getElementById('paywall-save-btn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+
+  const { error } = await supabaseClient
+    .from('app_settings')
+    .upsert({ key: 'locked_projects', value: locked }, { onConflict: 'key' });
+
+  btn.textContent = 'Save Configuration';
+  btn.disabled = false;
+
+  if (error) {
+    showToast('Error saving: ' + error.message);
+  } else {
+    currentLockedProjects = locked;
+    const status = document.getElementById('paywall-save-status');
+    status.classList.add('show');
+    setTimeout(function() { status.classList.remove('show'); }, 2500);
+  }
+}
+
+document.getElementById('paywall-save-btn').addEventListener('click', savePaywallConfig);
 
 let allUsers = [];
 
@@ -577,6 +663,17 @@ document.getElementById('users-tbody').addEventListener('click', async function(
 
   applyFilterSort();
   renderReviews(users);
+
+  // Load paywall config
+  const { data: pwRow } = await supabaseClient
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'locked_projects')
+    .single();
+  if (pwRow && Array.isArray(pwRow.value)) {
+    currentLockedProjects = pwRow.value;
+  }
+  renderPaywallConfig();
 })();
 </script>
 

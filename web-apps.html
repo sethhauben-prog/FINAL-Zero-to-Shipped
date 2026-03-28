@@ -2737,9 +2737,17 @@ eas submit --platform android</span></span></div></div></div>
   window._userEmail = session.user.email;
   window._userPlan = (myProfile && myProfile.plan) || 'free';
 
-  // Lock p7 for free users
+  // Load paywall config
+  var pwData = await supabaseClient
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'locked_projects')
+    .single();
+  window._lockedProjects = (pwData.data && Array.isArray(pwData.data.value)) ? pwData.data.value : ['p3','p4','p5','p6','p7','p8'];
+
+  // Lock projects for free users
   if (window._userPlan !== 'paid') {
-    lockP7();
+    applyPaywall();
   }
 
   // Inject Admin tab if admin
@@ -2780,41 +2788,46 @@ eas submit --platform android</span></span></div></div></div>
   }
 })();
 
-// ── P7 LOCK / UNLOCK ──
-function lockP7() {
-  var card = document.getElementById('p7-selector-card');
+// ── PAYWALL LOCK / UNLOCK ──
+function applyPaywall() {
+  (window._lockedProjects || []).forEach(function(id) { lockProject(id); });
+}
+
+function lockProject(id) {
+  var card = document.querySelector('[data-pid="' + id + '"]');
   if (!card) return;
+  if (card.querySelector('.proj-lock-overlay')) return; // already locked
   card.classList.add('proj-card-locked');
 
-  // Add a small "locked" badge below the chips
   var badge = document.createElement('div');
   badge.className = 'proj-lock-badge';
-  badge.id = 'p7-lock-badge';
+  badge.id = id + '-lock-badge';
   badge.innerHTML = '🔒 Creator Tier — Locked';
   var projInfo = card.querySelector('.proj-info');
   if (projInfo) projInfo.appendChild(badge);
 
-  // Replace CTA with unlock button (flows in the card, no blur)
   var overlay = document.createElement('div');
   overlay.className = 'proj-lock-overlay';
-  overlay.id = 'p7-lock-overlay';
+  overlay.id = id + '-lock-overlay';
   overlay.innerHTML = '<button class="proj-lock-btn" onclick="event.stopPropagation();startCheckout()">🔒 Unlock for $1/mo →</button>';
   card.appendChild(overlay);
 }
 
-function unlockP7() {
-  var card = document.getElementById('p7-selector-card');
-  if (!card) return;
-  card.classList.remove('proj-card-locked');
-  var overlay = document.getElementById('p7-lock-overlay');
-  if (overlay) overlay.remove();
-  var badge = document.getElementById('p7-lock-badge');
-  if (badge) badge.remove();
+function unlockAll() {
   window._userPlan = 'paid';
+  (window._lockedProjects || []).forEach(function(id) {
+    var card = document.querySelector('[data-pid="' + id + '"]');
+    if (!card) return;
+    card.classList.remove('proj-card-locked');
+    var overlay = document.getElementById(id + '-lock-overlay');
+    if (overlay) overlay.remove();
+    var badge = document.getElementById(id + '-lock-badge');
+    if (badge) badge.remove();
+  });
 }
 
 function handleP7Click() {
-  if (window._userPlan !== 'paid') {
+  if (window._userPlan !== 'paid' && (window._lockedProjects || []).includes('p7')) {
     startCheckout();
   } else {
     showProject('p7');
@@ -2856,13 +2869,12 @@ async function verifyAndUnlock(sessionId) {
         .update({ plan: 'paid' })
         .eq('id', window._userId);
 
-      window._userPlan = 'paid';
-      unlockP7();
+      unlockAll();
 
       var banner = document.querySelector('.payment-banner');
       if (banner) {
         var msg = banner.querySelector('span:nth-child(2)');
-        if (msg) msg.textContent = 'Project 7 unlocked! Welcome to Creator tier. 🎉';
+        if (msg) msg.textContent = 'All projects unlocked! Welcome to Creator tier. 🎉';
       }
     } else {
       pollForPlanUpgrade(window._userId);
@@ -2882,12 +2894,11 @@ async function pollForPlanUpgrade(userId) {
       .eq('id', userId)
       .single();
     if (data && data.plan === 'paid') {
-      unlockP7();
-      // Update the banner text to confirm
+      unlockAll();
       var banner = document.querySelector('.payment-banner');
       if (banner) {
         var msg = banner.querySelector('span:nth-child(2)');
-        if (msg) msg.textContent = 'Project 7 unlocked! Welcome to Creator tier.';
+        if (msg) msg.textContent = 'All projects unlocked! Welcome to Creator tier.';
       }
       break;
     }
@@ -2928,8 +2939,8 @@ const LABELS = {
 let currentProject = null;
 
 function showProject(id) {
-  // Block p7 for free users
-  if (id === 'p7' && window._userPlan !== 'paid') {
+  // Block locked projects for free users
+  if (window._userPlan !== 'paid' && (window._lockedProjects || []).includes(id)) {
     startCheckout();
     return;
   }

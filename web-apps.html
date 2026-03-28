@@ -1029,20 +1029,21 @@ ul.plain-list li:last-child { border-bottom: none; }
 /* STAR RATING */
 .done-and-rating {
   display: flex;
-  align-items: flex-end;
-  gap: 40px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0;
   margin-bottom: 14px;
 }
-.done-and-rating .complete-row { margin-bottom: 0; flex-shrink: 0; }
+.done-and-rating .complete-row { margin-bottom: 0; }
 .star-rating-wrap {
   display: none;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
 }
 .star-rating-wrap.visible { display: flex; }
-.star-rating-row { display: flex; align-items: center; gap: 8px; }
+.star-rating-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .review-comment {
   font-family: 'Manrope', sans-serif;
   font-size: 13px;
@@ -1056,7 +1057,6 @@ ul.plain-list li:last-child { border-bottom: none; }
   min-height: 72px;
   outline: none;
   transition: border-color 0.15s;
-  margin-top: 4px;
 }
 .review-comment:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
 .star-rating-label {

@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents — GoLive Labs</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f6f1;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e0dbd0;
+  --agent: #4c1d95;
+  --agent-dark: #3b1670;
+  --agent-light: rgba(76,29,149,0.07);
+  --royal: #1a3db5;
+  --gold: #c9922a;
+  --gold-light: rgba(201,146,42,0.12);
+  --text: #1a1a1a;
+  --text-muted: #6b6660;
+  --text-dim: #a09b94;
+  --green: #1a7a4a;
+  --green-light: rgba(26,122,74,0.1);
+  --red: #c0392b;
+
+  --p1: #1a3db5;
+  --p2: #2d7dd2;
+  --p3: #1a7a4a;
+  --p4: #c9922a;
+  --p5: #7c3aed;
+  --p6: #c0392b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; font-size: 15px; line-height: 1.7; }
+
+/* ─── NAV ─── */
+.site-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-left { display: flex; align-items: center; }
+.page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
+.page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
+.page-tab:hover { color: var(--text); background: var(--surface2); border-bottom-color: var(--border); }
+.page-tab.active { color: var(--agent); border-bottom-color: var(--agent); }
+.nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--royal); }
+.nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+.nav-btn:hover { background: var(--surface2); }
+.nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 8px; margin-left: 8px; }
+.nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.2s; }
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 49; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.mobile-menu.open { display: flex; }
+.mobile-menu-link { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); text-decoration: none; padding: 16px 20px; border-bottom: 1px solid var(--border); display: block; transition: background 0.15s; }
+.mobile-menu-link:hover, .mobile-menu-link.active { background: var(--surface2); color: var(--agent); }
+.mobile-menu-actions { padding: 16px 20px; }
+.mobile-menu-actions .nav-btn { width: 100%; text-align: center; display: block; }
+@media (max-width: 700px) {
+  .site-nav { padding: 0 16px; position: relative; }
+  .site-nav > div { display: none !important; }
+  .nav-hamburger { display: flex; }
+}
+
+/* ─── PROGRESS ─── */
+.progress-bar-wrap { position: fixed; top: 60px; left: 0; right: 0; height: 3px; z-index: 200; background: var(--border); }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--agent), var(--gold)); width: 0%; transition: width 0.1s; }
+
+/* ─── HERO ─── */
+.hero { background: var(--agent); color: #fff; padding: 60px 24px 80px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 20% 50%, rgba(255,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse 50% 80% at 80% 20%, rgba(201,146,42,0.18) 0%, transparent 60%); }
+.hero-back { position: absolute; top: 20px; left: 32px; display: inline-flex; align-items: center; gap: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.15s; }
+.hero-back:hover { color: rgba(255,255,255,0.85); }
+.hero-eyebrow { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(201,146,42,0.4); padding: 5px 16px; border-radius: 2px; margin-bottom: 24px; position: relative; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(44px, 8vw, 96px); font-weight: 900; line-height: 0.92; letter-spacing: -0.02em; position: relative; margin-bottom: 10px; }
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: clamp(14px, 2.2vw, 18px); color: rgba(255,255,255,0.65); max-width: 520px; margin: 16px auto 36px; font-weight: 400; position: relative; line-height: 1.7; }
+.hero-stats { display: flex; gap: 36px; justify-content: center; flex-wrap: wrap; position: relative; }
+.stat { text-align: center; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #fff; line-height: 1; }
+.stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 4px; }
+
+/* ─── PATH BAR ─── */
+.path-bar { background: var(--surface); border-bottom: 2px solid var(--border); position: sticky; top: 60px; z-index: 90; overflow-x: auto; scrollbar-width: none; }
+.path-bar::-webkit-scrollbar { display: none; }
+.path-bar-inner { display: flex; max-width: 1100px; margin: 0 auto; padding: 0 16px; white-space: nowrap; }
+.path-tab { display: flex; align-items: center; gap: 8px; padding: 14px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; text-decoration: none; white-space: nowrap; }
+.path-tab:hover { color: var(--text); }
+.path-tab.active { color: var(--text); border-bottom-color: var(--active-color, var(--agent)); }
+.path-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dot-color, var(--agent)); flex-shrink: 0; }
+
+/* ─── CONTAINER ─── */
+.container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── PROJECT SECTIONS ─── */
+.project-section { padding: 72px 0 80px; border-bottom: 1px solid var(--border); }
+.project-header { display: flex; gap: 28px; align-items: flex-start; margin-bottom: 40px; }
+.project-badge { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.project-num { width: 56px; height: 56px; border-radius: 50%; background: var(--p-color, var(--agent)); color: #fff; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.project-level-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); white-space: nowrap; }
+.project-info { flex: 1; }
+.project-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.1; margin-bottom: 8px; }
+.project-desc { color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 14px; }
+.tool-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 2px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
+.chip.highlight { background: var(--agent-light); border-color: rgba(76,29,149,0.25); color: var(--agent); }
+
+/* ─── BUILD IDEAS ─── */
+.build-ideas { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 22px 24px; margin-bottom: 20px; }
+.build-ideas-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); margin-bottom: 12px; }
+.idea-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.idea-item { font-size: 13px; color: var(--text-muted); padding: 6px 10px; background: var(--bg); border-radius: 3px; border: 1px solid var(--border); display: flex; align-items: center; gap: 7px; }
+.idea-item::before { content: '→'; color: var(--p-color, var(--agent)); font-size: 11px; flex-shrink: 0; }
+
+/* ─── SKILL UNLOCK ─── */
+.skill-unlock { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border: 1px solid var(--border); border-top: 3px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 20px 24px; margin: 20px 0; }
+.skill-unlock-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); margin-bottom: 10px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.skill-tag { font-size: 12px; font-weight: 600; padding: 4px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.skill-tag::before { content: '✓'; color: var(--p-color, var(--agent)); font-size: 10px; }
+
+/* ─── UNSTUCK CALLOUT ─── */
+.unstuck-callout { background: #eef3fd; border: 1px solid rgba(26,61,181,0.2); border-left: 3px solid #1a3db5; border-radius: 4px; padding: 14px 18px; margin: 0 0 20px 0; font-size: 13px; color: var(--text); line-height: 1.8; }
+.unstuck-callout strong { font-weight: 700; }
+
+/* ─── ACCORDION ─── */
+.accordion { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 10px; background: var(--surface); overflow: hidden; }
+.accordion-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; user-select: none; transition: background 0.15s; }
+.accordion-header:hover { background: var(--surface2); }
+.acc-icon { font-size: 16px; flex-shrink: 0; }
+.acc-title { font-size: 14px; font-weight: 700; flex: 1; color: var(--text); }
+.acc-chevron { color: var(--text-dim); font-size: 12px; transition: transform 0.2s; flex-shrink: 0; }
+.accordion.open .acc-chevron { transform: rotate(180deg); }
+.accordion-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border); }
+.accordion.open .accordion-body { display: block; }
+
+/* ─── STEPS ─── */
+.step-list { margin-top: 16px; }
+.step { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.step:last-child { border-bottom: none; }
+.step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--p-color, var(--agent)); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.step-content { flex: 1; }
+.step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+
+/* ─── CODE ─── */
+.copyable-wrap { position: relative; margin: 12px 0; }
+.code-block { display: block; background: #13131a; border: 1px solid #2a2a3a; border-left: 3px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 14px 16px 14px 40px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #e0dfd8; white-space: pre-wrap; word-break: break-word; overflow-x: auto; }
+.code-str { color: #7dd3b0; }
+.code-cmd { color: #f4a56a; }
+.code-comment { color: #5a5a7a; }
+.copy-btn { position: absolute; top: 6px; left: 6px; background: #1e1e2e; border: 1px solid #2a2a3a; border-radius: 3px; color: #43d9ad; padding: 2px 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; z-index: 2; font-size: 13px; line-height: 1; }
+.copy-btn:hover { border-color: #43d9ad; opacity: 0.8; }
+.copy-btn .copy-emoji { display: block; }
+.copy-btn .copied-check { display: none; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #43d9ad; }
+.copy-btn.copied .copy-emoji { display: none; }
+.copy-btn.copied .copied-check { display: block; }
+code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--agent); }
+
+/* ─── CALLOUTS ─── */
+.callout { padding: 14px 18px; border-radius: 4px; margin: 12px 0; font-size: 13px; line-height: 1.8; }
+.callout-info { background: var(--agent-light); border: 1px solid rgba(76,29,149,0.18); border-left: 3px solid var(--agent); color: var(--text); }
+.callout-tip { background: var(--green-light); border: 1px solid rgba(26,122,74,0.2); border-left: 3px solid var(--green); color: var(--text); }
+.callout-warn { background: var(--gold-light); border: 1px solid rgba(201,146,42,0.25); border-left: 3px solid var(--gold); color: var(--text); }
+.callout strong { font-weight: 700; }
+
+/* ─── PLAIN LIST ─── */
+ul.plain-list { list-style: none; padding: 0; margin: 10px 0; }
+ul.plain-list li { font-size: 13px; color: var(--text-muted); padding: 5px 0 5px 18px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.04); line-height: 1.7; }
+ul.plain-list li::before { content: '→'; position: absolute; left: 0; color: var(--p-color, var(--agent)); font-size: 11px; }
+ul.plain-list li:last-child { border-bottom: none; }
+
+/* ─── PROJECT COLOR OVERRIDES ─── */
+.p1 { --p-color: var(--p1); }
+.p2 { --p-color: var(--p2); }
+.p3 { --p-color: var(--p3); }
+.p4 { --p-color: var(--p4); }
+.p5 { --p-color: var(--p5); }
+.p6 { --p-color: var(--p6); }
+
+/* ─── FOOTER ─── */
+footer { background: var(--text); color: rgba(255,255,255,0.4); text-align: center; padding: 48px 24px; font-size: 12px; }
+footer .ft { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+
+@media (max-width: 600px) {
+  .project-header { flex-direction: column; gap: 12px; }
+  .idea-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
+<nav class="site-nav">
+  <div class="nav-left">
+    <a href="dashboard.html" class="nav-logo">GoLive <em>Labs</em></a>
+    <div class="page-tabs">
+      <a href="dashboard.html" class="page-tab">My Dashboard</a>
+      <a href="web-apps.html" class="page-tab">Web Apps</a>
+      <a href="agents.html" class="page-tab active">AI Agents</a>
+      <a href="my-projects.html" class="page-tab">My Projects</a>
+      <a href="my-profile.html" class="page-tab">My Profile</a>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="nav-btn" id="logout-btn">Log Out</button>
+  </div>
+  <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="dashboard.html" class="mobile-menu-link">My Dashboard</a>
+  <a href="web-apps.html" class="mobile-menu-link">Web Apps</a>
+  <a href="agents.html" class="mobile-menu-link active">AI Agents</a>
+  <a href="my-projects.html" class="mobile-menu-link">My Projects</a>
+  <a href="my-profile.html" class="mobile-menu-link">My Profile</a>
+  <div class="mobile-menu-actions">
+    <button class="nav-btn" id="mobile-logout-btn">Log Out</button>
+  </div>
+</div>
+
+<div class="progress-bar-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <a href="dashboard.html" class="hero-back">← Dashboard</a>
+  <div class="hero-eyebrow">🤖 Track 2 of 2 · AI Agents</div>
+  <h1>AI<br><em>Agents</em></h1>
+  <p class="hero-sub">Build AI that thinks, searches, remembers, and acts on its own — from a no-code automation to a fully autonomous agent running 24/7 in the cloud.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Projects</div></div>
+    <div class="stat"><div class="stat-num">$0</div><div class="stat-label">To Start</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Experience Needed</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">What It Can Do</div></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     PATH BAR
+══════════════════════════════════════ -->
+<nav class="path-bar">
+  <div class="path-bar-inner">
+    <a class="path-tab" href="#a1" style="--active-color:var(--p1)"><span class="path-dot" style="--dot-color:var(--p1)"></span>01 Starter</a>
+    <a class="path-tab" href="#a2" style="--active-color:var(--p2)"><span class="path-dot" style="--dot-color:var(--p2)"></span>02 Beginner</a>
+    <a class="path-tab" href="#a3" style="--active-color:var(--p3)"><span class="path-dot" style="--dot-color:var(--p3)"></span>03 Intermediate</a>
+    <a class="path-tab" href="#a4" style="--active-color:var(--p4)"><span class="path-dot" style="--dot-color:var(--p4)"></span>04 Advanced</a>
+    <a class="path-tab" href="#a5" style="--active-color:var(--p5)"><span class="path-dot" style="--dot-color:var(--p5)"></span>05 Pro</a>
+    <a class="path-tab" href="#a6" style="--active-color:var(--p6)"><span class="path-dot" style="--dot-color:var(--p6)"></span>06 Ninja</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<!-- ═══════════════════════════════════
+     PROJECT 1 — STARTER
+════════════════════════════════════ -->
+<section class="project-section p1" id="a1">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">1</div>
+      <div class="project-level-tag">Starter</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">Your First Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p1);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 1–2 hrs</span></div>
+      <div class="project-desc">Build a working AI automation using zero code — just Claude and Zapier. Your agent will respond to triggers, answer questions, and take actions automatically. No terminal, no installation, no experience needed.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Free</span>
+        <span class="chip highlight">Zapier</span>
+        <span class="chip">100% Free to Start</span>
+        <span class="chip">No Code</span>
+        <span class="chip">No Installation</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with no-code agents</div>
+    <div class="idea-grid">
+      <div class="idea-item">Email auto-responder</div>
+      <div class="idea-item">Form → AI → Slack reply</div>
+      <div class="idea-item">Daily briefing emailer</div>
+      <div class="idea-item">Lead qualifier bot</div>
+      <div class="idea-item">Meeting notes summarizer</div>
+      <div class="idea-item">Social post generator</div>
+      <div class="idea-item">Support ticket tagger</div>
+      <div class="idea-item">Document classifier</div>
+      <div class="idea-item">Newsletter curator</div>
+      <div class="idea-item">Customer feedback analyzer</div>
+      <div class="idea-item">Invoice data extractor</div>
+      <div class="idea-item">RSS → summary digest</div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">What agents are</div>
+      <div class="skill-tag">Triggers vs actions</div>
+      <div class="skill-tag">Zapier workflows</div>
+      <div class="skill-tag">Prompt engineering</div>
+      <div class="skill-tag">Connecting apps with AI</div>
+      <div class="skill-tag">Testing agent behavior</div>
+      <div class="skill-tag">API cost awareness</div>
+      <div class="skill-tag">Agent safety basics</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">💰</span>
+      <span class="acc-title">Understanding API Costs — Before You Build Anything</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">This is the most important thing to understand before building agents. Unlike web apps that run on free Vercel hosting, agents call APIs every time they run — and those calls cost money. Understanding costs upfront prevents nasty surprises.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">How Claude API pricing works</div>
+            <div class="step-desc">You pay per token — roughly per word. Claude Sonnet 4 costs approximately $0.003 per 1,000 input tokens and $0.015 per 1,000 output tokens. A typical agent call costs about $0.01–$0.05. That's nearly free for testing, but adds up if your agent runs thousands of times. Check current pricing at <strong>anthropic.com/pricing</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Estimate your agent's monthly cost before deploying</div>
+            <div class="step-desc">The formula: <code>(runs per day) × (cost per run) × 30</code>. An agent that runs 24 times per day (hourly) at $0.02 per run = $14.40/month. One that runs every 5 minutes at $0.05 = $432/month. Always calculate this before setting a schedule.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Set a spending limit before you start</div>
+            <div class="step-desc">In the Anthropic Console, go to <strong>Billing → Usage Limits</strong> and set a monthly hard limit — e.g. $20. This caps your exposure if an agent runs in an unexpected loop. Set it before writing a single line of agent code.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Keep prompts short and efficient</div>
+            <div class="step-desc">Every word in your system prompt costs money, multiplied by every run. Cut anything that isn't necessary. A 2,000-token system prompt running hourly costs 10× more than a 200-token one. Ask Claude: <em>"Rewrite this system prompt to be as concise as possible while keeping all the important instructions."</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">✍️</span>
+      <span class="acc-title">Prompt Engineering for Agents — Different from Chatting</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Writing prompts for an autonomous agent is very different from chatting with Claude. In a chat, you can clarify and correct. In an agent, the prompt runs unattended — every ambiguity becomes a bug.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Give the agent a clear role and scope</div>
+            <div class="step-desc">Start every agent system prompt with: what the agent is, what it should do, and — crucially — what it should NOT do. Constraints are as important as instructions.</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">You are an email response assistant for [Business Name].
+Your job: read incoming customer support emails and draft a helpful reply.
+ONLY respond to questions about our products and services.
+DO NOT make promises about refunds, timelines, or pricing without checking.
+If you're unsure how to respond, say "I'll need to check on this" instead of guessing.</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Specify the output format exactly</div>
+            <div class="step-desc">Agents pass their output to the next step — a webhook, an email, a database. If the format varies, downstream steps break. Tell the agent exactly what to return: <em>"Respond with only a JSON object with keys: reply_text (string), confidence (1-10), needs_human_review (boolean). No other text."</em></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Test edge cases before going live</div>
+            <div class="step-desc">Before turning on an automated agent, manually test at least 5 edge cases: empty input, very long input, input in another language, rude or nonsensical input, and the exact type of input you expect most. Ask Claude: <em>"What are 5 edge cases that might cause this agent to behave unexpectedly? Let's test each one."</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building — and What an Agent Actually Is</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">An agent is an AI that doesn't just answer questions — it takes action. Instead of you typing a prompt and reading a response, an agent watches for a trigger (like a new email or a form submission), processes it using AI, and does something with the result (like sending a reply, updating a spreadsheet, or posting to Slack) — all without you touching a keyboard.</p>
+      <div class="callout callout-info" style="margin-top:12px;"><strong>What you'll build:</strong> A Zapier workflow that watches your Gmail inbox for emails with the subject "AI Help", feeds the email body to Claude, and sends an intelligent AI-written reply automatically — within seconds of receiving the email.</div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">⚙️</span>
+      <span class="acc-title">Step 1 — Set Up Your Accounts</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Get Claude API access</div>
+            <div class="step-desc">Go to <strong>console.anthropic.com</strong> and sign up. You pay only for what you use — testing typically costs cents. Add a small credit (e.g. $5) to get started.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Create a free Zapier account</div>
+            <div class="step-desc">Go to <strong>zapier.com</strong> and sign up. The free plan allows 100 tasks per month — more than enough to build and test your first agent.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Get your Anthropic API key</div>
+            <div class="step-desc">In the Anthropic Console, go to <strong>API Keys → Create Key</strong>. Copy it somewhere safe — you'll paste it into Zapier. Never share this key publicly or commit it to GitHub.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🤖</span>
+      <span class="acc-title">Step 2 — Build Your First Zap (Agent Workflow)</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a new Zap in Zapier</div>
+            <div class="step-desc">In Zapier, click <strong>Create Zap</strong>. A Zap is a workflow — it has a trigger (what starts it) and one or more actions (what happens next).</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Set the trigger — New email in Gmail</div>
+            <div class="step-desc">Search for <strong>Gmail</strong> as your trigger app. Choose the event <strong>"New Email"</strong>. Connect your Gmail account. Under filters, set <strong>Subject Contains</strong> to <code>AI Help</code>. This means the Zap only fires when you receive an email with that subject line.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Add Claude as the action — generate a reply</div>
+            <div class="step-desc">Click the + to add an action. Search for <strong>Anthropic (Claude)</strong>. Choose <strong>"Send Message"</strong>. Connect using your API key. In the prompt field, enter:</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">You are a helpful assistant. Someone emailed asking for help. Read their email and write a friendly, helpful reply in 2-3 sentences.
+
+Email subject: [insert Gmail subject field here]
+Email body: [insert Gmail body field here]
+
+Write only the reply text — no subject line, no greeting like "Dear", just the reply body.</span></span>
+            </div>
+            <div class="step-desc" style="margin-top:8px;">Use Zapier's variable picker to insert the actual Gmail data from the trigger step into the prompt.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Add a second action — send the reply</div>
+            <div class="step-desc">Add another Gmail action. Choose <strong>"Send Email"</strong>. Set <strong>To</strong> to the sender's email from the trigger. Set <strong>Subject</strong> to <code>Re: [original subject]</code>. Set <strong>Body</strong> to Claude's output from the previous step.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <div class="step-title">Test and turn on your agent</div>
+            <div class="step-desc">Click <strong>Test</strong> in Zapier to run the workflow with a real email. Review the output — does Claude's reply make sense? Adjust your prompt if needed. When satisfied, toggle the Zap to <strong>On</strong>. Your agent is now live.</div>
+            <div class="callout callout-tip" style="margin-top:10px;"><strong>Test it:</strong> Send yourself an email with the subject "AI Help" and a question in the body. Within 30 seconds you should receive an AI-written reply.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔧</span>
+      <span class="acc-title">Step 3 — Customize and Extend</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Now that your basic agent works, try these improvements:</p>
+      <ul class="plain-list" style="margin-top:10px;">
+        <li><strong>Change the trigger</strong> — instead of Gmail, try a Typeform submission, a Slack message, or a new row in Google Sheets</li>
+        <li><strong>Change the action</strong> — instead of replying by email, post Claude's response to a Slack channel or save it to a Google Doc</li>
+        <li><strong>Improve the prompt</strong> — give Claude a persona: "You are a customer support agent for [your business]. Always be friendly, concise, and offer one next step."</li>
+        <li><strong>Add a filter step</strong> — only trigger the agent if the email contains certain keywords, or only during business hours</li>
+        <li><strong>Add logging</strong> — add a Google Sheets action that saves every email + Claude's reply so you can review them</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECT 2 — BEGINNER
+════════════════════════════════════ -->
+<section class="project-section p2" id="a2">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">2</div>
+      <div class="project-level-tag">Beginner</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">File Intelligence Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p2);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 1–3 hrs</span></div>
+      <div class="project-desc">Build a local AI assistant using Claude Code that reads documents in a folder and answers questions about them in plain English. Drop any file in — PDFs, contracts, reports, spreadsheets — and ask anything.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip">File Processing</span>
+        <span class="chip">Local Agent</span>
+        <span class="chip">RAG Basics</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">Claude Code terminal</div>
+      <div class="skill-tag">Reading files with Python</div>
+      <div class="skill-tag">Passing context to Claude</div>
+      <div class="skill-tag">Interactive CLI agents</div>
+      <div class="skill-tag">Document Q&amp;A</div>
+      <div class="skill-tag">RAG fundamentals</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="callout callout-info" style="margin-top:14px;"><strong>How it works:</strong> You run a Python script from your terminal. It reads all documents in a <code>docs/</code> folder. You type a question. It sends the documents to Claude along with your question, and gives you an answer based only on what's in those files.</div>
+      <ul class="plain-list" style="margin-top:12px;">
+        <li>Ask questions about any PDF, .txt, or Word document</li>
+        <li>Compare multiple documents at once</li>
+        <li>Extract specific data — dates, names, numbers, clauses</li>
+        <li>Summarize long documents in seconds</li>
+        <li>Find contradictions or inconsistencies across files</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🏗️</span>
+      <span class="acc-title">Step 1 — Set Up and Build with Claude Code</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a project folder and start Claude Code</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">mkdir file-agent
+cd file-agent
+mkdir docs
+claude</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Describe the agent to Claude Code</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Build me a file intelligence agent in Python. Here's what it should do:
+
+1. Watch a folder called 'docs/' in the current directory
+2. When I run the script, it reads all .txt, .pdf, and .docx files in that folder
+3. It presents a simple command-line interface where I can type questions
+4. It sends the contents of all the files plus my question to the Anthropic API
+5. It prints Claude's answer in the terminal
+6. It keeps running so I can ask multiple questions — type 'quit' to exit
+
+Use the Anthropic Python SDK. Store the API key in a .env file. Add clear comments explaining how each part works. Keep the code as simple as possible."</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Install dependencies and create your .env file</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Install all required Python packages and create a .env file template I can fill in with my Anthropic API key."</span></span>
+            </div>
+            <div class="step-desc" style="margin-top:8px;">Open the .env file and replace the placeholder with your actual API key from <strong>console.anthropic.com</strong>.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Drop files in docs/ and test</div>
+            <div class="step-desc">Copy any PDF, Word doc, or text file into the <code>docs/</code> folder. Then run the agent:</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">python agent.py</span></span>
+            </div>
+            <div class="step-desc" style="margin-top:8px;">Type a question like <em>"What are the main points in these documents?"</em> and press Enter.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔧</span>
+      <span class="acc-title">Step 2 — Extend Your Agent</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Once the basic agent works, ask Claude Code to add these improvements one at a time:</p>
+      <ul class="plain-list" style="margin-top:10px;">
+        <li><strong>Conversation history</strong> — remember previous questions in the same session so follow-up questions make sense</li>
+        <li><strong>File summaries on startup</strong> — when the agent loads, automatically summarize what each document contains</li>
+        <li><strong>Source citing</strong> — have Claude name which document each piece of information came from</li>
+        <li><strong>Save Q&amp;A to a log file</strong> — save every question and answer to a timestamped text file for reference</li>
+      </ul>
+      <div class="callout callout-tip" style="margin-top:12px;"><strong>Example prompt:</strong> "Add conversation history so Claude remembers the last 5 questions and answers in each session. This way I can ask follow-up questions like 'tell me more about that' and it will understand."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECT 3 — INTERMEDIATE
+════════════════════════════════════ -->
+<section class="project-section p3" id="a3">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">3</div>
+      <div class="project-level-tag">Intermediate</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">Web Research Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p3);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 2–4 hrs</span></div>
+      <div class="project-desc">Build an agent that searches the web on a topic you choose, reads the results, synthesizes the findings, and emails you a clean formatted digest — automatically, on a schedule.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">Serper API</span>
+        <span class="chip">Web Scraping</span>
+        <span class="chip">Email Automation</span>
+        <span class="chip">Scheduling</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">Web search APIs</div>
+      <div class="skill-tag">Scraping web content</div>
+      <div class="skill-tag">Multi-step agent pipelines</div>
+      <div class="skill-tag">Formatting AI output</div>
+      <div class="skill-tag">Sending emails with Python</div>
+      <div class="skill-tag">Cron scheduling</div>
+      <div class="skill-tag">Error handling &amp; retries</div>
+      <div class="skill-tag">Silent failure detection</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🛡️</span>
+      <span class="acc-title">Error Handling — Agents Fail Silently Without This</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">An agent running unattended can fail for hours without anyone noticing. Without error handling, you'll never know. With it, failures surface immediately.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Wrap every external call in try/except</div>
+            <div class="step-desc">Ask Claude Code: <em>"Add try/except error handling around every external API call. If a call fails, log the error with a timestamp and continue rather than crashing the whole agent."</em></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Validate Claude's output before using it</div>
+            <div class="step-desc">When your agent expects Claude to return JSON, always validate it before passing it downstream. Ask Claude Code: <em>"Before using Claude's response, check that it matches the expected format. If it doesn't, retry once. If it fails again, log the bad output and skip this run."</em></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Add a dead agent alert</div>
+            <div class="step-desc">Ask Claude Code: <em>"If the agent hasn't successfully completed a run in 3 hours, send me an alert email. This catches situations where the agent crashes silently."</em> This one feature will save you countless headaches.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Handle empty or poor search results gracefully</div>
+            <div class="step-desc">Never send Claude an empty results set — it will hallucinate content that doesn't exist. Always check: <em>"If the search returns fewer than 2 results, skip this run and log 'insufficient results' rather than generating a digest."</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="callout callout-info" style="margin-top:14px;"><strong>The pipeline:</strong> You define a topic (e.g. "AI news" or "competitor mentions"). Every morning the agent searches the web for recent articles, reads the top results, passes them to Claude to synthesize into a 5-bullet digest, then emails it to your inbox. Zero manual effort.</div>
+      <ul class="plain-list" style="margin-top:12px;">
+        <li>Uses Serper API (free tier: 2,500 searches/month) to find current articles</li>
+        <li>Fetches and reads the actual page content — not just headlines</li>
+        <li>Claude synthesizes across multiple sources into a coherent digest</li>
+        <li>Formats the email with clear sections, links, and key takeaways</li>
+        <li>Runs automatically every day via a scheduler</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔑</span>
+      <span class="acc-title">Step 1 — Get Your API Keys</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Get a free Serper API key (web search)</div>
+            <div class="step-desc">Go to <strong>serper.dev</strong> and sign up. The free plan gives you 2,500 searches per month — more than enough for daily research. Copy your API key.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Set up email sending</div>
+            <div class="step-desc">Use Gmail with an App Password. In your Google account, go to <strong>Security → 2-Step Verification → App Passwords</strong>. Create an app password for "Mail". This lets Python send email on your behalf without your real password.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🏗️</span>
+      <span class="acc-title">Step 2 — Build the Research Agent</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a project and start Claude Code</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">mkdir research-agent
+cd research-agent
+claude</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Build the agent pipeline</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Build a web research agent in Python with these steps:
+
+Step 1 — Search: Use the Serper API to find the 5 most recent articles about a topic defined in a config variable at the top of the file
+
+Step 2 — Fetch: For each result, fetch the actual page content using requests and BeautifulSoup, extracting just the main article text (no nav, footer, ads)
+
+Step 3 — Synthesize: Send all article content to Claude with this task: summarize the most important findings into a 5-bullet digest with a one-line intro. Include the source URL for each bullet.
+
+Step 4 — Email: Send the formatted digest to an email address defined in config, using Gmail SMTP with an app password
+
+Store all API keys in a .env file. Add a config section at the top with: topic, my email, and how many articles to fetch."</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Test it manually first</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">python research_agent.py</span></span>
+            </div>
+            <div class="step-desc" style="margin-top:8px;">Check your inbox within 60 seconds. If the email arrives and the digest looks good, schedule it.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Schedule it to run every morning</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Add a scheduler so this script runs automatically every day at 7am. Show me how to set this up on my operating system — explain both Mac (cron) and Windows (Task Scheduler) options."</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECT 4 — ADVANCED
+════════════════════════════════════ -->
+<section class="project-section p4" id="a4">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">4</div>
+      <div class="project-level-tag">Advanced</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">Multi-Agent Pipeline <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p4);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 3–5 hrs</span></div>
+      <div class="project-desc">Build a system of three specialized AI agents that hand off work to each other: a Researcher finds information, a Writer turns it into polished content, and a Reviewer critiques and improves it — all chained together automatically.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip">Multi-Agent</span>
+        <span class="chip">Agent Orchestration</span>
+        <span class="chip">Prompt Chaining</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">Agent specialization</div>
+      <div class="skill-tag">Prompt chaining</div>
+      <div class="skill-tag">Passing state between agents</div>
+      <div class="skill-tag">Output evaluation</div>
+      <div class="skill-tag">Retry logic</div>
+      <div class="skill-tag">Pipeline orchestration</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="callout callout-info" style="margin-top:14px;"><strong>The pipeline:</strong> You give the system a topic. The Researcher searches and gathers facts. It passes those to the Writer, which drafts a 500-word article. The Writer's output goes to the Reviewer, which scores the piece and rewrites any weak sections. Final output is saved as a formatted markdown file.</div>
+      <ul class="plain-list" style="margin-top:12px;">
+        <li><strong>Researcher agent</strong> — searches the web, extracts key facts, cites sources</li>
+        <li><strong>Writer agent</strong> — receives the research, writes a structured article in a specified style</li>
+        <li><strong>Reviewer agent</strong> — reads the draft, scores it on clarity/accuracy/flow, rewrites anything below threshold</li>
+        <li>Each agent has its own system prompt defining its role and constraints</li>
+        <li>The pipeline logs what each agent did and why at every step</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🏗️</span>
+      <span class="acc-title">Step 1 — Build the Pipeline</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a new project and start Claude Code</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">mkdir multi-agent
+cd multi-agent
+claude</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Build the three-agent system</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Build a multi-agent content pipeline in Python with three specialized agents, each using the Anthropic API:
+
+RESEARCHER AGENT
+- System prompt: You are a research specialist. Given a topic, search the web using Serper API and extract the 5 most important facts with source URLs. Return structured JSON: {facts: [], sources: []}
+
+WRITER AGENT
+- System prompt: You are an expert writer. Given research facts, write a clear, engaging 500-word article. Structure it with a headline, 3 sections, and a conclusion. Return as markdown.
+
+REVIEWER AGENT
+- System prompt: You are an editorial reviewer. Score the draft 1-10 on clarity, accuracy, and flow. If any score is below 7, rewrite that section. Return: {scores: {}, final_article: ''}
+
+ORCHESTRATOR
+- Takes a topic as input → runs Researcher → passes to Writer → passes to Reviewer → saves final article to output/[topic].md
+
+Add detailed logging so I can see what each agent is doing at every step."</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Run the pipeline on a test topic</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">python pipeline.py "the future of solar energy"</span></span>
+            </div>
+            <div class="step-desc" style="margin-top:8px;">Watch the logs as each agent runs. Check <code>output/</code> for the finished article. The whole pipeline should take 30–60 seconds.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔧</span>
+      <span class="acc-title">Step 2 — Add Retry Logic and Quality Gates</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="copyable-wrap" style="margin-top:14px;">
+        <span class="code-block"><span class="code-str">"Add quality gates to the pipeline:
+1. If the Reviewer scores any section below 6, automatically send it back to the Writer with specific feedback and retry up to 2 times
+2. If the Researcher returns fewer than 3 facts, retry the search with a broader query
+3. Log all retries with the reason so I can see when and why the pipeline self-corrected"</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECT 5 — PRO
+════════════════════════════════════ -->
+<section class="project-section p5" id="a5">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">5</div>
+      <div class="project-level-tag">Pro</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">Agent with Memory <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p5);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 4–6 hrs</span></div>
+      <div class="project-desc">Build an AI assistant that remembers. It learns your preferences, recalls past conversations, and gets more personalized every time you use it — powered by a real database and vector search that persists between sessions.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">Supabase</span>
+        <span class="chip">Vector Embeddings</span>
+        <span class="chip">Long-Term Memory</span>
+        <span class="chip">MCP Servers</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">Vector embeddings</div>
+      <div class="skill-tag">Semantic search</div>
+      <div class="skill-tag">Persistent memory</div>
+      <div class="skill-tag">User preference learning</div>
+      <div class="skill-tag">Supabase pgvector</div>
+      <div class="skill-tag">Personalized AI</div>
+      <div class="skill-tag">MCP servers</div>
+      <div class="skill-tag">Native tool connections</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔌</span>
+      <span class="acc-title">MCP Servers — Give Your Agent Native Tool Access</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">The Model Context Protocol (MCP) is an open standard that lets Claude connect directly to external tools and data sources — without you writing custom API integration code. Instead of building a custom Slack connector, you install a Slack MCP server and Claude can read and write to Slack natively. Claude Code has built-in MCP support, making this very straightforward to set up.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">What MCP unlocks for agents</div>
+            <div class="step-desc">With MCP servers, your agent can connect to Google Drive, GitHub, Slack, Notion, databases, file systems, and dozens of other services using pre-built connectors. This dramatically reduces the work needed to build powerful agents that interact with your real tools.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Finding and installing MCP servers via Claude Code</div>
+            <div class="step-desc">Claude Code can discover, install, and configure MCP servers for you. To add one:</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"I want to connect my agent to [Notion / GitHub / Slack / Google Drive]. Find the appropriate MCP server, install it in my Claude Code environment, and configure it. Walk me through getting the required API credentials and setting up the connection."</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Add MCP-powered tools to your memory agent</div>
+            <div class="step-desc">For this project, use an MCP server to give your memory agent access to your calendar, notes, or email — so it learns from your actual digital life, not just conversations:</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Connect my memory agent to my Google Calendar via MCP. When I ask 'what do I have coming up?', the agent should check my actual calendar and incorporate it into its response."</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="callout callout-info" style="margin-top:14px;"><strong>The problem with most AI:</strong> Every conversation starts from zero. It doesn't know your name, your preferences, or what you talked about last Tuesday. This project fixes that by giving your agent a persistent memory stored in a real database.</div>
+      <ul class="plain-list" style="margin-top:12px;">
+        <li>Every conversation is stored as a vector embedding in Supabase</li>
+        <li>When you ask something new, the agent searches memory for relevant past context</li>
+        <li>It builds a preference profile — your name, communication style, topics you care about</li>
+        <li>Each session gets smarter — it references past conversations naturally</li>
+        <li>Memory is searchable: "What did I ask you about last week?"</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🗄️</span>
+      <span class="acc-title">Step 1 — Set Up Supabase with Vector Support</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create a Supabase project and enable pgvector</div>
+            <div class="step-desc">Go to <strong>supabase.com</strong> and create a new project. In the SQL editor, run:</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">create extension if not exists vector;</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Ask Claude Code to set up the database schema</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"I'm building an agent with persistent memory using Supabase and pgvector. Create the SQL to set up:
+1. A 'memories' table with: id, content (text), embedding (vector 1536), created_at, session_id, importance_score
+2. A 'user_profile' table with: id, key (text), value (text), updated_at — for storing preferences
+3. A function to search memories by semantic similarity using cosine distance
+Give me the SQL to run in Supabase's SQL editor."</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🏗️</span>
+      <span class="acc-title">Step 2 — Build the Memory Agent</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Build the agent with memory capabilities</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Build a memory-powered AI assistant in Python. It should:
+
+BEFORE each response:
+- Convert my message to an embedding using the Anthropic embeddings API
+- Search Supabase for the 3 most semantically similar past memories
+- Retrieve relevant user preferences from the profile table
+- Include all of this as context in the system prompt
+
+DURING the conversation:
+- Have a natural conversation using Claude as the AI
+- Detect and extract any preferences I express (e.g. 'I prefer concise answers')
+
+AFTER each exchange:
+- Save the conversation turn as a new memory with an embedding
+- Update user_profile if new preferences were detected
+- Score each memory for importance (1-10) based on content type
+
+The agent should feel personal — naturally reference past context when relevant."</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Test memory persistence across sessions</div>
+            <div class="step-desc">Run the agent, have a conversation, close it, restart it, and ask: <em>"What do you know about me?"</em> or <em>"What did we talk about last time?"</em> The agent should recall your past conversations accurately.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     PROJECT 6 — NINJA
+════════════════════════════════════ -->
+<section class="project-section p6" id="a6">
+  <div class="project-header">
+    <div class="project-badge">
+      <div class="project-num">6</div>
+      <div class="project-level-tag">Ninja</div>
+    </div>
+    <div class="project-info">
+      <div class="project-title">Autonomous Business Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:var(--p6);letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 5–9 hrs</span></div>
+      <div class="project-desc">Build a fully autonomous agent that monitors a business trigger, decides what action to take, executes it, logs the result, and alerts you — running 24/7 in the cloud without any human involvement.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">Railway</span>
+        <span class="chip">Tool Use</span>
+        <span class="chip">Autonomous Execution</span>
+        <span class="chip">Cloud Deployment</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
+    <div class="skill-tags">
+      <div class="skill-tag">Tool use (function calling)</div>
+      <div class="skill-tag">Autonomous decision loops</div>
+      <div class="skill-tag">Cloud deployment</div>
+      <div class="skill-tag">Monitoring &amp; alerting</div>
+      <div class="skill-tag">Agent safety guardrails</div>
+      <div class="skill-tag">Always-on agents</div>
+      <div class="skill-tag">Evaluation &amp; quality metrics</div>
+      <div class="skill-tag">Trust boundaries</div>
+    </div>
+  </div>
+
+  <div class="unstuck-callout">💡 <strong>Stuck on a step?</strong> Paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong> — it will diagnose and fix it. Getting unstuck this way is a core part of the process.</div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">📊</span>
+      <span class="acc-title">Evaluating Your Agent — How to Know If It's Actually Working</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">A deployed agent that's quietly making bad decisions is worse than a broken one. Production agents need evaluation — a way to measure whether they're doing their job well and catching when quality degrades.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Define what "good" looks like before you deploy</div>
+            <div class="step-desc">For each action your agent takes, decide upfront what success looks like. Write these criteria into your code as assertions — if the agent's output doesn't meet them, it logs a quality warning.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Build a review log you actually read</div>
+            <div class="step-desc">Ask Claude Code: <em>"Add a weekly summary email showing: total runs, success rate, number of actions taken, quality warnings triggered, and 3 example outputs. Send it every Monday morning."</em> An agent you never inspect is one you can't improve.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Detect when the agent's quality has changed</div>
+            <div class="step-desc">Ask Claude Code: <em>"Add a quality score to each run — ask Claude to self-evaluate its output on a 1-10 scale. Log this score over time and alert me if the 7-day average drops below 7."</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🔒</span>
+      <span class="acc-title">Trust Boundaries — What Your Agent Should Never Be Allowed to Do</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">An autonomous agent that can take action in the real world needs hard limits — not soft guidelines, but code-enforced guardrails. Trust boundaries are the difference between a useful tool and an expensive mistake.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">The principle of least privilege</div>
+            <div class="step-desc">Give your agent access to only what it needs. If it only needs to read emails, don't give it permission to send them. Scope credentials tightly and document what each one is for.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Hard-code irreversible action limits</div>
+            <div class="step-desc">For each irreversible action (sending emails, posting publicly, spending money), add a code-level rate limit the agent cannot override. Ask Claude Code: <em>"Add hard rate limits: maximum 10 emails per hour, 50 Slack messages per day. If either limit is hit, stop all actions and alert me — no bypassing this."</em></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Build a human-in-the-loop escape hatch</div>
+            <div class="step-desc">Ask Claude Code: <em>"For any action with an importance score above 8, send me an approval request via email with a one-click approve/reject link. Only proceed if I approve within 24 hours."</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🎯</span>
+      <span class="acc-title">What You're Building</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="callout callout-info" style="margin-top:14px;"><strong>The agent loop:</strong> Every hour the agent checks a data source (e.g. brand mentions on Reddit, competitor job postings, a stock price). It uses Claude with tool calling to decide: is this worth acting on? If yes, it takes a defined action (email, Slack, log to spreadsheet). It runs this loop continuously — deployed in the cloud, costing ~$5/month.</div>
+      <ul class="plain-list" style="margin-top:12px;">
+        <li>Monitors a trigger source every hour (configurable)</li>
+        <li>Uses Claude's tool-use API — the agent can search, read URLs, send messages</li>
+        <li>Claude decides whether each event is worth acting on based on criteria you define</li>
+        <li>All actions are logged with timestamp, reasoning, and outcome</li>
+        <li>Alert system notifies you when a high-priority event is detected</li>
+        <li>Deployed to Railway — runs 24/7 in the cloud, survives computer restarts</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🏗️</span>
+      <span class="acc-title">Step 1 — Build the Autonomous Agent</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Create the project and build the agent</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-cmd">mkdir autonomous-agent
+cd autonomous-agent
+claude</span></span>
+            </div>
+            <div class="copyable-wrap" style="margin-top:8px;">
+              <span class="code-block"><span class="code-str">"Build an autonomous business monitoring agent in Python. It should:
+
+TOOLS (give Claude these capabilities via tool use / function calling):
+- search_web(query): searches Google via Serper API, returns top 5 results
+- fetch_url(url): fetches and extracts text content from a URL
+- send_slack_message(message): posts to a Slack webhook URL
+- send_email(subject, body): sends via Gmail SMTP
+- log_event(event, action_taken, reasoning): appends to a local SQLite database
+
+AGENT LOOP (runs every 60 minutes via a scheduler):
+1. Fetch recent mentions of a monitored keyword from the web
+2. For each result, ask Claude (with tools available): 'Is this worth acting on? If yes, what action should I take?'
+3. Claude decides and calls the appropriate tool
+4. Log every decision with full reasoning
+
+SAFETY GUARDRAILS:
+- Never take the same action twice on the same URL/content
+- Maximum 10 actions per hour (rate limit)
+- All actions require logging — nothing happens silently
+
+MONITORING:
+- A simple /status endpoint showing the last 20 events in the log
+- Alert email if no events have been processed in 3 hours (dead agent detection)"</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Test locally with a 5-minute interval</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Change the interval to 5 minutes temporarily so I can test the full loop quickly. Show me the log output as it runs so I can see each decision the agent makes."</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggle(this)">
+      <span class="acc-icon">🚀</span>
+      <span class="acc-title">Step 2 — Deploy to the Cloud</span>
+      <span class="acc-chevron">▾</span>
+    </div>
+    <div class="accordion-body">
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Prepare for deployment</div>
+            <div class="copyable-wrap">
+              <span class="code-block"><span class="code-str">"Prepare this project for Railway deployment. Create:
+1. A requirements.txt with all dependencies
+2. A Procfile that runs the agent
+3. A .gitignore that excludes .env and the SQLite database
+4. Instructions for setting environment variables in Railway's dashboard"</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Deploy to Railway</div>
+            <div class="step-desc">Go to <strong>railway.app</strong>, create a free account, connect your GitHub repo. Add all environment variables in the Railway dashboard. Deploy. Your agent starts running immediately in the cloud — 24/7, even when your computer is off.</div>
+            <div class="callout callout-tip" style="margin-top:10px;"><strong>You've done it.</strong> A fully autonomous AI agent running in the cloud, monitoring the world on your behalf, making decisions, taking actions, and alerting you — built entirely by describing what you wanted in plain English with Claude Code.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="ft">GoLive <em style="font-style:italic;color:rgba(201,146,42,0.8);">Labs</em></div>
+  AI Agents Track · Build Real Things with AI · Created with Claude
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+// ── AUTH ──
+(async function() {
+  async function getSessionWithRetry() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) return session;
+    return new Promise(function(resolve) {
+      var timeout = setTimeout(function() { resolve(null); }, 3000);
+      supabaseClient.auth.onAuthStateChange(function(event, s) {
+        if (s) { clearTimeout(timeout); resolve(s); }
+      });
+    });
+  }
+  const session = await getSessionWithRetry();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const { data: myProfile } = await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+  if (myProfile && myProfile.role === 'admin') {
+    var tabs = document.querySelector('.page-tabs');
+    var adminTab = document.createElement('a');
+    adminTab.href = 'admin.html';
+    adminTab.className = 'page-tab';
+    adminTab.textContent = 'Admin';
+    adminTab.style.color = 'var(--gold)';
+    tabs.appendChild(adminTab);
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', async function() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+  document.getElementById('mobile-logout-btn').addEventListener('click', async function() {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'login.html';
+  });
+})();
+
+// ── MOBILE MENU ──
+function toggleMobileMenu() {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var btn = document.getElementById('nav-hamburger');
+  var menu = document.getElementById('mobile-menu');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }
+});
+
+// ── ACCORDION ──
+function toggle(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+// ── PATH BAR SCROLL ──
+document.querySelectorAll('.path-tab').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── PROGRESS BAR ──
+function updateProgress() {
+  var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+}
+window.addEventListener('scroll', updateProgress, { passive: true });
+
+// ── ACTIVE PATH TAB ──
+var sections = document.querySelectorAll('.project-section');
+var pathTabs = document.querySelectorAll('.path-tab');
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      pathTabs.forEach(function(t) { t.classList.remove('active'); });
+      var active = document.querySelector('.path-tab[href="#' + entry.target.id + '"]');
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(function(s) { observer.observe(s); });
+
+// ── COPY BUTTONS ──
+var COPY_ICON = '<span class="copy-emoji">⧉</span><span class="copied-check">✓</span>';
+function makeCopyBtn(getText) {
+  var btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.innerHTML = COPY_ICON;
+  btn.title = 'Copy to clipboard';
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(getText().trim()).then(function() {
+      btn.classList.add('copied');
+      setTimeout(function() { btn.classList.remove('copied'); }, 2000);
+    });
+  });
+  return btn;
+}
+document.querySelectorAll('span.code-block').forEach(function(block) {
+  var parent = block.parentElement;
+  if (!parent.classList.contains('copyable-wrap')) {
+    var wrap = document.createElement('div');
+    wrap.className = 'copyable-wrap';
+    block.parentNode.insertBefore(wrap, block);
+    wrap.appendChild(block);
+  }
+  block.parentElement.appendChild(makeCopyBtn(function() { return block.innerText || block.textContent; }));
+});
+</script>
+</body>
+</html>

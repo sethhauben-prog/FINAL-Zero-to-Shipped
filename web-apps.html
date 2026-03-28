@@ -985,7 +985,7 @@ ul.plain-list li:last-child { border-bottom: none; }
 .complete-check.done { background: var(--p-color, var(--royal)); border-color: var(--p-color, var(--royal)); }
 .complete-check.done::after { content: '✓'; color: #fff; font-size: 13px; font-weight: 700; }
 .complete-row-label { font-size: 14px; font-weight: 600; color: var(--text); }
-.complete-url-wrap { margin: 0 0 18px 34px; display: none; }
+.complete-url-wrap { margin: 0 0 18px 0; display: none; }
 .complete-url-wrap.visible { display: block; }
 .complete-url-label {
   font-family: 'IBM Plex Mono', monospace;
@@ -1054,10 +1054,12 @@ ul.plain-list li:last-child { border-bottom: none; }
   padding: 10px 14px;
   width: 100%;
   resize: vertical;
-  min-height: 72px;
+  min-height: 40px;
+  height: 40px;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, height 0.15s;
 }
+.review-comment:focus { height: 96px; }
 .review-comment:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
 .star-rating-label {
   font-family: 'IBM Plex Mono', monospace;

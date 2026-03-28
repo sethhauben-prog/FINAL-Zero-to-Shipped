@@ -318,6 +318,21 @@ h1 em { font-style: italic; color: var(--gold); }
 }
 .free-note strong { color: var(--text-muted); }
 
+/* FAQ */
+.faq-section { max-width: 720px; margin: 0 auto; padding: 72px 24px 80px; }
+.faq-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--royal); margin-bottom: 12px; }
+.faq-heading { font-family: 'Playfair Display', serif; font-size: clamp(26px, 3.5vw, 38px); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 40px; }
+.faq-heading em { font-style: italic; color: var(--gold); }
+.faq-item { border-top: 1px solid var(--border); }
+.faq-item:last-child { border-bottom: 1px solid var(--border); }
+.faq-q { width: 100%; background: none; border: none; text-align: left; cursor: pointer; padding: 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; }
+.faq-q:hover { color: var(--royal); }
+.faq-icon { font-size: 20px; color: var(--text-dim); flex-shrink: 0; transition: transform 0.2s; line-height: 1; }
+.faq-item.open .faq-icon { transform: rotate(45deg); color: var(--royal); }
+.faq-a { display: none; padding: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.75; }
+.faq-item.open .faq-a { display: block; }
+.faq-a a { color: var(--royal); text-decoration: underline; }
+
 /* FOOTER */
 footer {
   background: var(--text);
@@ -552,6 +567,52 @@ footer .ft {
   <div class="free-note"><strong>Project 1 in both tracks is 100% free.</strong> No credit card, no installation required to start.</div>
 </section>
 
+<section class="faq-section">
+  <div class="faq-eyebrow">✦ FAQ</div>
+  <h2 class="faq-heading">Questions? <em>Answered.</em></h2>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">Do I need any coding experience to start?<span class="faq-icon">+</span></button>
+    <div class="faq-a">None at all. GoLive Labs is designed for complete beginners. You follow structured projects step by step, and AI tools like Claude do the heavy lifting. Your job is to understand what's being built and why — not to memorize syntax.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">How long does it take to ship my first project?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Project 1 takes 1–2 hours. Most people have something live the same day they sign up. Later projects go deeper and take longer — typically 3–9 hours — but by then you're building real, monetizable software.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What do I actually build?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Real, deployed web apps. You'll build a chat interface, a dashboard with a database and user logins, an admin panel, a Stripe-powered subscription product, and a mobile app — all hosted live on the internet. By the end, you have a portfolio of working software you built yourself.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What AI tools are used throughout the projects?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Primarily Claude (Anthropic's AI) via Claude.ai and Claude Code — an AI coding tool that writes and edits code directly in your terminal. Later projects also integrate the Claude API so you can build your own AI-powered features into your apps.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What's the pricing?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Project 1 in every track is completely free — no credit card needed. The Creator plan unlocks all projects for $10/month, which you can cancel anytime. See the full breakdown on the <a href="pricing.html">Pricing page</a>.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">Do I get a certificate when I finish?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Yes. Each completed project lets you download a certificate and a shareable achievement badge — including your live project URL — that you can post on LinkedIn or add to your portfolio.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What tech stack will I learn?<span class="faq-icon">+</span></button>
+    <div class="faq-a">The Web Apps track covers HTML/CSS/JS, React, Supabase (database + auth), Stripe (payments), Vercel (deployment), and React Native for mobile. These are the same tools used by professional developers and startups.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What if I get stuck?<span class="faq-icon">+</span></button>
+    <div class="faq-a">Every project includes detailed steps with code examples and explanations. Claude Code is your AI co-pilot throughout — you can ask it anything at any point. If you hit a wall, Claude can debug, explain, and fix issues in real time alongside you.</div>
+  </div>
+
+</section>
+
 <footer>
   <div class="ft">GoLive Labs</div>
   Build Real Things with AI · Created with Claude
@@ -564,6 +625,13 @@ footer .ft {
 </footer>
 
 <script>
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+
 function toggleMobileMenu() {
   var btn = document.getElementById('nav-hamburger');
   var menu = document.getElementById('mobile-menu');

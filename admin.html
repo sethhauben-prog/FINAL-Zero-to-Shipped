@@ -149,6 +149,9 @@ tr.deactivated td { opacity: 0.45; }
 /* PROJECT LIBRARY POSTS */
 .lib-post-list { display: flex; flex-direction: column; gap: 10px; }
 .lib-post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; }
+.lib-post-thumb { width: 120px; height: 80px; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); flex-shrink: 0; background: var(--surface2); position: relative; }
+.lib-post-thumb iframe { width: 400%; height: 400%; border: none; transform: scale(0.25); transform-origin: top left; pointer-events: none; }
+.lib-post-thumb-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-dim); }
 .lib-post-info { flex: 1; min-width: 0; }
 .lib-post-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
 .lib-post-meta { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
@@ -359,11 +362,16 @@ function renderLibPosts() {
     const projName = PROJECT_META[p.project_id] || p.project_id || 'Project';
     const email = p._email || '';
     const desc = p.description ? '<div class="lib-post-desc">' + p.description.substring(0, 120) + (p.description.length > 120 ? '…' : '') + '</div>' : '';
+    const hasUrl = p.url && p.url.startsWith('http');
+    const thumb = hasUrl
+      ? '<div class="lib-post-thumb"><iframe src="' + p.url + '" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe></div>'
+      : '<div class="lib-post-thumb"><div class="lib-post-thumb-placeholder">🚀</div></div>';
     return '<div class="lib-post-card" id="lib-post-' + p.id + '">' +
+      thumb +
       '<div class="lib-post-info">' +
         '<div class="lib-post-title">' + projName + '</div>' +
         '<div class="lib-post-meta">' + email + ' · Shared ' + fmtDateShort(p.shared_at) + '</div>' +
-        (p.url ? '<a class="lib-post-url" href="' + p.url + '" target="_blank" rel="noopener">' + p.url + '</a>' : '') +
+        (hasUrl ? '<a class="lib-post-url" href="' + p.url + '" target="_blank" rel="noopener">' + p.url + '</a>' : '') +
         desc +
       '</div>' +
       '<button class="lib-delete-btn" data-post-id="' + p.id + '">Delete</button>' +

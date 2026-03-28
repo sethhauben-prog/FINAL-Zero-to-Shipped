@@ -357,7 +357,7 @@ function renderLibPosts() {
   }
   list.innerHTML = allLibPosts.map(function(p) {
     const projName = PROJECT_META[p.project_id] || p.project_id || 'Project';
-    const email = p.profiles ? p.profiles.email : (p.user_id || '');
+    const email = p._email || '';
     const desc = p.description ? '<div class="lib-post-desc">' + p.description.substring(0, 120) + (p.description.length > 120 ? '…' : '') + '</div>' : '';
     return '<div class="lib-post-card" id="lib-post-' + p.id + '">' +
       '<div class="lib-post-info">' +
@@ -396,13 +396,19 @@ function renderLibPosts() {
 async function loadLibPosts() {
   const { data, error } = await supabaseClient
     .from('shared_projects')
-    .select('*, profiles(email)')
+    .select('*')
     .order('shared_at', { ascending: false });
   if (error) {
     document.getElementById('lib-post-list').innerHTML = '<div class="lib-empty">Failed to load posts.</div>';
     return;
   }
-  allLibPosts = data || [];
+  // Attach email from already-loaded allUsers
+  const userMap = {};
+  allUsers.forEach(function(u) { userMap[u.id] = u.email; });
+  allLibPosts = (data || []).map(function(p) {
+    p._email = userMap[p.user_id] || p.user_id;
+    return p;
+  });
   renderLibPosts();
 }
 

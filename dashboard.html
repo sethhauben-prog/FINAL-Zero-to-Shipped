@@ -216,6 +216,25 @@ body {
   line-height: 1.65;
 }
 .orientation.open .orient-body { display: block; }
+.orient-unstuck {
+  display: none;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: rgba(26,61,181,0.05);
+  border: 1px solid rgba(26,61,181,0.15);
+  border-radius: 6px;
+}
+.orientation.open .orient-unstuck { display: flex; }
+@media (max-width: 700px) {
+  .orient-unstuck { display: flex; margin-top: 8px; }
+  .orientation.open .orient-unstuck { display: flex; }
+}
+.orient-unstuck-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.orient-unstuck-text { font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+.orient-unstuck-text strong { color: var(--royal); }
+
 .orient-toggle {
   display: flex;
   align-items: center;
@@ -484,6 +503,10 @@ footer .ft {
         <div class="orient-trigger"><strong>Build anything you envision</strong></div>
         <div class="orient-body">Complete the projects and you'll have the skills, confidence, and tools to build whatever idea you can imagine — from scratch, on your own.</div>
       </div>
+    </div>
+    <div class="orient-unstuck">
+      <div class="orient-unstuck-icon">💡</div>
+      <div class="orient-unstuck-text"><strong>Stuck at any point?</strong> That's completely normal — just paste the error or describe what's not working into <strong>Claude.ai</strong> or your <strong>Claude Code terminal</strong>. It will diagnose and fix it. Getting unstuck is part of the process.</div>
     </div>
     <div class="orient-toggle" id="orient-trigger">
       <div class="orient-toggle-icon" id="orient-icon">+</div>

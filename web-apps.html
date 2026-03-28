@@ -904,6 +904,114 @@ ul.plain-list li:last-child { border-bottom: none; }
   padding: 28px 32px;
   background: var(--surface);
 }
+/* CERTIFICATE */
+.certificate-wrap {
+  display: none;
+  margin: 0 0 20px;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: linear-gradient(160deg, #fffdf7 0%, #fff8ec 100%);
+  padding: 36px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.certificate-wrap.visible { display: block; }
+.certificate-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(201,146,42,0.25);
+  border-radius: 4px;
+  pointer-events: none;
+}
+.cert-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.cert-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+.cert-body {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.cert-body strong { color: var(--text); font-size: 16px; }
+.cert-project {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--royal);
+  margin-bottom: 6px;
+}
+.cert-level {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  background: rgba(26,61,181,0.08);
+  border: 1px solid rgba(26,61,181,0.2);
+  color: var(--royal);
+  margin-bottom: 20px;
+}
+.cert-divider {
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  margin: 20px auto;
+  border-radius: 2px;
+}
+.cert-sig {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.cert-sig-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+.cert-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+.cert-download-btn {
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 50px;
+  border: 1px solid var(--gold);
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.cert-download-btn:hover { background: var(--gold); color: #fff; }
+
 .achievement-badge-wrap {
   display: none;
   margin: 24px 0;
@@ -3213,6 +3321,25 @@ function initProjectCompletion(projectId) {
         <div class="complete-check${data.share ? ' done' : ''}" id="comp-share-${projectId}"></div>
         <span class="complete-row-label">Share with the GoLive Labs Project Library</span>
       </div>
+      <div class="complete-row" id="comp-cert-row-${projectId}">
+        <div class="complete-check${data.cert ? ' done' : ''}" id="comp-cert-check-${projectId}"></div>
+        <span class="complete-row-label">Get Certificate</span>
+      </div>
+    </div>
+
+    <div class="certificate-wrap${data.cert && data.done ? ' visible' : ''}" id="comp-cert-${projectId}">
+      <div class="cert-eyebrow">✦ GoLive Labs ✦</div>
+      <div class="cert-title">Certificate of Completion</div>
+      <div class="cert-body">This certifies that</div>
+      <div class="cert-body"><strong id="comp-cert-name-${projectId}">${window._userEmail || ''}</strong></div>
+      <div class="cert-body">has successfully completed</div>
+      <div class="cert-project">${PROJECT_META[projectId] ? PROJECT_META[projectId].title : ''}</div>
+      <div class="cert-level">${PROJECT_META[projectId] ? PROJECT_META[projectId].level : ''}</div>
+      <div class="cert-divider"></div>
+      <div class="cert-sig">GoLive Labs</div>
+      <div class="cert-sig-label">Web Apps Track · Project ${idx + 1} of 8</div>
+      <div class="cert-date" id="comp-cert-date-${projectId}"></div>
+      <button class="cert-download-btn" onclick="downloadCertificate('${projectId}')">⬇ Download Certificate</button>
     </div>
 
     <div class="achievement-badge-wrap${data.done ? ' visible' : ''}" id="comp-badge-${projectId}">
@@ -3297,6 +3424,17 @@ function initProjectCompletion(projectId) {
     syncProfileToSupabase();
   });
 
+  const certCheck = el.querySelector('#comp-cert-check-' + projectId);
+  const certWrap  = el.querySelector('#comp-cert-' + projectId);
+  const certDate  = el.querySelector('#comp-cert-date-' + projectId);
+  if (certDate) certDate.textContent = 'Issued ' + new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  el.querySelector('#comp-cert-row-' + projectId).addEventListener('click', function() {
+    const isCert = !certCheck.classList.contains('done');
+    certCheck.classList.toggle('done', isCert);
+    certWrap.classList.toggle('visible', isCert);
+    saveCompletion(projectId, { cert: isCert });
+  });
+
   if (nextBtn) {
     nextBtn.addEventListener('click', function() {
       nextProject();
@@ -3376,6 +3514,92 @@ function downloadBadge(projectId) {
 
   const link = document.createElement('a');
   link.download = 'golive-labs-project-' + (idx + 1) + '-badge.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function downloadCertificate(projectId) {
+  const meta = PROJECT_META[projectId] || {};
+  const idx = ORDER.indexOf(projectId);
+  const email = window._userEmail || '';
+  const canvas = document.createElement('canvas');
+  canvas.width = 1000; canvas.height = 700;
+  const ctx = canvas.getContext('2d');
+
+  // Cream background
+  ctx.fillStyle = '#fffdf7';
+  ctx.fillRect(0, 0, 1000, 700);
+
+  // Gold outer border
+  ctx.strokeStyle = '#c9922a';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(12, 12, 976, 676);
+
+  // Gold inner border
+  ctx.strokeStyle = 'rgba(201,146,42,0.3)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(24, 24, 952, 652);
+
+  // Eyebrow
+  ctx.font = '500 12px monospace';
+  ctx.fillStyle = '#c9922a';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦  GOLIVE LABS  ✦', 500, 80);
+
+  // Title
+  ctx.font = 'bold 52px serif';
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillText('Certificate of Completion', 500, 160);
+
+  // Divider
+  ctx.fillStyle = '#c9922a';
+  ctx.fillRect(420, 178, 160, 2);
+
+  // Body
+  ctx.font = '300 18px sans-serif';
+  ctx.fillStyle = '#6b6660';
+  ctx.fillText('This certifies that', 500, 230);
+
+  // Name
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillText(email, 500, 280);
+
+  ctx.font = '300 18px sans-serif';
+  ctx.fillStyle = '#6b6660';
+  ctx.fillText('has successfully completed', 500, 330);
+
+  // Project name
+  ctx.font = 'italic bold 32px serif';
+  ctx.fillStyle = '#1a3db5';
+  ctx.fillText(meta.title || '', 500, 390);
+
+  // Level badge line
+  ctx.font = '500 13px monospace';
+  ctx.fillStyle = '#6b6660';
+  ctx.fillText('WEB APPS TRACK  ·  PROJECT ' + (idx + 1) + ' OF 8  ·  ' + (meta.level || '').toUpperCase(), 500, 430);
+
+  // Divider
+  ctx.fillStyle = '#c9922a';
+  ctx.fillRect(420, 460, 160, 2);
+
+  // Signature
+  ctx.font = 'italic bold 28px serif';
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillText('GoLive Labs', 500, 520);
+
+  ctx.font = '500 11px monospace';
+  ctx.fillStyle = '#a09b94';
+  ctx.fillText('goliveailabs.com', 500, 548);
+
+  // Date
+  const dateStr = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  ctx.font = '400 12px monospace';
+  ctx.fillStyle = '#a09b94';
+  ctx.fillText('Issued ' + dateStr, 500, 610);
+
+  const link = document.createElement('a');
+  link.download = 'golive-labs-certificate-project-' + (idx + 1) + '.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
 }

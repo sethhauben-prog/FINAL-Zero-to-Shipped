@@ -1037,11 +1037,28 @@ ul.plain-list li:last-child { border-bottom: none; }
 .done-and-rating .complete-row { margin-bottom: 0; flex-shrink: 0; }
 .star-rating-wrap {
   display: none;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
-  margin-left: auto;
+  margin-top: 14px;
 }
 .star-rating-wrap.visible { display: flex; }
+.star-rating-row { display: flex; align-items: center; gap: 8px; }
+.review-comment {
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  width: 100%;
+  resize: vertical;
+  min-height: 72px;
+  outline: none;
+  transition: border-color 0.15s;
+  margin-top: 4px;
+}
+.review-comment:focus { border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
 .star-rating-label {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
@@ -3165,15 +3182,18 @@ function initProjectCompletion(projectId) {
         <span class="complete-row-label">Yes, I completed this project</span>
       </div>
       <div class="star-rating-wrap${data.done ? ' visible' : ''}" id="comp-stars-wrap-${projectId}">
-        <span class="star-rating-label">How easy were the steps to follow?</span>
-        <div class="stars" id="comp-stars-${projectId}">
-          <span class="star${(data.rating||0)>=1?' active':''}" data-val="1">★</span>
-          <span class="star${(data.rating||0)>=2?' active':''}" data-val="2">★</span>
-          <span class="star${(data.rating||0)>=3?' active':''}" data-val="3">★</span>
-          <span class="star${(data.rating||0)>=4?' active':''}" data-val="4">★</span>
-          <span class="star${(data.rating||0)>=5?' active':''}" data-val="5">★</span>
+        <div class="star-rating-row">
+          <span class="star-rating-label">How easy were the steps to follow?</span>
+          <div class="stars" id="comp-stars-${projectId}">
+            <span class="star${(data.rating||0)>=1?' active':''}" data-val="1">★</span>
+            <span class="star${(data.rating||0)>=2?' active':''}" data-val="2">★</span>
+            <span class="star${(data.rating||0)>=3?' active':''}" data-val="3">★</span>
+            <span class="star${(data.rating||0)>=4?' active':''}" data-val="4">★</span>
+            <span class="star${(data.rating||0)>=5?' active':''}" data-val="5">★</span>
+          </div>
+          <span class="star-rating-label">(1 Hard, 5 Easy)</span>
         </div>
-        <span class="star-rating-label">(1 Hard, 5 Easy)</span>
+        <textarea class="review-comment" id="comp-comment-${projectId}" placeholder="Share what you built or any feedback on this project…">${data.comment || ''}</textarea>
       </div>
     </div>
 
@@ -3229,6 +3249,10 @@ function initProjectCompletion(projectId) {
     });
     saveCompletion(projectId, { rating: val });
     syncProfileToSupabase();
+  });
+
+  el.querySelector('#comp-comment-' + projectId).addEventListener('input', function() {
+    saveCompletion(projectId, { comment: this.value });
   });
 
   el.querySelector('#comp-done-row-' + projectId).addEventListener('click', function() {
@@ -3327,14 +3351,22 @@ function downloadBadge(projectId) {
   ctx.fillStyle = '#c9922a';
   ctx.fillText((meta.level || '').toUpperCase(), 66, 291);
 
+  // Live URL
+  const data = getCompletion()[projectId] || {};
+  if (data.url) {
+    ctx.font = '500 13px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.fillText('🔗 ' + data.url.replace(/^https?:\/\//, ''), 56, 330);
+  }
+
   // Divider
   ctx.fillStyle = 'rgba(255,255,255,0.15)';
-  ctx.fillRect(56, 330, 688, 1);
+  ctx.fillRect(56, data.url ? 350 : 330, 688, 1);
 
   // Footer
   ctx.font = '500 14px monospace';
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.fillText('goliveailabs.com  ·  Web Apps Track', 56, 370);
+  ctx.fillText('goliveailabs.com  ·  Web Apps Track', 56, data.url ? 385 : 370);
 
   // Rocket
   ctx.font = '52px serif';

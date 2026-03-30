@@ -174,6 +174,7 @@ tr.deactivated td { opacity: 0.45; }
 .paywall-item-label { flex: 1; }
 .paywall-proj-id { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2px; }
 .paywall-proj-name { font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3; }
+.paywall-track-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
 .paywall-footer { display: flex; align-items: center; gap: 14px; }
 .paywall-save-btn { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 6px; border: 1px solid var(--royal); background: var(--royal); color: #fff; cursor: pointer; transition: background 0.15s; }
 .paywall-save-btn:hover { background: var(--royal-dark); }
@@ -291,8 +292,11 @@ footer .ft { font-family: 'Playfair Display', serif; font-size: 18px; font-weigh
   <div class="section-heading">Paywall Configuration</div>
   <div class="paywall-card">
     <p class="paywall-desc">Check the projects that require a paid plan. Paid users always get access to everything — these locks only apply to free accounts.</p>
-    <div class="paywall-grid" id="paywall-grid"></div>
-    <div class="paywall-footer">
+    <div class="paywall-track-label">Web Apps Track</div>
+    <div class="paywall-grid" id="paywall-grid-webapps"></div>
+    <div class="paywall-track-label" style="margin-top:20px;">AI Agents Track</div>
+    <div class="paywall-grid" id="paywall-grid-agents"></div>
+    <div class="paywall-footer" style="margin-top:20px;">
       <button class="paywall-save-btn" id="paywall-save-btn">Save Configuration</button>
       <span class="paywall-save-status" id="paywall-save-status">Saved ✓</span>
     </div>
@@ -328,11 +332,17 @@ const PROJECT_META = {
   p5: 'Monetization — Stripe',
   p6: 'Mobile App',
   p7: 'Build Your Own',
-  p8: 'Launch Checklist'
+  p8: 'Launch Checklist',
+  a1: 'Your First Agent — No-Code',
+  a2: 'File Intelligence Agent',
+  a3: 'Web Research Agent',
+  a4: 'Multi-Agent Pipeline',
+  a5: 'Agent with Memory + MCP',
+  a6: 'Autonomous Business Agent'
 };
 const ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8'];
 
-const PAYWALL_PROJECTS = [
+const WEB_APP_PROJECTS = [
   { id: 'p1', level: 'Starter' },
   { id: 'p2', level: 'Beginner' },
   { id: 'p3', level: 'Intermediate' },
@@ -342,7 +352,16 @@ const PAYWALL_PROJECTS = [
   { id: 'p7', level: 'Creator' },
   { id: 'p8', level: 'Expert' }
 ];
-let currentLockedProjects = ['p3','p4','p5','p6','p7','p8'];
+const AGENT_PROJECTS = [
+  { id: 'a1', level: 'Starter' },
+  { id: 'a2', level: 'Beginner' },
+  { id: 'a3', level: 'Intermediate' },
+  { id: 'a4', level: 'Advanced' },
+  { id: 'a5', level: 'Pro' },
+  { id: 'a6', level: 'Ninja' }
+];
+const PAYWALL_PROJECTS = WEB_APP_PROJECTS.concat(AGENT_PROJECTS);
+let currentLockedProjects = ['p3','p4','p5','p6','p7','p8','a3','a4','a5','a6'];
 
 // ── PROJECT LIBRARY ──
 let allLibPosts = [];
@@ -421,18 +440,22 @@ async function loadLibPosts() {
 }
 
 function renderPaywallConfig() {
-  const grid = document.getElementById('paywall-grid');
-  if (!grid) return;
-  grid.innerHTML = PAYWALL_PROJECTS.map(function(p) {
-    const checked = currentLockedProjects.includes(p.id) ? 'checked' : '';
-    return '<label class="paywall-item">' +
-      '<input type="checkbox" id="pw-' + p.id + '" ' + checked + '>' +
-      '<div class="paywall-item-label">' +
-        '<div class="paywall-proj-id">' + p.id.toUpperCase() + ' · ' + p.level + '</div>' +
-        '<div class="paywall-proj-name">' + PROJECT_META[p.id] + '</div>' +
-      '</div>' +
-    '</label>';
-  }).join('');
+  function renderGroup(projects, gridId) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    grid.innerHTML = projects.map(function(p) {
+      const checked = currentLockedProjects.includes(p.id) ? 'checked' : '';
+      return '<label class="paywall-item">' +
+        '<input type="checkbox" id="pw-' + p.id + '" ' + checked + '>' +
+        '<div class="paywall-item-label">' +
+          '<div class="paywall-proj-id">' + p.id.toUpperCase() + ' · ' + p.level + '</div>' +
+          '<div class="paywall-proj-name">' + PROJECT_META[p.id] + '</div>' +
+        '</div>' +
+      '</label>';
+    }).join('');
+  }
+  renderGroup(WEB_APP_PROJECTS, 'paywall-grid-webapps');
+  renderGroup(AGENT_PROJECTS, 'paywall-grid-agents');
 }
 
 async function savePaywallConfig() {

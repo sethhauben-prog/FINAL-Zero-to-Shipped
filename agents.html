@@ -721,50 +721,93 @@ If you're unsure how to respond, say "I'll need to check on this" instead of gue
         </div>
         <div class="accordion-body">
           <div class="step-list">
+
             <div class="step">
               <div class="step-num">1</div>
               <div class="step-content">
                 <div class="step-title">Create a new Zap in Zapier</div>
-                <div class="step-desc">In Zapier, click <strong>Create Zap</strong>. A Zap is a workflow — it has a trigger (what starts it) and one or more actions (what happens next).</div>
+                <div class="step-desc">Log in to <strong>zapier.com</strong>. Click the orange <strong>+ Create</strong> button in the top left and select <strong>New Zap</strong>. You'll land in the Zap editor. At the top of the page, click the name field and type <code>AI Email Responder</code> so you can find it easily later.</div>
               </div>
             </div>
+
             <div class="step">
               <div class="step-num">2</div>
               <div class="step-content">
-                <div class="step-title">Set the trigger — New email in Gmail</div>
-                <div class="step-desc">Search for <strong>Gmail</strong> as your trigger app. Choose <strong>"New Email"</strong>. Connect your Gmail account. Under filters, set <strong>Subject Contains</strong> to <code>AI Help</code>.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <div class="step-title">Add Claude as the action — generate a reply</div>
-                <div class="step-desc">Click + to add an action. Search for <strong>Anthropic (Claude)</strong>. Choose <strong>"Send Message"</strong>. In the prompt field, enter:</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-str">You are a helpful assistant. Someone emailed asking for help. Read their email and write a friendly, helpful reply in 2-3 sentences.
-
-Email subject: [insert Gmail subject field here]
-Email body: [insert Gmail body field here]
-
-Write only the reply text — no subject line, no greeting like "Dear", just the reply body.</span></span>
+                <div class="step-title">Set up the Gmail trigger</div>
+                <div class="step-desc">Before you build anything, <strong>send yourself a test email first</strong>. Open Gmail and send an email to yourself with the subject <code>AI Help</code> and a question in the body like "How do I reset my password?". You'll need this later when testing.</div>
+                <div class="callout callout-info" style="margin-top:10px;">📋 <strong>Now set up the trigger in Zapier:</strong><br>
+                  1. In the Zap editor, click the <strong>Trigger</strong> box. Search for <strong>Gmail</strong> and select it.<br>
+                  2. Under Event, select <strong>New Email</strong> and click Continue.<br>
+                  3. Click <strong>Sign in to Gmail</strong>, connect your account, and click Continue.<br>
+                  4. On the Configure tab you will see a <strong>Label or Mailbox</strong> dropdown. Click it and select <strong>INBOX</strong> from the list. Click Continue.<br>
+                  5. Click <strong>Test trigger</strong>. Zapier will load recent emails from your inbox. Find and select the <strong>AI Help</strong> test email you just sent yourself, then click <strong>Continue with selected record</strong>. This ensures all the following steps use the right test data.
                 </div>
               </div>
             </div>
+
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <div class="step-title">Add a Filter — only run for "AI Help" emails</div>
+                <div class="step-desc">The trigger will fire for every email in your inbox. You need a Filter so the Zap only continues when the subject contains <code>AI Help</code>.</div>
+                <div class="step-desc" style="margin-top:8px;">Click the <strong>+</strong> icon below the Gmail trigger step. Search for <strong>Filter</strong> and select it. The action will be called "Only continue if…"</div>
+                <div class="step-desc" style="margin-top:8px;">You will see three fields. Set them up exactly like this:</div>
+                <div class="callout callout-info" style="margin-top:10px;">
+                  <strong>Field 1</strong> (dropdown): Click and select <strong>1. Subject</strong> — the subject line from your Gmail trigger.<br>
+                  <strong>Field 2</strong> (dropdown): Click and select <strong>(Text) Contains</strong>.<br>
+                  <strong>Field 3</strong> (text input): Type <code>AI Help</code>.
+                </div>
+                <div class="step-desc" style="margin-top:8px;">Click <strong>Continue</strong> then <strong>Test</strong>. Because you selected the AI Help email in Step 2, Zapier should say <em>"Zap would have continued"</em>. If it says it would NOT have continued, go back to Step 2 and make sure you selected the correct test email.</div>
+              </div>
+            </div>
+
             <div class="step">
               <div class="step-num">4</div>
               <div class="step-content">
-                <div class="step-title">Add a second action — send the reply</div>
-                <div class="step-desc">Add another Gmail action. Choose <strong>"Send Email"</strong>. Set <strong>To</strong> to the sender's email. Set <strong>Body</strong> to Claude's output from the previous step.</div>
+                <div class="step-title">Add Claude — generate the reply</div>
+                <div class="step-desc">Click the <strong>+</strong> icon below the Filter step. Search for <strong>Anthropic (Claude)</strong> and select it. For the event choose <strong>Send Message</strong> and click Continue. Connect your Anthropic account using your API key and click Continue.</div>
+                <div class="callout callout-info" style="margin-top:10px;">📋 <strong>Setting up the User Message field:</strong><br><br>
+                  Click inside the <strong>User Message</strong> field and type this exactly:
+                </div>
+                <div class="copyable-wrap" style="margin-top:8px;">
+                  <span class="code-block"><span class="code-str">You are a helpful assistant. Someone emailed asking for help. Read their email and write a friendly, helpful reply in 2-3 sentences.
+
+Email subject: {{1. Subject}}
+Email body: {{1. Body Plain}}
+
+Write only the reply text — no subject line, no greeting like "Dear", just the reply body.</span></span>
+                </div>
+                <div class="callout callout-info" style="margin-top:10px;">
+                  To insert the blue tokens, use the <strong>+ button</strong> on the right side of the field to open the variable picker. Under Previous Steps click <strong>1. New Email</strong> and select <strong>Subject</strong> for the first token, and <strong>Body Plain</strong> (NOT Body Html) for the second token.
+                </div>
+                <div class="callout callout-warn" style="margin-top:8px;">⚠️ <strong>Always choose Body Plain — never Body Html.</strong> Body Html sends raw HTML code to Claude which produces garbled, broken replies. Body Plain sends clean readable text.</div>
+                <div class="step-desc" style="margin-top:8px;">Leave all other fields as default. Click <strong>Continue</strong> then click <strong>Test</strong>. Zapier will send your test email to Claude and you will see Claude's reply appear in the test results. Confirm the reply looks like a real, sensible response before moving on.</div>
               </div>
             </div>
+
             <div class="step">
               <div class="step-num">5</div>
               <div class="step-content">
-                <div class="step-title">Test and turn on your agent</div>
-                <div class="step-desc">Click <strong>Test</strong> in Zapier. Review the output — does Claude's reply make sense? When satisfied, toggle the Zap to <strong>On</strong>. Your agent is now live.</div>
-                <div class="callout callout-tip" style="margin-top:10px;"><strong>Test it:</strong> Send yourself an email with the subject "AI Help" and a question in the body. Within 30 seconds you should receive an AI-written reply.</div>
+                <div class="step-title">Add Gmail — send the reply</div>
+                <div class="step-desc">Click the <strong>+</strong> icon below the Claude step. Search for <strong>Gmail</strong> and select it. For the event choose <strong>Send Email</strong> and click Continue. Select your Gmail account and click Continue.</div>
+                <div class="callout callout-info" style="margin-top:10px;">📋 <strong>Setting up each field</strong> — use the variable picker for every field, do not type email addresses manually:<br><br>
+                  <strong>To field:</strong> Click inside the To field, then click the + button. Under Previous Steps click <strong>1. New Email</strong> and select <strong>From Email</strong>. The token <code>{{1. From Email}}</code> will appear — this automatically sends the reply to whoever emailed you.<br><br>
+                  <strong>Subject field:</strong> Type <code>Re: </code> (with a space after the colon). Then click the + button, select <strong>1. New Email</strong>, and choose <strong>Subject</strong>. The field will show <code>Re: {{1. Subject}}</code> — this produces a subject like <em>Re: AI Help</em>.<br><br>
+                  <strong>Body field:</strong> Click inside the Body field, then click the + button. Under Previous Steps click <strong>3. Send Message</strong> (the Claude step) and select <strong>Response Content Text</strong>. The token <code>{{3. Response Content Text}}</code> will appear — this inserts Claude's reply as the email body.
+                </div>
+                <div class="step-desc" style="margin-top:8px;">Leave all other fields blank. Click <strong>Continue</strong> then click <strong>Test</strong>. Check your inbox — you should receive a real reply email written by Claude within a few seconds.</div>
               </div>
             </div>
+
+            <div class="step">
+              <div class="step-num">6</div>
+              <div class="step-content">
+                <div class="step-title">Turn on your agent</div>
+                <div class="step-desc">Once your test email arrives and the reply looks correct, click <strong>Publish</strong> in the top right corner of the Zap editor to turn your agent on. It will now run automatically every time you receive an email with <code>AI Help</code> in the subject.</div>
+                <div class="callout callout-tip" style="margin-top:10px;"><strong>Test it live:</strong> Send yourself an email with the subject "AI Help" and a question. Within 30 seconds you should receive an AI-written reply automatically.</div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

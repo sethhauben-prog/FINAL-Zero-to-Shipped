@@ -501,7 +501,9 @@ body {
     e.preventDefault();
     const email = form.email.value.trim();
     if (!email) { showMsg('Enter your email above first, then click Forgot password.', 'error'); return; }
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reset-password.html'
+    });
     if (error) { showMsg(error.message, 'error'); return; }
     showMsg('Password reset email sent — check your inbox.', 'success');
   });

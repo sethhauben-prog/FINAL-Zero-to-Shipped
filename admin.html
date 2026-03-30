@@ -673,7 +673,7 @@ document.getElementById('users-tbody').addEventListener('click', async function(
   if (btn.classList.contains('btn-reset')) {
     const email = btn.dataset.email;
     const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/login.html'
+      redirectTo: window.location.origin + '/reset-password.html'
     });
     showToast(error ? 'Error: ' + error.message : 'Password reset email sent to ' + email);
     return;

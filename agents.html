@@ -52,7 +52,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .page-tabs { display: flex; align-items: stretch; gap: 0; height: 100%; }
 .page-tab { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0 18px; border-bottom: 2px solid transparent; cursor: pointer; text-decoration: none; display: flex; align-items: center; transition: color 0.15s; white-space: nowrap; height: 60px; }
 .page-tab:hover { color: var(--text); background: var(--surface2); border-bottom-color: var(--border); }
-.page-tab.active { color: var(--agent); border-bottom-color: var(--agent); }
+.page-tab.active { color: var(--royal); border-bottom-color: var(--royal); }
 .nav-logo { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--text); text-decoration: none; }
 .nav-logo em { color: var(--royal); }
 .nav-btn { font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: background 0.15s; text-decoration: none; }
@@ -65,7 +65,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .mobile-menu { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 49; flex-direction: column; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
 .mobile-menu.open { display: flex; }
 .mobile-menu-link { font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 700; color: var(--text-muted); text-decoration: none; padding: 16px 20px; border-bottom: 1px solid var(--border); display: block; transition: background 0.15s; }
-.mobile-menu-link:hover, .mobile-menu-link.active { background: var(--surface2); color: var(--agent); }
+.mobile-menu-link:hover, .mobile-menu-link.active { background: var(--surface2); color: var(--royal); }
 .mobile-menu-actions { padding: 16px 20px; }
 .mobile-menu-actions .nav-btn { width: 100%; text-align: center; display: block; }
 @media (max-width: 700px) {
@@ -76,7 +76,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 
 /* ─── PROGRESS BAR ─── */
 .progress-bar-wrap { position: fixed; top: 60px; left: 0; right: 0; height: 3px; z-index: 200; background: var(--border); display: none; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, var(--agent), var(--gold)); width: 0%; transition: width 0.1s; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--royal), var(--gold)); width: 0%; transition: width 0.1s; }
 
 /* ─── HERO ─── */
 .hero {
@@ -119,7 +119,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .proj-desc { font-size: 12px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
 .proj-chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .proj-chip { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 2px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
-.proj-chip.hi { background: var(--agent-light); border-color: rgba(76,29,149,0.25); color: var(--agent); }
+.proj-chip.hi { background: var(--royal-light); border-color: rgba(26,61,181,0.25); color: var(--royal); }
 .proj-cta { margin: auto 16px 16px; padding: 11px 16px; border-radius: 5px; font-size: 12px; font-weight: 700; letter-spacing: 0.03em; display: flex; align-items: center; justify-content: space-between; color: #fff; transition: opacity 0.15s; }
 .proj-cta:hover { opacity: 0.88; }
 
@@ -127,10 +127,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .proj-card { position: relative; }
 .card-done-wrap { padding: 0 16px 14px; display: flex; align-items: center; gap: 8px; }
 .card-done-check { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 3px; background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
-.card-done-check.done { background: var(--agent); border-color: var(--agent); }
+.card-done-check.done { background: var(--royal); border-color: var(--royal); }
 .card-done-check.done::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
 .card-done-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
-.card-done-label.done { color: var(--agent); }
+.card-done-label.done { color: var(--royal); }
 
 /* ─── PAYWALL ─── */
 .proj-card-locked .proj-cta { display: none; }
@@ -150,10 +150,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 #project-views { display: none; }
 .project-nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; gap: 12px; }
 .pnav-back { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; cursor: pointer; background: none; border: none; transition: color 0.15s; }
-.pnav-back:hover { color: var(--agent); }
+.pnav-back:hover { color: var(--royal); }
 .pnav-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); text-align: center; flex: 1; }
 .pnav-next { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; cursor: pointer; background: none; border: none; transition: color 0.15s; }
-.pnav-next:hover { color: var(--agent); }
+.pnav-next:hover { color: var(--royal); }
 .pnav-next.hidden { visibility: hidden; }
 
 /* ─── UNSTUCK CALLOUT ─── */
@@ -167,28 +167,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .project-section.active { display: block; }
 .project-header { display: flex; gap: 28px; align-items: flex-start; margin-bottom: 40px; }
 .project-badge { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.project-num { width: 56px; height: 56px; border-radius: 50%; background: var(--p-color, var(--agent)); color: #fff; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-.project-level-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); white-space: nowrap; }
+.project-num { width: 56px; height: 56px; border-radius: 50%; background: var(--p-color, var(--royal)); color: #fff; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.project-level-tag { font-family: 'IBM Plex Mono', monospace; font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--royal)); white-space: nowrap; }
 .project-info { flex: 1; }
 .project-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.1; margin-bottom: 8px; color: var(--text); }
 .project-desc { color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 14px; }
 .tool-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 2px; border: 1px solid var(--border); color: var(--text-muted); background: var(--surface2); }
-.chip.highlight { background: var(--agent-light); border-color: rgba(76,29,149,0.25); color: var(--agent); }
+.chip.highlight { background: var(--royal-light); border-color: rgba(26,61,181,0.25); color: var(--royal); }
 
 /* ─── BUILD IDEAS ─── */
-.build-ideas { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 22px 24px; margin-bottom: 20px; }
-.build-ideas-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); margin-bottom: 12px; }
+.build-ideas { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--p-color, var(--royal)); border-radius: 4px; padding: 22px 24px; margin-bottom: 20px; }
+.build-ideas-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--royal)); margin-bottom: 12px; }
 .idea-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
 .idea-item { font-size: 13px; color: var(--text-muted); padding: 6px 10px; background: var(--bg); border-radius: 3px; border: 1px solid var(--border); display: flex; align-items: center; gap: 7px; }
-.idea-item::before { content: '→'; color: var(--p-color, var(--agent)); font-size: 11px; flex-shrink: 0; }
+.idea-item::before { content: '→'; color: var(--p-color, var(--royal)); font-size: 11px; flex-shrink: 0; }
 
 /* ─── SKILL UNLOCK ─── */
-.skill-unlock { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border: 1px solid var(--border); border-top: 3px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 20px 24px; margin: 20px 0; }
-.skill-unlock-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--agent)); margin-bottom: 10px; }
+.skill-unlock { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border: 1px solid var(--border); border-top: 3px solid var(--p-color, var(--royal)); border-radius: 4px; padding: 20px 24px; margin: 20px 0; }
+.skill-unlock-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--p-color, var(--royal)); margin-bottom: 10px; }
 .skill-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .skill-tag { font-size: 12px; font-weight: 600; padding: 4px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
-.skill-tag::before { content: '✓'; color: var(--p-color, var(--agent)); font-size: 10px; }
+.skill-tag::before { content: '✓'; color: var(--p-color, var(--royal)); font-size: 10px; }
 
 /* ─── ACCORDION ─── */
 .accordion { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 10px; background: var(--surface); overflow: hidden; }
@@ -206,14 +206,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 /* ─── STEP CHECKBOXES ─── */
 .step { display: flex; gap: 16px; padding: 16px 0; padding-right: 36px; border-bottom: 1px solid var(--border); position: relative; }
 .step:last-child { border-bottom: none; }
-.step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--p-color, var(--agent)); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.step-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--p-color, var(--royal)); color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 .step-content { flex: 1; }
 .step-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
 .step-check { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; background: var(--surface); flex-shrink: 0; }
-.step-check:hover { border-color: var(--p-color, var(--agent)); }
+.step-check:hover { border-color: var(--p-color, var(--royal)); }
 .step-check-tick { display: none; font-size: 13px; color: #fff; font-weight: 700; line-height: 1; }
-.step.done .step-check { background: var(--p-color, var(--agent)); border-color: var(--p-color, var(--agent)); }
+.step.done .step-check { background: var(--p-color, var(--royal)); border-color: var(--p-color, var(--royal)); }
 .step.done .step-check-tick { display: block; }
 .step.done .step-title { text-decoration: line-through; color: var(--text-dim); }
 .step.done .step-desc { opacity: 0.5; }
@@ -221,7 +221,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 
 /* ─── CODE ─── */
 .copyable-wrap { position: relative; margin: 12px 0; }
-.code-block { display: block; background: #13131a; border: 1px solid #2a2a3a; border-left: 3px solid var(--p-color, var(--agent)); border-radius: 4px; padding: 14px 16px 14px 40px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #e0dfd8; white-space: pre-wrap; word-break: break-word; overflow-x: auto; }
+.code-block { display: block; background: #13131a; border: 1px solid #2a2a3a; border-left: 3px solid var(--p-color, var(--royal)); border-radius: 4px; padding: 14px 16px 14px 40px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #e0dfd8; white-space: pre-wrap; word-break: break-word; overflow-x: auto; }
 .code-str { color: #7dd3b0; }
 .code-cmd { color: #f4a56a; }
 .code-comment { color: #5a5a7a; }
@@ -231,11 +231,11 @@ body { background: var(--bg); color: var(--text); font-family: 'Manrope', sans-s
 .copy-btn .copied-check { display: none; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #43d9ad; }
 .copy-btn.copied .copy-emoji { display: none; }
 .copy-btn.copied .copied-check { display: block; }
-code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--agent); }
+code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; color: var(--royal); }
 
 /* ─── CALLOUTS ─── */
 .callout { padding: 14px 18px; border-radius: 4px; margin: 12px 0; font-size: 13px; line-height: 1.8; }
-.callout-info { background: var(--agent-light); border: 1px solid rgba(76,29,149,0.18); border-left: 3px solid var(--agent); color: var(--text); }
+.callout-info { background: var(--royal-light); border: 1px solid rgba(26,61,181,0.2); border-left: 3px solid var(--royal); color: var(--text); }
 .callout-tip { background: var(--green-light); border: 1px solid rgba(26,122,74,0.2); border-left: 3px solid var(--green); color: var(--text); }
 .callout-warn { background: var(--gold-light); border: 1px solid rgba(201,146,42,0.25); border-left: 3px solid var(--gold); color: var(--text); }
 .callout strong { font-weight: 700; }
@@ -243,7 +243,7 @@ code { font-family: 'IBM Plex Mono', monospace; font-size: 12px; background: var
 /* ─── PLAIN LIST ─── */
 ul.plain-list { list-style: none; padding: 0; margin: 10px 0; }
 ul.plain-list li { font-size: 13px; color: var(--text-muted); padding: 5px 0 5px 18px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.04); line-height: 1.7; }
-ul.plain-list li::before { content: '→'; position: absolute; left: 0; color: var(--p-color, var(--agent)); font-size: 11px; }
+ul.plain-list li::before { content: '→'; position: absolute; left: 0; color: var(--p-color, var(--royal)); font-size: 11px; }
 ul.plain-list li:last-child { border-bottom: none; }
 
 /* ─── PROJECT COLOR OVERRIDES ─── */
@@ -255,19 +255,19 @@ ul.plain-list li:last-child { border-bottom: none; }
 .p6 { --p-color: var(--p6); }
 
 /* ─── PROJECT COMPLETION ─── */
-.proj-complete-section { margin-top: 48px; border: 1px solid var(--border); border-top: 3px solid var(--p-color, var(--agent)); border-radius: 6px; padding: 28px 32px; background: var(--surface); }
+.proj-complete-section { margin-top: 48px; border: 1px solid var(--border); border-top: 3px solid var(--p-color, var(--royal)); border-radius: 6px; padding: 28px 32px; background: var(--surface); }
 .proj-complete-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
 .proj-complete-sub { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 24px; }
 .complete-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; cursor: pointer; }
 .complete-check { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 4px; background: var(--surface); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
-.complete-check.done { background: var(--p-color, var(--agent)); border-color: var(--p-color, var(--agent)); }
+.complete-check.done { background: var(--p-color, var(--royal)); border-color: var(--p-color, var(--royal)); }
 .complete-check.done::after { content: '✓'; color: #fff; font-size: 13px; font-weight: 700; }
 .complete-row-label { font-size: 14px; font-weight: 600; color: var(--text); }
 .complete-url-wrap { margin: 0 0 18px 0; display: none; }
 .complete-url-wrap.visible { display: block; }
 .complete-url-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 7px; }
 .complete-url-input { width: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 10px 14px; outline: none; transition: border-color 0.15s; }
-.complete-url-input:focus { border-color: var(--p-color, var(--agent)); box-shadow: 0 0 0 3px rgba(76,29,149,0.08); }
+.complete-url-input:focus { border-color: var(--p-color, var(--royal)); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
 .complete-library-row { display: none; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
 .complete-library-row.visible { display: flex; }
 .complete-library-row .complete-row { margin-bottom: 0; flex: 1; }
@@ -282,7 +282,7 @@ ul.plain-list li:last-child { border-bottom: none; }
 .star:hover, .star.active { color: var(--gold); }
 .star:hover { transform: scale(1.15); }
 .review-comment { font-family: 'Manrope', sans-serif; font-size: 13px; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; width: 100%; resize: vertical; min-height: 40px; height: 40px; outline: none; transition: border-color 0.15s, height 0.15s; }
-.review-comment:focus { height: 96px; border-color: var(--agent); box-shadow: 0 0 0 3px rgba(76,29,149,0.08); }
+.review-comment:focus { height: 96px; border-color: var(--royal); box-shadow: 0 0 0 3px rgba(26,61,181,0.08); }
 
 /* CERTIFICATE */
 .certificate-wrap { display: none; margin: 0 0 20px; border: 2px solid var(--gold); border-radius: 8px; background: linear-gradient(160deg, #fffdf7 0%, #fff8ec 100%); padding: 36px 40px; text-align: center; position: relative; overflow: hidden; }
@@ -292,8 +292,8 @@ ul.plain-list li:last-child { border-bottom: none; }
 .cert-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--text); margin-bottom: 16px; line-height: 1.1; }
 .cert-body { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 16px; }
 .cert-body strong { color: var(--text); font-size: 16px; }
-.cert-project { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--agent); margin-bottom: 6px; }
-.cert-level { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; background: var(--agent-light); border: 1px solid rgba(76,29,149,0.2); color: var(--agent); margin-bottom: 20px; }
+.cert-project { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; font-style: italic; color: var(--royal); margin-bottom: 6px; }
+.cert-level { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px; background: var(--royal-light); border: 1px solid rgba(26,61,181,0.2); color: var(--royal); margin-bottom: 20px; }
 .cert-divider { width: 60px; height: 2px; background: var(--gold); margin: 20px auto; border-radius: 2px; }
 .cert-sig { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; font-style: italic; color: var(--text); margin-bottom: 4px; }
 .cert-sig-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 20px; }
@@ -302,7 +302,7 @@ ul.plain-list li:last-child { border-bottom: none; }
 .cert-download-btn:hover { background: var(--gold); color: #fff; }
 
 /* ACHIEVEMENT BADGE */
-.achievement-badge-wrap { display: none; margin: 24px 0; padding: 20px 24px; background: linear-gradient(135deg, #4c1d95 0%, #3b1670 100%); border-radius: 8px; color: #fff; }
+.achievement-badge-wrap { display: none; margin: 24px 0; padding: 20px 24px; background: linear-gradient(135deg, #1a3db5 0%, #142e8a 100%); border-radius: 8px; color: #fff; }
 .achievement-badge-wrap.visible { display: block; }
 .achievement-badge-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
 .achievement-badge-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; line-height: 1.2; margin-bottom: 4px; }
@@ -320,7 +320,7 @@ ul.plain-list li:last-child { border-bottom: none; }
 .complete-nav-btn { flex: 1; padding: 13px 20px; border-radius: 6px; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--border); transition: background 0.15s, border-color 0.15s; }
 .complete-nav-btn--ghost { background: var(--surface); color: var(--text-muted); }
 .complete-nav-btn--ghost:hover { background: var(--surface2); }
-.complete-nav-btn--primary { background: var(--p-color, var(--agent)); color: #fff; border-color: transparent; }
+.complete-nav-btn--primary { background: var(--p-color, var(--royal)); color: #fff; border-color: transparent; }
 .complete-nav-btn--primary:hover { opacity: 0.88; }
 .complete-nav-btn--primary.hidden { display: none; }
 
@@ -349,7 +349,7 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
 /* ─── STEP CHECKBOXES (new pattern) ─── */
 .step-check-row { margin: 8px 0; }
 .step-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: var(--text-muted); line-height: 1.65; }
-.step-check input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; accent-color: var(--p-color, var(--agent)); width: 14px; height: 14px; cursor: pointer; }
+.step-check input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; accent-color: var(--p-color, var(--royal)); width: 14px; height: 14px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -848,23 +848,41 @@ Write only the reply text — no subject line, no greeting like "Dear", just the
 
 
     <!-- Project 2 -->
-<section id="a2" class="project-section p2" style="display:none">
+<section id="a2" class="project-section p2">
   <div class="project-header">
-    <div class="project-header-top">
-      <button class="back-btn" onclick="showSelector()">← All Projects</button>
-      <span class="project-label" id="label-a2"></span>
+    <div class="project-badge">
+      <div class="project-num">2</div>
+      <div class="project-level-tag">Beginner</div>
     </div>
-    <h1 class="project-title">Tool-Use Agent</h1>
-    <div class="project-meta-row">
-      <span class="level-badge">Beginner</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">Anthropic SDK</span>
-      <span class="tool-tag">Tool Use</span>
+    <div class="project-info">
+      <div class="project-title">Tool-Use Agent</div>
+      <div class="project-desc">Learn the most important pattern in agent development — the tool-use loop. Build a Python agent with real tools: web search, file writing, and date lookup. Once you understand this loop, every other agent architecture builds on it.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">Anthropic SDK</span>
+        <span class="chip">Tool Use</span>
+        <span class="chip">Agent Loop</span>
+        <span class="chip">1–3 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with tool-use agents</div>
+    <div class="idea-grid">
+      <div class="idea-item">Web research bot</div>
+      <div class="idea-item">File organizer agent</div>
+      <div class="idea-item">Competitive analysis tool</div>
+      <div class="idea-item">Daily news summarizer</div>
+      <div class="idea-item">Auto report generator</div>
+      <div class="idea-item">SEO keyword researcher</div>
+      <div class="idea-item">Job listing aggregator</div>
+      <div class="idea-item">Stock data fetcher</div>
     </div>
   </div>
 
   <div class="skill-unlock">
-    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
     <div class="skill-tags">
       <span class="skill-tag">Tool definitions</span>
       <span class="skill-tag">The agent loop</span>
@@ -1044,23 +1062,41 @@ if __name__ == "__main__":
 </section>
 
 <!-- Project 3 -->
-<section id="a3" class="project-section p3" style="display:none">
+<section id="a3" class="project-section p3">
   <div class="project-header">
-    <div class="project-header-top">
-      <button class="back-btn" onclick="showSelector()">← All Projects</button>
-      <span class="project-label" id="label-a3"></span>
+    <div class="project-badge">
+      <div class="project-num">3</div>
+      <div class="project-level-tag">Intermediate</div>
     </div>
-    <h1 class="project-title">Extended Thinking Agent</h1>
-    <div class="project-meta-row">
-      <span class="level-badge">Intermediate</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">claude-opus-4-6</span>
-      <span class="tool-tag">Extended Thinking</span>
+    <div class="project-info">
+      <div class="project-title">Extended Thinking Agent</div>
+      <div class="project-desc">Use Claude's extended thinking feature to build a deep analysis agent. Claude reasons step-by-step through complex problems before answering — you'll see its visible thinking blocks and control how deeply it reasons.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">claude-opus-4-6</span>
+        <span class="chip">Extended Thinking</span>
+        <span class="chip">Deep Analysis</span>
+        <span class="chip">2–4 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with extended thinking agents</div>
+    <div class="idea-grid">
+      <div class="idea-item">Business plan analyzer</div>
+      <div class="idea-item">Code architecture reviewer</div>
+      <div class="idea-item">Legal document analyzer</div>
+      <div class="idea-item">Investment thesis evaluator</div>
+      <div class="idea-item">Technical spec reviewer</div>
+      <div class="idea-item">Risk assessment agent</div>
+      <div class="idea-item">Strategy evaluator</div>
+      <div class="idea-item">Research synthesizer</div>
     </div>
   </div>
 
   <div class="skill-unlock">
-    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
     <div class="skill-tags">
       <span class="skill-tag">Extended thinking API</span>
       <span class="skill-tag">Thinking blocks</span>
@@ -1250,24 +1286,41 @@ python analyze.py business_plan.txt deep "Is the $1.2M ask reasonable given thei
 </section>
 
 <!-- Project 4 -->
-<section id="a4" class="project-section p4" style="display:none">
+<section id="a4" class="project-section p4">
   <div class="project-header">
-    <div class="project-header-top">
-      <button class="back-btn" onclick="showSelector()">← All Projects</button>
-      <span class="project-label" id="label-a4"></span>
+    <div class="project-badge">
+      <div class="project-num">4</div>
+      <div class="project-level-tag">Advanced</div>
     </div>
-    <h1 class="project-title">Multi-Agent Orchestration</h1>
-    <div class="project-meta-row">
-      <span class="level-badge">Advanced</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">claude-sonnet-4-6</span>
-      <span class="tool-tag">Orchestration</span>
-      <span class="tool-tag">Structured Outputs</span>
+    <div class="project-info">
+      <div class="project-title">Multi-Agent Orchestration</div>
+      <div class="project-desc">Build three specialized agents — Researcher, Writer, Reviewer — that pass structured JSON to each other. The pipeline retries automatically when the reviewer scores too low. This is how production AI systems are built.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">claude-sonnet-4-6</span>
+        <span class="chip">Structured Outputs</span>
+        <span class="chip">Orchestration</span>
+        <span class="chip">3–6 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with multi-agent pipelines</div>
+    <div class="idea-grid">
+      <div class="idea-item">Blog post factory</div>
+      <div class="idea-item">Marketing copy pipeline</div>
+      <div class="idea-item">Research → report pipeline</div>
+      <div class="idea-item">Product description writer</div>
+      <div class="idea-item">Email campaign creator</div>
+      <div class="idea-item">Technical doc generator</div>
+      <div class="idea-item">Proposal writer</div>
+      <div class="idea-item">Content QA system</div>
     </div>
   </div>
 
   <div class="skill-unlock">
-    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
     <div class="skill-tags">
       <span class="skill-tag">Agent specialization</span>
       <span class="skill-tag">Structured JSON outputs</span>
@@ -1451,24 +1504,41 @@ if __name__ == "__main__":
 </section>
 
 <!-- Project 5 -->
-<section id="a5" class="project-section p5" style="display:none">
+<section id="a5" class="project-section p5">
   <div class="project-header">
-    <div class="project-header-top">
-      <button class="back-btn" onclick="showSelector()">← All Projects</button>
-      <span class="project-label" id="label-a5"></span>
+    <div class="project-badge">
+      <div class="project-num">5</div>
+      <div class="project-level-tag">Pro</div>
     </div>
-    <h1 class="project-title">MCP: Claude Connected to Everything</h1>
-    <div class="project-meta-row">
-      <span class="level-badge">Pro</span>
-      <span class="tool-tag">Claude Code</span>
-      <span class="tool-tag">MCP</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">Supabase</span>
+    <div class="project-info">
+      <div class="project-title">MCP: Claude Connected to Everything</div>
+      <div class="project-desc">Configure built-in MCP servers to give Claude access to your filesystem, Supabase database, and GitHub. Then build your own custom MCP server in Python that exposes any tool you want.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Claude Code</span>
+        <span class="chip highlight">MCP</span>
+        <span class="chip highlight">Python</span>
+        <span class="chip">Supabase</span>
+        <span class="chip">4–7 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with MCP agents</div>
+    <div class="idea-grid">
+      <div class="idea-item">Database query agent</div>
+      <div class="idea-item">File management assistant</div>
+      <div class="idea-item">GitHub PR reviewer</div>
+      <div class="idea-item">Supabase data explorer</div>
+      <div class="idea-item">Multi-tool research agent</div>
+      <div class="idea-item">Code review bot</div>
+      <div class="idea-item">Custom API connector</div>
+      <div class="idea-item">Local file search agent</div>
     </div>
   </div>
 
   <div class="skill-unlock">
-    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
     <div class="skill-tags">
       <span class="skill-tag">MCP protocol</span>
       <span class="skill-tag">Configuring MCP servers</span>
@@ -1661,25 +1731,41 @@ ls ~/mcp-notes/</code></pre></div>
 </section>
 
 <!-- Project 6 -->
-<section id="a6" class="project-section p6" style="display:none">
+<section id="a6" class="project-section p6">
   <div class="project-header">
-    <div class="project-header-top">
-      <button class="back-btn" onclick="showSelector()">← All Projects</button>
-      <span class="project-label" id="label-a6"></span>
+    <div class="project-badge">
+      <div class="project-num">6</div>
+      <div class="project-level-tag">Ninja</div>
     </div>
-    <h1 class="project-title">Production Agent + Computer Use</h1>
-    <div class="project-meta-row">
-      <span class="level-badge">Ninja</span>
-      <span class="tool-tag">Python</span>
-      <span class="tool-tag">claude-sonnet-4-6</span>
-      <span class="tool-tag">Computer Use API</span>
-      <span class="tool-tag">Railway</span>
-      <span class="tool-tag">Docker</span>
+    <div class="project-info">
+      <div class="project-title">Production Agent + Computer Use</div>
+      <div class="project-desc">Use Claude's computer use API to build an agent that browses the web autonomously. Then deploy a production agent to Railway with Docker, cron scheduling, and live logs. Your agent runs 24/7 with zero server management.</div>
+      <div class="tool-chips">
+        <span class="chip highlight">Python</span>
+        <span class="chip highlight">Computer Use API</span>
+        <span class="chip highlight">Railway</span>
+        <span class="chip">Docker</span>
+        <span class="chip">5–9 hrs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="build-ideas">
+    <div class="build-ideas-title">💡 What you can build with production agents</div>
+    <div class="idea-grid">
+      <div class="idea-item">Daily market monitor</div>
+      <div class="idea-item">Competitor price tracker</div>
+      <div class="idea-item">Lead generation bot</div>
+      <div class="idea-item">News aggregator</div>
+      <div class="idea-item">Job listing monitor</div>
+      <div class="idea-item">Social media tracker</div>
+      <div class="idea-item">E-commerce price watcher</div>
+      <div class="idea-item">Scheduled report sender</div>
     </div>
   </div>
 
   <div class="skill-unlock">
-    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
     <div class="skill-tags">
       <span class="skill-tag">Computer use API</span>
       <span class="skill-tag">Screenshot → action loop</span>

@@ -2193,8 +2193,10 @@ function showProject(id) {
   document.getElementById('selector-view').style.display = 'none';
   document.getElementById('project-views').style.display = 'block';
   document.getElementById('progress-wrap').style.display = 'block';
-  document.querySelectorAll('.project-section').forEach(function(s) { s.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.project-section').forEach(function(s) { s.classList.remove('active'); s.style.display = ''; });
+  var activeSection = document.getElementById(id);
+  activeSection.classList.add('active');
+  activeSection.style.display = 'block';
   document.getElementById('pnav-title').textContent = LABELS[id];
   var idx = ORDER.indexOf(id);
   var nextBtn = document.getElementById('pnav-next');

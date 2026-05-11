@@ -335,6 +335,21 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
   .project-header { flex-direction: column; gap: 12px; }
   .idea-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* ─── ACCORDION ITEM (new pattern) ─── */
+.accordion-item { border: 1px solid var(--border); border-radius: 4px; margin-bottom: 10px; background: var(--surface); overflow: hidden; }
+.accordion-btn { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; user-select: none; background: var(--surface); border: none; text-align: left; transition: background 0.15s; gap: 12px; }
+.accordion-btn:hover { background: var(--surface2); }
+.accordion-title { font-size: 14px; font-weight: 700; color: var(--text); flex: 1; line-height: 1.4; }
+.accordion-arrow { color: var(--text-dim); font-size: 11px; transition: transform 0.2s; flex-shrink: 0; }
+.accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+.accordion-item .accordion-body { display: none; padding: 16px 20px 20px; border-top: 1px solid var(--border); }
+.accordion-item.open .accordion-body { display: block; }
+
+/* ─── STEP CHECKBOXES (new pattern) ─── */
+.step-check-row { margin: 8px 0; }
+.step-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+.step-check input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; accent-color: var(--p-color, var(--agent)); width: 14px; height: 14px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -411,16 +426,16 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
         <div class="proj-card-header">
           <div class="proj-badge">
             <div class="proj-num" style="background:#1a3db5">2</div>
-            <div class="proj-level" style="color:#2d7dd2">Beginner</div>
+            <div class="proj-level" style="color:#1a3db5">Beginner</div>
           </div>
           <div class="proj-info">
-            <div class="proj-title">File Intelligence Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#2d7dd2;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 1–3 hrs</span></div>
-            <div class="proj-desc">Build a local AI assistant that reads documents in a folder and answers questions about them in plain English. Drop any file in — PDFs, contracts, reports — and ask anything.</div>
+            <div class="proj-title">Tool-Use Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#1a3db5;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 1–3 hrs</span></div>
+            <div class="proj-desc">Learn the most important pattern in agent development — the tool-use loop. Build a Python agent with real tools: web search, file writing, and date lookup.</div>
             <div class="proj-chips">
-              <span class="proj-chip hi">Claude Code</span>
               <span class="proj-chip hi">Python</span>
-              <span class="proj-chip">File Processing</span>
-              <span class="proj-chip">RAG Basics</span>
+              <span class="proj-chip hi">Anthropic SDK</span>
+              <span class="proj-chip">Tool Use</span>
+              <span class="proj-chip">Agent Loop</span>
             </div>
           </div>
         </div>
@@ -432,16 +447,16 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
         <div class="proj-card-header">
           <div class="proj-badge">
             <div class="proj-num" style="background:#1a3db5">3</div>
-            <div class="proj-level" style="color:#1a7a4a">Intermediate</div>
+            <div class="proj-level" style="color:#1a3db5">Intermediate</div>
           </div>
           <div class="proj-info">
-            <div class="proj-title">Web Research Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#1a7a4a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 2–4 hrs</span></div>
-            <div class="proj-desc">Build an agent that searches the web on a topic you choose, reads the results, synthesizes the findings, and emails you a clean digest — automatically, on a schedule.</div>
+            <div class="proj-title">Extended Thinking Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#1a3db5;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 2–4 hrs</span></div>
+            <div class="proj-desc">Use Claude's extended thinking feature to build a deep analysis agent. Claude reasons step-by-step through complex problems before answering — visible in the thinking blocks you'll read.</div>
             <div class="proj-chips">
-              <span class="proj-chip hi">Claude Code</span>
               <span class="proj-chip hi">Python</span>
-              <span class="proj-chip hi">Serper API</span>
-              <span class="proj-chip">Email Automation</span>
+              <span class="proj-chip hi">claude-opus-4-6</span>
+              <span class="proj-chip">Extended Thinking</span>
+              <span class="proj-chip">Deep Analysis</span>
             </div>
           </div>
         </div>
@@ -456,12 +471,12 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
             <div class="proj-level" style="color:#c9922a">Advanced</div>
           </div>
           <div class="proj-info">
-            <div class="proj-title">Multi-Agent Pipeline <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#c9922a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 3–5 hrs</span></div>
-            <div class="proj-desc">Build three specialized AI agents that hand off work to each other: a Researcher finds information, a Writer turns it into content, and a Reviewer critiques and improves it.</div>
+            <div class="proj-title">Multi-Agent Orchestration <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#c9922a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 3–6 hrs</span></div>
+            <div class="proj-desc">Build three specialized agents — Researcher, Writer, Reviewer — that pass structured JSON to each other. The pipeline retries automatically when the reviewer scores too low.</div>
             <div class="proj-chips">
-              <span class="proj-chip hi">Claude Code</span>
               <span class="proj-chip hi">Python</span>
-              <span class="proj-chip">Multi-Agent</span>
+              <span class="proj-chip hi">claude-sonnet-4-6</span>
+              <span class="proj-chip">Structured Outputs</span>
               <span class="proj-chip">Orchestration</span>
             </div>
           </div>
@@ -474,16 +489,16 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
         <div class="proj-card-header">
           <div class="proj-badge">
             <div class="proj-num" style="background:#c9922a">5</div>
-            <div class="proj-level" style="color:#7c3aed">Pro</div>
+            <div class="proj-level" style="color:#c9922a">Pro</div>
           </div>
           <div class="proj-info">
-            <div class="proj-title">Agent with Memory + MCP <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#7c3aed;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 4–6 hrs</span></div>
-            <div class="proj-desc">Build an AI assistant that remembers. It learns your preferences, recalls past conversations, and gets more personalized every time — powered by a real database and vector search.</div>
+            <div class="proj-title">MCP: Claude Connected to Everything <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#c9922a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 4–7 hrs</span></div>
+            <div class="proj-desc">Configure built-in MCP servers to give Claude access to your filesystem, Supabase database, and GitHub. Then build your own custom MCP server in Python.</div>
             <div class="proj-chips">
               <span class="proj-chip hi">Claude Code</span>
+              <span class="proj-chip hi">MCP</span>
               <span class="proj-chip hi">Python</span>
-              <span class="proj-chip hi">Supabase</span>
-              <span class="proj-chip">MCP Servers</span>
+              <span class="proj-chip">Supabase</span>
             </div>
           </div>
         </div>
@@ -495,16 +510,16 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
         <div class="proj-card-header">
           <div class="proj-badge">
             <div class="proj-num" style="background:#c9922a">6</div>
-            <div class="proj-level" style="color:#c0392b">Ninja</div>
+            <div class="proj-level" style="color:#c9922a">Ninja</div>
           </div>
           <div class="proj-info">
-            <div class="proj-title">Autonomous Business Agent <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#c0392b;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 5–9 hrs</span></div>
-            <div class="proj-desc">Build a fully autonomous agent that monitors a business trigger, decides what action to take, executes it, logs the result, and alerts you — running 24/7 in the cloud.</div>
+            <div class="proj-title">Production Agent + Computer Use <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#c9922a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 5–9 hrs</span></div>
+            <div class="proj-desc">Use Claude's computer use API to build an agent that browses the web autonomously. Then deploy a production agent to Railway with Docker, cron scheduling, and live logs.</div>
             <div class="proj-chips">
-              <span class="proj-chip hi">Claude Code</span>
               <span class="proj-chip hi">Python</span>
+              <span class="proj-chip hi">Computer Use API</span>
               <span class="proj-chip hi">Railway</span>
-              <span class="proj-chip">Tool Use</span>
+              <span class="proj-chip">Docker</span>
             </div>
           </div>
         </div>
@@ -831,854 +846,1082 @@ Write only the reply text — no subject line, no greeting like "Dear", just the
       </div>
     </section>
 
-    <!-- ═══ PROJECT 2 — BEGINNER ═══ -->
-    <section class="project-section p2" id="a2">
-      <div class="project-header">
-        <div class="project-badge">
-          <div class="project-num">2</div>
-          <div class="project-level-tag">Beginner</div>
-        </div>
-        <div class="project-info">
-          <div class="project-title">File Intelligence Agent</div>
-          <div class="project-desc">Build a local AI assistant using Claude Code that reads documents in a folder and answers questions about them in plain English. Drop any file in — PDFs, contracts, reports, spreadsheets — and ask anything.</div>
-          <div class="tool-chips">
-            <span class="chip highlight">Claude Code</span>
-            <span class="chip highlight">Python</span>
-            <span class="chip">File Processing</span>
-            <span class="chip">Local Agent</span>
-            <span class="chip">RAG Basics</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="skill-unlock">
-        <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
-        <div class="skill-tags">
-          <div class="skill-tag">Claude Code terminal</div>
-          <div class="skill-tag">Reading files with Python</div>
-          <div class="skill-tag">Passing context to Claude</div>
-          <div class="skill-tag">Interactive CLI agents</div>
-          <div class="skill-tag">Document Q&amp;A</div>
-          <div class="skill-tag">RAG fundamentals</div>
-        </div>
-      </div>
+    <!-- Project 2 -->
+<section id="a2" class="project-section p2" style="display:none">
+  <div class="project-header">
+    <div class="project-header-top">
+      <button class="back-btn" onclick="showSelector()">← All Projects</button>
+      <span class="project-label" id="label-a2"></span>
+    </div>
+    <h1 class="project-title">Tool-Use Agent</h1>
+    <div class="project-meta-row">
+      <span class="level-badge">Beginner</span>
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">Anthropic SDK</span>
+      <span class="tool-tag">Tool Use</span>
+    </div>
+  </div>
 
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🎯</span>
-          <span class="acc-title">What You're Building</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <div class="callout callout-info" style="margin-top:14px;"><strong>How it works:</strong> You run a Python script from your terminal. It reads all documents in a <code>docs/</code> folder. You type a question. It sends the documents to Claude along with your question, and gives you an answer based only on what's in those files.</div>
-          <ul class="plain-list" style="margin-top:12px;">
-            <li>Ask questions about any PDF, .txt, or Word document</li>
-            <li>Compare multiple documents at once</li>
-            <li>Extract specific data — dates, names, numbers, clauses</li>
-            <li>Summarize long documents in seconds</li>
-            <li>Find contradictions or inconsistencies across files</li>
-          </ul>
-        </div>
-      </div>
+  <div class="skill-unlock">
+    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-tags">
+      <span class="skill-tag">Tool definitions</span>
+      <span class="skill-tag">The agent loop</span>
+      <span class="skill-tag">Processing tool calls</span>
+      <span class="skill-tag">Returning tool results</span>
+      <span class="skill-tag">Multi-turn conversations</span>
+    </div>
+  </div>
 
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🏗️</span>
-          <span class="acc-title">Step 1 — Set Up and Build with Claude Code</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <div class="step-list">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <div class="step-title">Create a project folder and start Claude Code</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-cmd">mkdir file-agent
-cd file-agent
-mkdir docs
-claude</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <div class="step-title">Describe the agent to Claude Code</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-str">"Build me a file intelligence agent in Python. Here's what it should do:
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What You're Building</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>You'll build a Python agent powered by <code>claude-sonnet-4-6</code> that can use three real tools: web search via the Serper API, writing files to disk, and getting today's date. The agent decides which tools to call, receives the results, and keeps looping until the task is fully complete. This is the most important pattern in agent development — once you understand the tool-use loop, every other agent architecture builds on it.</p>
+    </div>
+  </div>
 
-1. Watch a folder called 'docs/' in the current directory
-2. When I run the script, it reads all .txt, .pdf, and .docx files in that folder
-3. It presents a simple command-line interface where I can type questions
-4. It sends the contents of all the files plus my question to the Anthropic API
-5. It prints Claude's answer in the terminal
-6. It keeps running so I can ask multiple questions — type 'quit' to exit
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 1 — Set Up and Define Your Tools</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Create a new project folder, set up a virtual environment, and install the required packages.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a2" data-step="0" onchange="saveStep(this)"> Create project folder and virtual environment</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>mkdir tool-agent && cd tool-agent
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install anthropic requests python-dotenv</code></pre></div>
 
-Use the Anthropic Python SDK. Store the API key in a .env file. Add clear comments explaining how each part works. Keep the code as simple as possible."</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <div class="step-title">Install dependencies and create your .env file</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-str">"Install all required Python packages and create a .env file template I can fill in with my Anthropic API key."</span></span>
-                </div>
-                <div class="step-desc" style="margin-top:8px;">Open the .env file and replace the placeholder with your actual API key from <strong>console.anthropic.com</strong>.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">4</div>
-              <div class="step-content">
-                <div class="step-title">Drop files in docs/ and test</div>
-                <div class="step-desc">Copy any PDF, Word doc, or text file into the <code>docs/</code> folder. Then run the agent:</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-cmd">python agent.py</span></span>
-                </div>
-                <div class="step-desc" style="margin-top:8px;">Type a question like <em>"What are the main points in these documents?"</em> and press Enter.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <p>Create a <code>.env</code> file with your API keys. Get a free Serper API key at serper.dev.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a2" data-step="1" onchange="saveStep(this)"> Create .env with API keys</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>ANTHROPIC_API_KEY=your_anthropic_key_here
+SERPER_API_KEY=your_serper_key_here</code></pre></div>
 
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🔧</span>
-          <span class="acc-title">Step 2 — Extend Your Agent</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">Once the basic agent works, ask Claude Code to add these improvements one at a time:</p>
-          <ul class="plain-list" style="margin-top:10px;">
-            <li><strong>Conversation history</strong> — remember previous questions in the same session so follow-up questions make sense</li>
-            <li><strong>File summaries on startup</strong> — when the agent loads, automatically summarize what each document contains</li>
-            <li><strong>Source citing</strong> — have Claude name which document each piece of information came from</li>
-            <li><strong>Save Q&amp;A to a log file</strong> — save every question and answer to a timestamped text file for reference</li>
-          </ul>
-          <div class="callout callout-tip" style="margin-top:12px;"><strong>Example prompt:</strong> "Add conversation history so Claude remembers the last 5 questions and answers in each session. This way I can ask follow-up questions like 'tell me more about that' and it will understand."</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══ PROJECT 3 — INTERMEDIATE ═══ -->
-    <section class="project-section p3" id="a3">
-      <div class="project-header">
-        <div class="project-badge">
-          <div class="project-num">3</div>
-          <div class="project-level-tag">Intermediate</div>
-        </div>
-        <div class="project-info">
-          <div class="project-title">Web Research Agent</div>
-          <div class="project-desc">Build an agent that searches the web on a topic you choose, reads the results, synthesizes the findings, and emails you a clean formatted digest — automatically, on a schedule.</div>
-          <div class="tool-chips">
-            <span class="chip highlight">Claude Code</span>
-            <span class="chip highlight">Python</span>
-            <span class="chip highlight">Serper API</span>
-            <span class="chip">Web Scraping</span>
-            <span class="chip">Email Automation</span>
-            <span class="chip">Scheduling</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-unlock">
-        <div class="skill-unlock-title">🔓 Skills you'll unlock</div>
-        <div class="skill-tags">
-          <div class="skill-tag">Web search APIs</div>
-          <div class="skill-tag">Scraping web content</div>
-          <div class="skill-tag">Multi-step agent pipelines</div>
-          <div class="skill-tag">Formatting AI output</div>
-          <div class="skill-tag">Sending emails with Python</div>
-          <div class="skill-tag">Cron scheduling</div>
-          <div class="skill-tag">Error handling &amp; retries</div>
-          <div class="skill-tag">Silent failure detection</div>
-        </div>
-      </div>
-
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🛡️</span>
-          <span class="acc-title">Error Handling — Agents Fail Silently Without This</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <p style="font-size:13px;color:var(--text-muted);margin-top:14px;line-height:1.8;">An agent running unattended can fail for hours without anyone noticing. Without error handling, you'll never know. With it, failures surface immediately.</p>
-          <div class="step-list" style="margin-top:12px;">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <div class="step-title">Wrap every external call in try/except</div>
-                <div class="step-desc">Ask Claude Code: <em>"Add try/except error handling around every external API call. If a call fails, log the error with a timestamp and continue rather than crashing the whole agent."</em></div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <div class="step-title">Validate Claude's output before using it</div>
-                <div class="step-desc">When your agent expects Claude to return JSON, always validate it before passing it downstream. Ask Claude Code: <em>"Before using Claude's response, check that it matches the expected format. If it doesn't, retry once. If it fails again, log the bad output and skip this run."</em></div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <div class="step-title">Add a dead agent alert</div>
-                <div class="step-desc">Ask Claude Code: <em>"If the agent hasn't successfully completed a run in 3 hours, send me an alert email."</em> This catches situations where the agent crashes silently.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">4</div>
-              <div class="step-content">
-                <div class="step-title">Handle empty or poor search results gracefully</div>
-                <div class="step-desc">Never send Claude an empty results set — it will hallucinate content. Always check: <em>"If the search returns fewer than 2 results, skip this run and log 'insufficient results' rather than generating a digest."</em></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🎯</span>
-          <span class="acc-title">What You're Building</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <div class="callout callout-info" style="margin-top:14px;"><strong>The pipeline:</strong> You define a topic (e.g. "AI news" or "competitor mentions"). Every morning the agent searches the web for recent articles, reads the top results, passes them to Claude to synthesize into a 5-bullet digest, then emails it to your inbox. Zero manual effort.</div>
-          <ul class="plain-list" style="margin-top:12px;">
-            <li>Uses Serper API (free tier: 2,500 searches/month) to find current articles</li>
-            <li>Fetches and reads the actual page content — not just headlines</li>
-            <li>Claude synthesizes across multiple sources into a coherent digest</li>
-            <li>Formats the email with clear sections, links, and key takeaways</li>
-            <li>Runs automatically every day via a scheduler</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🔑</span>
-          <span class="acc-title">Step 1 — Get Your API Keys</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <div class="step-list">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <div class="step-title">Get a free Serper API key (web search)</div>
-                <div class="step-desc">Go to <strong>serper.dev</strong> and sign up. The free plan gives you 2,500 searches per month. Copy your API key.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <div class="step-title">Set up email sending</div>
-                <div class="step-desc">Use Gmail with an App Password. In your Google account, go to <strong>Security → 2-Step Verification → App Passwords</strong>. Create an app password for "Mail". This lets Python send email on your behalf without your real password.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="accordion">
-        <div class="accordion-header" onclick="toggle(this)">
-          <span class="acc-icon">🏗️</span>
-          <span class="acc-title">Step 2 — Build the Research Agent</span>
-          <span class="acc-chevron">▾</span>
-        </div>
-        <div class="accordion-body">
-          <div class="step-list">
-            <div class="step">
-              <div class="step-num">1</div>
-              <div class="step-content">
-                <div class="step-title">Create a project and start Claude Code</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-cmd">mkdir research-agent
-cd research-agent
-claude</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">2</div>
-              <div class="step-content">
-                <div class="step-title">Build the agent pipeline</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-str">"Build a web research agent in Python with these steps:
-
-Step 1 — Search: Use the Serper API to find the 5 most recent articles about a topic defined in a config variable at the top of the file
-
-Step 2 — Fetch: For each result, fetch the actual page content using requests and BeautifulSoup, extracting just the main article text (no nav, footer, ads)
-
-Step 3 — Synthesize: Send all article content to Claude with this task: summarize the most important findings into a 5-bullet digest with a one-line intro. Include the source URL for each bullet.
-
-Step 4 — Email: Send the formatted digest to an email address defined in config, using Gmail SMTP with an app password
-
-Store all API keys in a .env file. Add a config section at the top with: topic, my email, and how many articles to fetch."</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">3</div>
-              <div class="step-content">
-                <div class="step-title">Test it manually first</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-cmd">python research_agent.py</span></span>
-                </div>
-                <div class="step-desc" style="margin-top:8px;">Check your inbox within 60 seconds. If the email arrives and the digest looks good, schedule it.</div>
-              </div>
-            </div>
-            <div class="step">
-              <div class="step-num">4</div>
-              <div class="step-content">
-                <div class="step-title">Schedule it to run every morning</div>
-                <div class="copyable-wrap">
-                  <span class="code-block"><span class="code-str">"Add a scheduler so this script runs automatically every day at 7am. Show me how to set this up on my operating system — explain both Mac (cron) and Windows (Task Scheduler) options."</span></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Project 4 -->
-    <section id="a4" class="project-section p4" style="display:none">
-      <div class="project-header">
-        <div class="project-header-top">
-          <button class="back-btn" onclick="showSelector()">← All Projects</button>
-          <span class="project-label" id="label-a4"></span>
-        </div>
-        <h1 class="project-title">Multi-Agent Pipeline</h1>
-        <div class="project-meta-row">
-          <span class="level-badge">Advanced</span>
-          <span class="tool-tag">Claude Code</span>
-          <span class="tool-tag">Python</span>
-          <span class="tool-tag">Multi-Agent</span>
-          <span class="tool-tag">Agent Orchestration</span>
-          <span class="tool-tag">Prompt Chaining</span>
-        </div>
-      </div>
-
-      <div class="skill-unlock">
-        <div class="skill-unlock-label">Skills You'll Unlock</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Agent Specialization</span>
-          <span class="skill-tag">Prompt Chaining</span>
-          <span class="skill-tag">Passing State Between Agents</span>
-          <span class="skill-tag">Output Evaluation</span>
-          <span class="skill-tag">Retry Logic</span>
-          <span class="skill-tag">Pipeline Orchestration</span>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">What You're Building</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>A multi-agent pipeline where specialized Claude agents pass work to each other. One agent researches, another writes, a third reviews and scores — if the score is too low, the pipeline retries automatically.</p>
-          <p>You'll orchestrate the pipeline in Python, passing structured JSON state between agents and implementing quality gates with retry logic so the system self-corrects without human intervention.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a4-s1-counter">Step 1</span>
-            — Build the Pipeline
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Create three specialized agents and wire them together in a pipeline.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="0" onchange="saveStep(this)"> Create your project folder and virtual environment</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="1" onchange="saveStep(this)"> Install the Anthropic SDK: <code>pip install anthropic</code></label></div>
-          <p>Create <code>pipeline.py</code> with the three agents:</p>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import anthropic
+      <p>Create <code>agent.py</code> and define the three tool implementations plus their JSON schemas.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a2" data-step="2" onchange="saveStep(this)"> Create agent.py with tool implementations and schemas</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
 import json
-
-client = anthropic.Anthropic()
-
-def research_agent(topic: str) -> dict:
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": f"""Research this topic and return JSON with:
-- key_points: list of 5 facts
-- context: 2-3 sentence background
-- sources_needed: list of source types
-
-Topic: {topic}
-Return only valid JSON."""}]
-    )
-    return json.loads(response.content[0].text)
-
-def writer_agent(research: dict, topic: str) -> str:
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=2048,
-        messages=[{"role": "user", "content": f"""Write a 300-word article on '{topic}' using this research:
-{json.dumps(research, indent=2)}
-Include a headline. Write for a general audience."""}]
-    )
-    return response.content[0].text
-
-def reviewer_agent(article: str, topic: str) -> dict:
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=512,
-        messages=[{"role": "user", "content": f"""Review this article on '{topic}' and return JSON with:
-- score: integer 1-10
-- issues: list of specific problems
-- verdict: "pass" if score >= 7, else "fail"
-
-Article: {article}
-Return only valid JSON."""}]
-    )
-    return json.loads(response.content[0].text)
-
-def run_pipeline(topic: str):
-    print(f"[Pipeline] Topic: {topic}")
-    research = research_agent(topic)
-    article = writer_agent(research, topic)
-    review = reviewer_agent(article, topic)
-    print(f"Score: {review['score']}/10 — {review['verdict']}")
-    return article, review
-
-if __name__ == "__main__":
-    article, review = run_pipeline("the rise of AI agents")
-    print(article)</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="2" onchange="saveStep(this)"> Run the pipeline: <code>python pipeline.py</code></label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="3" onchange="saveStep(this)"> Try different topics and observe quality variance</label></div>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a4-s2-counter">Step 2</span>
-            — Add Retry Logic and Quality Gates
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Wrap the pipeline in a retry loop that re-runs the writer if the reviewer scores below 7.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="4" onchange="saveStep(this)"> Add the retry orchestrator</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>def run_pipeline_with_retry(topic: str, max_attempts: int = 3):
-    print(f"[Pipeline] Max {max_attempts} attempts")
-    research = research_agent(topic)  # Research once, reuse
-
-    for attempt in range(1, max_attempts + 1):
-        print(f"\n[Attempt {attempt}/{max_attempts}]")
-        article = writer_agent(research, topic)
-        review = reviewer_agent(article, topic)
-        print(f"  Score: {review['score']}/10 — {review['verdict']}")
-
-        if review['verdict'] == 'pass':
-            print(f"✓ Passed on attempt {attempt}")
-            return article, review, attempt
-
-        if attempt < max_attempts:
-            print(f"  Issues: {review['issues']} — retrying...")
-
-    print("⚠ Max attempts reached.")
-    return article, review, max_attempts
-
-if __name__ == "__main__":
-    article, review, attempts = run_pipeline_with_retry("the rise of AI agents")
-    print(f"\nFinal article (after {attempts} attempt(s)):\n{article}")</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="5" onchange="saveStep(this)"> Enhance the writer to accept reviewer feedback as an optional parameter</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="6" onchange="saveStep(this)"> Run several topics and observe the retry loop</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="7" onchange="saveStep(this)"> Push your project to GitHub</label></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Project 5 -->
-    <section id="a5" class="project-section p5" style="display:none">
-      <div class="project-header">
-        <div class="project-header-top">
-          <button class="back-btn" onclick="showSelector()">← All Projects</button>
-          <span class="project-label" id="label-a5"></span>
-        </div>
-        <h1 class="project-title">Agent with Memory + MCP</h1>
-        <div class="project-meta-row">
-          <span class="level-badge">Pro</span>
-          <span class="tool-tag">Claude Code</span>
-          <span class="tool-tag">Python</span>
-          <span class="tool-tag">Supabase</span>
-          <span class="tool-tag">Vector Embeddings</span>
-          <span class="tool-tag">MCP Servers</span>
-        </div>
-      </div>
-
-      <div class="skill-unlock">
-        <div class="skill-unlock-label">Skills You'll Unlock</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Vector Embeddings</span>
-          <span class="skill-tag">Semantic Memory Search</span>
-          <span class="skill-tag">MCP Protocol</span>
-          <span class="skill-tag">Persistent Agent State</span>
-          <span class="skill-tag">Supabase pgvector</span>
-          <span class="skill-tag">Tool Use</span>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">MCP Servers — What Are They?</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p><strong>Model Context Protocol (MCP)</strong> is an open standard that lets AI models connect to external tools and data sources through a common interface. An MCP server exposes a set of <em>tools</em> the model can call — like reading a file, querying a database, or fetching a webpage.</p>
-          <p>Instead of writing one-off integration code for every tool, you configure MCP servers once and Claude can use them automatically. In this project you'll connect Claude Code to Supabase so your agent can store and retrieve memories without you writing the query code yourself.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">What You're Building</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>An agent that actually <em>remembers</em> things across conversations. When you tell it something important, it stores a vector embedding in Supabase. When you ask a question later, it searches those memories semantically and includes the most relevant ones in its context.</p>
-          <p>You'll also wire up the Supabase MCP server so Claude Code can query your database directly using natural language — no raw SQL needed.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a5-s1-counter">Step 1</span>
-            — Set Up Supabase with Vector Support
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Create a Supabase project and enable pgvector for semantic memory search.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="0" onchange="saveStep(this)"> Create a new Supabase project at supabase.com</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="1" onchange="saveStep(this)"> Run this SQL in the Supabase SQL Editor</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>-- Enable vector extension
-create extension if not exists vector;
-
--- Memory table
-create table memories (
-  id uuid primary key default gen_random_uuid(),
-  content text not null,
-  embedding vector(1536),
-  created_at timestamptz default now()
-);
-
--- Semantic search function
-create or replace function match_memories(
-  query_embedding vector(1536),
-  match_threshold float default 0.7,
-  match_count int default 5
-)
-returns table (id uuid, content text, similarity float)
-language sql stable as $$
-  select id, content,
-    1 - (embedding <=> query_embedding) as similarity
-  from memories
-  where 1 - (embedding <=> query_embedding) > match_threshold
-  order by similarity desc
-  limit match_count;
-$$;</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="2" onchange="saveStep(this)"> Copy your Supabase URL and service role key from Project Settings → API</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="3" onchange="saveStep(this)"> Create <code>.env</code> with your keys</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_KEY=your-service-role-key
-ANTHROPIC_API_KEY=your-key-here</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="4" onchange="saveStep(this)"> Install dependencies: <code>pip install anthropic supabase python-dotenv</code></label></div>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a5-s2-counter">Step 2</span>
-            — Build the Memory Agent
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Write the agent that stores and retrieves memories using vector embeddings.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="5" onchange="saveStep(this)"> Create <code>memory_agent.py</code></label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
-from anthropic import Anthropic
-from supabase import create_client
+import requests
+from datetime import date
 from dotenv import load_dotenv
+import anthropic
 
 load_dotenv()
-client = Anthropic()
-supabase = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_KEY"])
 
-def embed(text: str) -> list[float]:
-    """Generate a vector embedding for text."""
-    # Use Voyage embeddings via the Anthropic Batches API or a local model.
-    # For quick prototyping, ask Claude Code: "add real embeddings using voyage-3"
-    import hashlib, random
-    seed = int(hashlib.md5(text.encode()).hexdigest(), 16) % (2**32)
-    rng = random.Random(seed)
-    return [rng.gauss(0, 1) for _ in range(1536)]
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-def store_memory(content: str):
-    supabase.table("memories").insert({
-        "content": content,
-        "embedding": embed(content)
-    }).execute()
-    print(f"[Memory stored] {content[:60]}...")
+# --- Tool implementations ---
 
-def search_memories(query: str, limit: int = 3) -> list[str]:
-    result = supabase.rpc("match_memories", {
-        "query_embedding": embed(query),
-        "match_count": limit
-    }).execute()
-    return [row["content"] for row in (result.data or [])]
+def search_web(query: str) -> str:
+    url = "https://google.serper.dev/search"
+    headers = {"X-API-KEY": os.getenv("SERPER_API_KEY"), "Content-Type": "application/json"}
+    payload = {"q": query, "num": 5}
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+    results = []
+    for item in data.get("organic", []):
+        results.append(f"{item['title']}\n{item['link']}\n{item.get('snippet', '')}")
+    return "\n\n".join(results) if results else "No results found."
 
-def chat(user_message: str, history: list) -> str:
-    memories = search_memories(user_message)
-    memory_context = ""
-    if memories:
-        memory_context = "\n\nRelevant memories:\n" + "\n".join(f"- {m}" for m in memories)
+def write_file(filename: str, content: str) -> str:
+    with open(filename, "w") as f:
+        f.write(content)
+    return f"File '{filename}' written successfully ({len(content)} characters)."
 
-    history.append({"role": "user", "content": user_message})
-    response = client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1024,
-        system=f"You are a helpful assistant with persistent memory.{memory_context}",
-        messages=history
-    )
-    reply = response.content[0].text
-    history.append({"role": "assistant", "content": reply})
-    return reply
+def get_date() -> str:
+    return f"Today's date is {date.today().strftime('%B %d, %Y')}."
 
-if __name__ == "__main__":
-    history = []
-    print("Memory Agent ready. Type 'remember: ...' to store a memory. Type 'quit' to exit.\n")
-    while True:
-        user_input = input("You: ").strip()
-        if user_input.lower() == "quit":
-            break
-        if user_input.lower().startswith("remember:"):
-            store_memory(user_input[9:].strip())
-            print("Agent: Got it, I'll remember that.\n")
-        else:
-            print(f"Agent: {chat(user_input, history)}\n")</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="6" onchange="saveStep(this)"> Run the agent and test storing + recalling memories</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="7" onchange="saveStep(this)"> Connect the Supabase MCP server to Claude Code (Settings → MCP → add Supabase)</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="8" onchange="saveStep(this)"> Ask Claude Code to query your memories table using natural language</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="9" onchange="saveStep(this)"> Push your project to GitHub</label></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Project 6 -->
-    <section id="a6" class="project-section p6" style="display:none">
-      <div class="project-header">
-        <div class="project-header-top">
-          <button class="back-btn" onclick="showSelector()">← All Projects</button>
-          <span class="project-label" id="label-a6"></span>
-        </div>
-        <h1 class="project-title">Autonomous Business Agent</h1>
-        <div class="project-meta-row">
-          <span class="level-badge">Ninja</span>
-          <span class="tool-tag">Claude Code</span>
-          <span class="tool-tag">Python</span>
-          <span class="tool-tag">Railway</span>
-          <span class="tool-tag">Tool Use</span>
-          <span class="tool-tag">Cloud Deployment</span>
-        </div>
-      </div>
-
-      <div class="skill-unlock">
-        <div class="skill-unlock-label">Skills You'll Unlock</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Tool Use (Function Calling)</span>
-          <span class="skill-tag">Autonomous Decision Making</span>
-          <span class="skill-tag">Cloud Deployment</span>
-          <span class="skill-tag">Scheduled Agents</span>
-          <span class="skill-tag">Agent Evaluation</span>
-          <span class="skill-tag">Trust Boundaries</span>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">Evaluating Your Agent</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>An autonomous agent running unsupervised needs different evaluation than an interactive one. Before deploying, ask yourself:</p>
-          <ul>
-            <li><strong>Worst case?</strong> If the agent makes a mistake, what's the maximum damage? Can it be reversed?</li>
-            <li><strong>Tight feedback loop?</strong> Will you know quickly if something goes wrong?</li>
-            <li><strong>Correctly scoped tools?</strong> Each tool should do exactly one thing. Avoid broad write permissions.</li>
-            <li><strong>Edge cases tested?</strong> Empty inputs, API failures, rate limits, unexpected data formats.</li>
-          </ul>
-          <p>Start with read-only tools and a human approval step. Add write tools and full autonomy only after the agent proves reliable.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">Trust Boundaries</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Every autonomous agent needs explicit trust boundaries — a clear definition of what it can do without human approval.</p>
-          <p><strong>Low trust (require approval):</strong> sending emails, posting to social media, making purchases, deleting data, calling paid APIs repeatedly.</p>
-          <p><strong>High trust (run autonomously):</strong> reading files, searching the web, summarizing content, writing to a staging environment, logging to a database.</p>
-          <p>In this project the agent drafts and prints the email before sending, giving you a chance to review. In production you'd add an approval webhook or confirmation step.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">What You're Building</span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>A fully autonomous business agent that runs on a schedule in the cloud. Every morning it scrapes your industry's news, summarizes the top stories, identifies business opportunities, drafts an email briefing, and sends it — all without you touching it.</p>
-          <p>You'll build it locally with tool use, then deploy to Railway as a cron job that fires every day at 7 AM.</p>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a6-s1-counter">Step 1</span>
-            — Build the Autonomous Agent
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Build the agent with tool use so it can search the web, scrape content, and send email.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="0" onchange="saveStep(this)"> Create project folder, virtual environment, and install dependencies</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>pip install anthropic requests python-dotenv</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="1" onchange="saveStep(this)"> Create <code>.env</code> with your API keys</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>ANTHROPIC_API_KEY=your-key-here
-SERPER_API_KEY=your-serper-key     # free at serper.dev
-EMAIL_FROM=you@yourdomain.com
-EMAIL_TO=you@yourdomain.com
-RESEND_API_KEY=your-resend-key     # free at resend.com</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="2" onchange="saveStep(this)"> Create <code>agent.py</code></label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os, json, requests
-from anthropic import Anthropic
-from dotenv import load_dotenv
-
-load_dotenv()
-client = Anthropic()
-
-# --- Tools ---
-
-def search_news(query: str, num_results: int = 5) -> list:
-    r = requests.post("https://google.serper.dev/news",
-        headers={"X-API-KEY": os.environ["SERPER_API_KEY"]},
-        json={"q": query, "num": num_results})
-    return r.json().get("news", [])
-
-def scrape_page(url: str) -> str:
-    r = requests.get(f"https://r.jina.ai/{url}", timeout=15)
-    return r.text[:4000]
-
-def send_email(to: str, subject: str, body: str) -> str:
-    r = requests.post("https://api.resend.com/emails",
-        headers={"Authorization": f"Bearer {os.environ['RESEND_API_KEY']}",
-                 "Content-Type": "application/json"},
-        json={"from": os.environ["EMAIL_FROM"], "to": [to],
-              "subject": subject, "text": body})
-    return f"Email sent: {r.status_code}"
+# --- Tool schemas for Claude ---
 
 TOOLS = [
-    {"name": "search_news", "description": "Search recent news on a topic",
-     "input_schema": {"type": "object",
-       "properties": {"query": {"type": "string"}, "num_results": {"type": "integer"}},
-       "required": ["query"]}},
-    {"name": "scrape_page", "description": "Scrape a webpage's text content",
-     "input_schema": {"type": "object",
-       "properties": {"url": {"type": "string"}}, "required": ["url"]}},
-    {"name": "send_email", "description": "Send the daily briefing email",
-     "input_schema": {"type": "object",
-       "properties": {"to": {"type": "string"}, "subject": {"type": "string"},
-                      "body": {"type": "string"}},
-       "required": ["to", "subject", "body"]}}
-]
-TOOL_MAP = {"search_news": search_news, "scrape_page": scrape_page, "send_email": send_email}
+    {
+        "name": "search_web",
+        "description": "Search the web for current information on any topic. Returns titles, URLs, and snippets.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "The search query to look up."}
+            },
+            "required": ["query"]
+        }
+    },
+    {
+        "name": "write_file",
+        "description": "Write text content to a file on disk.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "filename": {"type": "string", "description": "The name of the file to write, e.g. 'report.txt'."},
+                "content": {"type": "string", "description": "The text content to write into the file."}
+            },
+            "required": ["filename", "content"]
+        }
+    },
+    {
+        "name": "get_date",
+        "description": "Returns today's current date.",
+        "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
+    }
+]</code></pre></div>
+    </div>
+  </div>
 
-# --- Agent loop ---
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 2 — Build the Agent Loop</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>The agent loop is the core pattern: send messages to Claude, check if it wants to use a tool, execute the tool, append the result, and repeat until Claude signals it's done with <code>end_turn</code>.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a2" data-step="3" onchange="saveStep(this)"> Add the run_agent function to agent.py</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>def run_tool(name: str, tool_input: dict) -> str:
+    if name == "search_web":
+        return search_web(tool_input["query"])
+    elif name == "write_file":
+        return write_file(tool_input["filename"], tool_input["content"])
+    elif name == "get_date":
+        return get_date()
+    return "Unknown tool."
 
-def run_agent(topic: str):
-    print(f"[Agent] Starting briefing for: {topic}")
-    messages = [{"role": "user", "content": f"""You are an autonomous business intelligence agent.
-
-Your task:
-1. Search for the latest news on: {topic}
-2. Scrape 2-3 of the most relevant articles
-3. Identify top 3 business opportunities or risks
-4. Draft and send a briefing email to {os.environ['EMAIL_TO']}
-   Subject: "Daily Briefing: {topic}"
-   Include: top stories, key insights, opportunities/risks
-
-Complete this task autonomously using your tools."""}]
+def run_agent(task: str):
+    print(f"\nTask: {task}\n{'='*50}")
+    messages = [{"role": "user", "content": task}]
 
     while True:
         response = client.messages.create(
-            model="claude-sonnet-4-6", max_tokens=4096,
-            tools=TOOLS, messages=messages)
+            model="claude-sonnet-4-6",
+            max_tokens=4096,
+            tools=TOOLS,
+            messages=messages
+        )
+
+        # Append Claude's response to message history
         messages.append({"role": "assistant", "content": response.content})
 
         if response.stop_reason == "end_turn":
-            print("[Agent] Done.")
+            # Extract final text response
+            for block in response.content:
+                if hasattr(block, "text"):
+                    print(f"\nAgent: {block.text}")
             break
 
+        # Process tool calls
         tool_results = []
         for block in response.content:
             if block.type == "tool_use":
-                print(f"  [Tool] {block.name}")
-                result = TOOL_MAP[block.name](**block.input)
-                tool_results.append({"type": "tool_result", "tool_use_id": block.id,
-                    "content": json.dumps(result) if not isinstance(result, str) else result})
+                print(f"  [Tool] {block.name}({json.dumps(block.input)})")
+                result = run_tool(block.name, block.input)
+                print(f"  [Result] {result[:200]}{'...' if len(result) > 200 else ''}\n")
+                tool_results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": result
+                })
+
+        # Append tool results and loop again
         messages.append({"role": "user", "content": tool_results})
 
 if __name__ == "__main__":
-    run_agent("AI and SaaS startups")</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="3" onchange="saveStep(this)"> Run the agent locally and verify it completes the full loop</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="4" onchange="saveStep(this)"> Verify the email arrives in your inbox</label></div>
-        </div>
-      </div>
+    run_agent(
+        "Search for the latest Claude API updates, summarize the key points, "
+        "and save the summary to report.txt. Include today's date at the top."
+    )</code></pre></div>
 
-      <div class="accordion-item">
-        <button class="accordion-btn" onclick="toggleAccordion(this)">
-          <span class="accordion-title">
-            <span class="step-counter" id="a6-s2-counter">Step 2</span>
-            — Deploy to the Cloud
-          </span>
-          <span class="accordion-arrow">▼</span>
-        </button>
-        <div class="accordion-body">
-          <p>Deploy your agent to Railway so it runs every morning on a schedule — no laptop required.</p>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="5" onchange="saveStep(this)"> Create a Railway account at railway.app</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="6" onchange="saveStep(this)"> Add <code>requirements.txt</code> and push to GitHub</label></div>
-          <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>anthropic
-requests
-python-dotenv</code></pre></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="7" onchange="saveStep(this)"> Create a new Railway project → Deploy from GitHub repo</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="8" onchange="saveStep(this)"> Add all environment variables in Railway's Variables tab</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="9" onchange="saveStep(this)"> Set the start command to <code>python agent.py</code></label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="10" onchange="saveStep(this)"> Add a cron schedule in Railway: <code>0 7 * * *</code> (7 AM daily)</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="11" onchange="saveStep(this)"> Trigger a manual run in Railway and verify the email arrives</label></div>
-          <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="12" onchange="saveStep(this)"> Your agent is live — share the GitHub link</label></div>
-        </div>
-      </div>
-    </section>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a2" data-step="4" onchange="saveStep(this)"> Run the agent and confirm report.txt is created</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>python agent.py</code></pre></div>
+      <p>You should see the agent search the web, process results, and write the file — all decided autonomously. Try changing the task string to any research question you like.</p>
+    </div>
+  </div>
+</section>
 
-  </main>
+<!-- Project 3 -->
+<section id="a3" class="project-section p3" style="display:none">
+  <div class="project-header">
+    <div class="project-header-top">
+      <button class="back-btn" onclick="showSelector()">← All Projects</button>
+      <span class="project-label" id="label-a3"></span>
+    </div>
+    <h1 class="project-title">Extended Thinking Agent</h1>
+    <div class="project-meta-row">
+      <span class="level-badge">Intermediate</span>
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">claude-opus-4-6</span>
+      <span class="tool-tag">Extended Thinking</span>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-tags">
+      <span class="skill-tag">Extended thinking API</span>
+      <span class="skill-tag">Thinking blocks</span>
+      <span class="skill-tag">Budget tokens</span>
+      <span class="skill-tag">When to use thinking</span>
+      <span class="skill-tag">Complex analysis tasks</span>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What Is Extended Thinking?</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Extended thinking lets Claude reason through a problem step by step before committing to an answer. You set a <code>budget_tokens</code> limit, and Claude uses that token budget to think silently — exploring angles, checking its logic, reconsidering — before producing a final response.</p>
+      <p>The result is dramatically better performance on: complex multi-step analysis, ambiguous decisions with trade-offs, long documents with subtle implications, and tasks requiring structured reasoning. Use <code>claude-opus-4-6</code> for the best thinking quality.</p>
+      <p>When <em>not</em> to use it: simple factual questions, creative writing, or tasks where latency matters more than depth. Extended thinking takes longer and costs more tokens — save it for problems that deserve it.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What You're Building</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>A document analysis agent that reads a business problem or text file and produces a deep, structured analysis using Claude's extended thinking. You'll see the raw reasoning blocks as Claude works through the problem, then the polished final answer. The CLI accepts a file path as an argument so you can analyze any document instantly.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 1 — Enable Extended Thinking</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Install the SDK and create a minimal script that demonstrates extended thinking. Run this first to confirm everything works before building the full agent.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a3" data-step="0" onchange="saveStep(this)"> Install the Anthropic SDK</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>pip install anthropic python-dotenv</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a3" data-step="1" onchange="saveStep(this)"> Create thinking_demo.py and confirm thinking blocks appear</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+prompt = "A startup has $500k runway, 6 months to profitability, but a competitor just raised $10M. Should they pivot, double down, or seek funding? Analyze carefully."
+
+response = client.messages.create(
+    model="claude-opus-4-6",
+    max_tokens=16000,
+    thinking={"type": "enabled", "budget_tokens": 10000},
+    messages=[{"role": "user", "content": prompt}]
+)
+
+for block in response.content:
+    if block.type == "thinking":
+        print("=== Claude's Reasoning ===")
+        print(block.thinking)
+        print()
+    elif block.type == "text":
+        print("=== Final Answer ===")
+        print(block.text)</code></pre></div>
+      <p>Run it and watch Claude's internal reasoning appear before the answer. Notice how it explores multiple angles before concluding.</p>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>python thinking_demo.py</code></pre></div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 2 — Build the Analysis Agent</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Now build the full agent. It reads a file (business plan, contract, research paper — anything), lets you choose the analysis depth, and outputs structured findings.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a3" data-step="2" onchange="saveStep(this)"> Create analyze.py with the full analysis agent</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
+import sys
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+# Budget presets — tune based on complexity
+DEPTH_BUDGETS = {
+    "quick":  4000,   # Simple questions, short docs
+    "normal": 10000,  # Most business analysis tasks
+    "deep":   20000,  # Complex contracts, multi-factor decisions
+}
+
+SYSTEM_PROMPT = """You are a senior business analyst and strategic advisor.
+When analyzing documents or problems, structure your response with:
+1. Executive Summary (2-3 sentences)
+2. Key Findings (bullet points)
+3. Risks and Concerns
+4. Recommendations (prioritized)
+5. Open Questions
+
+Be direct, specific, and actionable."""
+
+def analyze(file_path: str, depth: str = "normal", question: str = None):
+    if not os.path.exists(file_path):
+        print(f"Error: File '{file_path}' not found.")
+        sys.exit(1)
+
+    with open(file_path, "r") as f:
+        document = f.read()
+
+    budget = DEPTH_BUDGETS.get(depth, DEPTH_BUDGETS["normal"])
+
+    user_message = f"Document to analyze:\n\n{document}"
+    if question:
+        user_message += f"\n\nSpecific question: {question}"
+    else:
+        user_message += "\n\nProvide a comprehensive analysis of this document."
+
+    print(f"Analyzing '{file_path}' at depth='{depth}' (budget_tokens={budget})...")
+    print("Thinking...\n")
+
+    response = client.messages.create(
+        model="claude-opus-4-6",
+        max_tokens=16000,
+        thinking={"type": "enabled", "budget_tokens": budget},
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_message}]
+    )
+
+    thinking_shown = False
+    for block in response.content:
+        if block.type == "thinking":
+            if not thinking_shown:
+                print("=== Internal Reasoning (thinking blocks) ===")
+                thinking_shown = True
+            # Show a preview — full thinking can be very long
+            preview = block.thinking[:1000]
+            print(preview + ("..." if len(block.thinking) > 1000 else ""))
+            print()
+        elif block.type == "text":
+            print("=== Analysis ===")
+            print(block.text)
+
+    # Save output
+    out_path = file_path.replace(".txt", "") + "_analysis.txt"
+    final_text = next((b.text for b in response.content if b.type == "text"), "")
+    with open(out_path, "w") as f:
+        f.write(final_text)
+    print(f"\nAnalysis saved to: {out_path}")
+
+if __name__ == "__main__":
+    # Usage: python analyze.py <file> [depth] [question]
+    if len(sys.argv) < 2:
+        print("Usage: python analyze.py <file_path> [quick|normal|deep] [optional question]")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    depth = sys.argv[2] if len(sys.argv) > 2 else "normal"
+    question = sys.argv[3] if len(sys.argv) > 3 else None
+
+    analyze(file_path, depth, question)</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a3" data-step="3" onchange="saveStep(this)"> Create a sample business plan text file to test with</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Create a quick test document
+cat > business_plan.txt << 'EOF'
+Company: NovaMesh
+Product: AI-powered mesh WiFi that auto-optimizes for each household's usage patterns.
+Stage: Pre-seed. $180k raised from angels.
+Team: 2 engineers, 1 designer. No sales hire yet.
+Traction: 120 beta users, 4.6/5 rating, 0% churn in 3 months.
+Market: $12B home networking market growing 8% YoY.
+Ask: $1.2M seed to hire sales lead, scale manufacturing, launch in 3 cities.
+Competition: Eero (Amazon), Google Nest WiFi, Orbi.
+Concern: Manufacturing lead times are 16 weeks, limiting rapid iteration.
+EOF</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a3" data-step="4" onchange="saveStep(this)"> Run the analysis agent at different depth levels</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Quick analysis
+python analyze.py business_plan.txt quick
+
+# Deep analysis with a specific question
+python analyze.py business_plan.txt deep "Is the $1.2M ask reasonable given their traction?"</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Project 4 -->
+<section id="a4" class="project-section p4" style="display:none">
+  <div class="project-header">
+    <div class="project-header-top">
+      <button class="back-btn" onclick="showSelector()">← All Projects</button>
+      <span class="project-label" id="label-a4"></span>
+    </div>
+    <h1 class="project-title">Multi-Agent Orchestration</h1>
+    <div class="project-meta-row">
+      <span class="level-badge">Advanced</span>
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">claude-sonnet-4-6</span>
+      <span class="tool-tag">Orchestration</span>
+      <span class="tool-tag">Structured Outputs</span>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-tags">
+      <span class="skill-tag">Agent specialization</span>
+      <span class="skill-tag">Structured JSON outputs</span>
+      <span class="skill-tag">Quality gates</span>
+      <span class="skill-tag">Retry logic</span>
+      <span class="skill-tag">Parallel execution</span>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What You're Building</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>A three-agent pipeline where each agent is a specialist: the <strong>Researcher</strong> gathers and structures key points, the <strong>Writer</strong> turns research into a polished article, and the <strong>Reviewer</strong> scores the article 1–10. If the score is below 7, the Writer gets a second chance with the Reviewer's specific feedback. Agents communicate through structured JSON — not free text — so outputs are reliable and machine-readable.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 1 — Build Agents with Structured Outputs</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Each agent is a Python function that calls Claude with a strict prompt instructing it to return valid JSON only. We parse and validate the response before passing it downstream.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="0" onchange="saveStep(this)"> Create pipeline.py with setup and the research agent</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
+import json
+import re
+from dotenv import load_dotenv
+import anthropic
+
+load_dotenv()
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+MODEL = "claude-sonnet-4-6"
+
+def call_claude(system: str, user: str) -> str:
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=4096,
+        system=system,
+        messages=[{"role": "user", "content": user}]
+    )
+    return response.content[0].text
+
+def extract_json(text: str) -> dict:
+    """Strip markdown fences and parse JSON from Claude's response."""
+    cleaned = re.sub(r"```(?:json)?", "", text).strip().strip("`").strip()
+    return json.loads(cleaned)
+
+# --- Agent 1: Researcher ---
+
+def research_agent(topic: str) -> dict:
+    system = """You are a research specialist. Your ONLY output is valid JSON — no explanation, no markdown prose.
+Return this exact structure:
+{
+  "key_points": ["point 1", "point 2", "point 3", "point 4", "point 5"],
+  "context": "2-3 sentences of background context",
+  "angle": "The most compelling angle or hook for this topic"
+}"""
+    user = f"Research this topic thoroughly: {topic}"
+    raw = call_claude(system, user)
+    return extract_json(raw)
+
+# --- Agent 2: Writer ---
+
+def writer_agent(topic: str, research: dict, feedback: str = None) -> str:
+    system = """You are an expert content writer. Write clear, engaging articles for a general audience.
+Structure: compelling headline, intro hook, 3-4 substantive paragraphs, strong conclusion.
+Return ONLY the article text — no JSON, no commentary."""
+    user = f"""Topic: {topic}
+
+Research to use:
+Key points: {json.dumps(research['key_points'], indent=2)}
+Context: {research['context']}
+Angle: {research['angle']}"""
+    if feedback:
+        user += f"\n\nPrevious version was rejected. Reviewer feedback to address:\n{feedback}"
+    return call_claude(system, user)
+
+# --- Agent 3: Reviewer ---
+
+def reviewer_agent(topic: str, article: str) -> dict:
+    system = """You are a senior editorial reviewer. Evaluate articles rigorously. Your ONLY output is valid JSON.
+Return this exact structure:
+{
+  "score": 7,
+  "issues": ["issue 1", "issue 2"],
+  "verdict": "pass",
+  "improvements": "Specific, actionable instructions for the writer to improve the article."
+}
+score: integer 1-10. verdict: "pass" if score >= 7, "fail" if below 7."""
+    user = f"Topic: {topic}\n\nArticle to review:\n\n{article}"
+    raw = call_claude(system, user)
+    return extract_json(raw)</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="1" onchange="saveStep(this)"> Test each agent individually before wiring them together</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Quick smoke test — add to the bottom of pipeline.py temporarily
+if __name__ == "__main__":
+    topic = "How large language models are changing software development"
+    print("Testing research agent...")
+    research = research_agent(topic)
+    print(json.dumps(research, indent=2))
+
+    print("\nTesting writer agent...")
+    article = writer_agent(topic, research)
+    print(article[:500])
+
+    print("\nTesting reviewer agent...")
+    review = reviewer_agent(topic, article)
+    print(json.dumps(review, indent=2))</code></pre></div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 2 — Orchestrate with Quality Gates</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>The orchestrator runs the full pipeline and implements the retry loop. If the Reviewer scores below 7, the Writer gets the feedback and tries again — up to 3 attempts.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="2" onchange="saveStep(this)"> Add the run_pipeline orchestrator function</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code">def run_pipeline(topic: str, max_retries: int = 3):
+    print(f"\n{'='*60}")
+    print(f"Pipeline starting: {topic}")
+    print(f"{'='*60}\n")
+
+    # Stage 1: Research
+    print("[1/3] Research Agent working...")
+    research = research_agent(topic)
+    print(f"      Found {len(research['key_points'])} key points. Angle: {research['angle'][:80]}...")
+
+    # Stage 2 & 3: Write → Review → Retry loop
+    article = None
+    feedback = None
+
+    for attempt in range(1, max_retries + 1):
+        print(f"\n[2/3] Writer Agent — attempt {attempt}/{max_retries}...")
+        article = writer_agent(topic, research, feedback)
+        print(f"      Article written ({len(article)} characters).")
+
+        print(f"[3/3] Reviewer Agent scoring...")
+        review = reviewer_agent(topic, article)
+        score = review["score"]
+        verdict = review["verdict"]
+
+        print(f"      Score: {score}/10 — Verdict: {verdict.upper()}")
+
+        if verdict == "pass":
+            print(f"\n✓ Pipeline complete on attempt {attempt}!")
+            break
+        else:
+            if attempt < max_retries:
+                print(f"      Issues: {', '.join(review['issues'])}")
+                print(f"      Sending feedback to writer for revision...")
+                feedback = review["improvements"]
+            else:
+                print(f"\n  Max retries reached. Saving best version (score: {score}/10).")
+
+    # Save final article
+    safe_name = topic[:40].replace(" ", "_").replace("/", "-")
+    out_file = f"{safe_name}_article.txt"
+    with open(out_file, "w") as f:
+        f.write(f"Topic: {topic}\n")
+        f.write(f"Final score: {review['score']}/10\n")
+        f.write("="*60 + "\n\n")
+        f.write(article)
+
+    print(f"\nFinal article saved to: {out_file}")
+    return article, review
+
+if __name__ == "__main__":
+    run_pipeline("How large language models are changing software development")</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a4" data-step="3" onchange="saveStep(this)"> Run the full pipeline and verify the output file is created</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code">python pipeline.py</code></pre></div>
+      <p>Try topics that are more nuanced or controversial — the Reviewer is more likely to reject the first draft, so you'll see the retry loop in action. Experiment with raising the passing threshold from 7 to 8 for stricter quality control.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Project 5 -->
+<section id="a5" class="project-section p5" style="display:none">
+  <div class="project-header">
+    <div class="project-header-top">
+      <button class="back-btn" onclick="showSelector()">← All Projects</button>
+      <span class="project-label" id="label-a5"></span>
+    </div>
+    <h1 class="project-title">MCP: Claude Connected to Everything</h1>
+    <div class="project-meta-row">
+      <span class="level-badge">Pro</span>
+      <span class="tool-tag">Claude Code</span>
+      <span class="tool-tag">MCP</span>
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">Supabase</span>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-tags">
+      <span class="skill-tag">MCP protocol</span>
+      <span class="skill-tag">Configuring MCP servers</span>
+      <span class="skill-tag">Filesystem MCP</span>
+      <span class="skill-tag">Supabase MCP</span>
+      <span class="skill-tag">Building a custom MCP server</span>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What Is MCP?</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>MCP (Model Context Protocol) is an open standard created by Anthropic that lets Claude connect to external tools and data sources through a consistent interface. Instead of writing custom integration code for every service, you configure MCP servers once and Claude can use them automatically — in Claude Code, Claude Desktop, or any MCP-compatible client.</p>
+      <p>There are ready-made MCP servers for: filesystem access, Supabase databases, GitHub repositories, Slack, Notion, browser automation, and dozens more. You can also build your own in Python or TypeScript in minutes.</p>
+      <p>Think of it as a USB standard for AI tools. One protocol, unlimited integrations.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What You're Building</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>You'll connect Claude Code to three MCP servers: the built-in filesystem server, the official Supabase server, and a custom Python server you build yourself. By the end, you'll be able to ask Claude Code in plain English to read your files, query your database, save notes, and check the weather — all through natural conversation.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 1 — Configure Built-In MCP Servers</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Claude Code manages MCP servers through its settings. Open the MCP configuration panel with the command below, then add the filesystem and Supabase servers.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="0" onchange="saveStep(this)"> Open Claude Code MCP settings</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>claude mcp</code></pre></div>
+
+      <p>Add the filesystem and Supabase MCP servers to your Claude Code config. Replace the path and token with your own values.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="1" onchange="saveStep(this)"> Add filesystem and Supabase MCP servers to your config</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/your/projects"
+      ]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "YOUR_SUPABASE_ACCESS_TOKEN"
+      ]
+    }
+  }
+}</code></pre></div>
+
+      <p>Get your Supabase access token at <strong>app.supabase.com → Account → Access Tokens</strong>. Generate a new token and paste it into the config above.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="2" onchange="saveStep(this)"> Get your Supabase access token and update the config</label></div>
+
+      <p>Test that both servers are working by asking Claude Code these questions in a new session.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="3" onchange="saveStep(this)"> Test the filesystem and Supabase servers in Claude Code</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Ask Claude Code these prompts (no code needed — just type them):
+
+"List the files in my projects folder"
+
+"Show me all the tables in my Supabase database"
+
+"Read the contents of [any file in your projects folder]"</code></pre></div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 2 — Build a Custom MCP Server</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Now you'll build your own MCP server in Python that exposes two tools: a weather lookup and a note saver. The <code>mcp</code> library handles all the protocol details.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="4" onchange="saveStep(this)"> Install the mcp library</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>pip install mcp requests</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="5" onchange="saveStep(this)"> Create server.py — your custom MCP server</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import json
+import os
+import requests
+from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp import types
+
+app = Server("my-tools")
+
+@app.list_tools()
+async def list_tools() -> list[types.Tool]:
+    return [
+        types.Tool(
+            name="get_weather",
+            description="Get the current weather for a city.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "city": {"type": "string", "description": "The city name, e.g. 'London'"}
+                },
+                "required": ["city"]
+            }
+        ),
+        types.Tool(
+            name="save_note",
+            description="Save a note to a local file.",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string", "description": "The note title (used as filename)."},
+                    "content": {"type": "string", "description": "The note content."}
+                },
+                "required": ["title", "content"]
+            }
+        )
+    ]
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict) -> list[types.TextContent]:
+    if name == "get_weather":
+        city = arguments["city"]
+        # Using open-meteo (free, no API key required) via geocoding
+        geo = requests.get(
+            f"https://geocoding-api.open-meteo.com/v1/search?name={city}&count=1"
+        ).json()
+        if not geo.get("results"):
+            return [types.TextContent(type="text", text=f"City '{city}' not found.")]
+        loc = geo["results"][0]
+        weather = requests.get(
+            f"https://api.open-meteo.com/v1/forecast"
+            f"?latitude={loc['latitude']}&longitude={loc['longitude']}"
+            f"&current_weather=true"
+        ).json()
+        cw = weather["current_weather"]
+        result = f"Weather in {city}: {cw['temperature']}°C, wind {cw['windspeed']} km/h"
+        return [types.TextContent(type="text", text=result)]
+
+    elif name == "save_note":
+        title = arguments["title"]
+        content = arguments["content"]
+        notes_dir = os.path.expanduser("~/mcp-notes")
+        os.makedirs(notes_dir, exist_ok=True)
+        safe_title = title.replace(" ", "_").replace("/", "-")
+        file_path = os.path.join(notes_dir, f"{safe_title}.txt")
+        with open(file_path, "w") as f:
+            f.write(f"# {title}\n\n{content}")
+        return [types.TextContent(type="text", text=f"Note saved to {file_path}")]
+
+    return [types.TextContent(type="text", text="Unknown tool.")]
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(stdio_server(app))</code></pre></div>
+
+      <p>Register your custom server in the Claude Code MCP config. Add it alongside the other servers.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="6" onchange="saveStep(this)"> Register the custom server in your MCP config</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>{
+  "mcpServers": {
+    "filesystem": { "...": "..." },
+    "supabase": { "...": "..." },
+    "my-tools": {
+      "command": "python",
+      "args": ["/absolute/path/to/server.py"]
+    }
+  }
+}</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a5" data-step="7" onchange="saveStep(this)"> Restart Claude Code and test your custom tools</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Ask Claude Code:
+
+"What's the weather in Tokyo right now?"
+
+"Save a note titled 'Project Ideas' with the content: Build a Claude agent that monitors my inbox"
+
+# Then verify:
+ls ~/mcp-notes/</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<!-- Project 6 -->
+<section id="a6" class="project-section p6" style="display:none">
+  <div class="project-header">
+    <div class="project-header-top">
+      <button class="back-btn" onclick="showSelector()">← All Projects</button>
+      <span class="project-label" id="label-a6"></span>
+    </div>
+    <h1 class="project-title">Production Agent + Computer Use</h1>
+    <div class="project-meta-row">
+      <span class="level-badge">Ninja</span>
+      <span class="tool-tag">Python</span>
+      <span class="tool-tag">claude-sonnet-4-6</span>
+      <span class="tool-tag">Computer Use API</span>
+      <span class="tool-tag">Railway</span>
+      <span class="tool-tag">Docker</span>
+    </div>
+  </div>
+
+  <div class="skill-unlock">
+    <div class="skill-unlock-label">Skills You'll Unlock</div>
+    <div class="skill-tags">
+      <span class="skill-tag">Computer use API</span>
+      <span class="skill-tag">Screenshot → action loop</span>
+      <span class="skill-tag">Production deployment</span>
+      <span class="skill-tag">Docker</span>
+      <span class="skill-tag">Environment variables</span>
+      <span class="skill-tag">Monitoring</span>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What Is Computer Use?</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Claude's computer use capability lets it see screenshots and control a computer — clicking at coordinates, typing text, pressing keys, and scrolling. The loop is simple: you send a screenshot, Claude decides what action to take, you execute that action, send the next screenshot, repeat.</p>
+      <p>Real-world use cases: browser automation that requires JavaScript rendering, filling out complex web forms, UI testing across different environments, and scraping websites that block traditional scrapers.</p>
+      <p>In this project we use <strong>Playwright</strong> instead of raw screenshot + mouse control. Playwright runs a real Chromium browser, gives Claude actual screenshots, and executes its actions safely — no risk of Claude accidentally clicking something on your real desktop.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">What You're Building</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p><strong>Part 1:</strong> A computer use agent that opens any URL in a real browser, takes a screenshot, and uses Claude to extract specific information from the page — handling JavaScript-rendered content that regular scrapers can't touch.</p>
+      <p><strong>Part 2:</strong> Package a production tool-use agent into Docker and deploy it to Railway with environment variable management, a cron schedule for automated runs, and log monitoring.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 1 — Computer Use Agent with Playwright</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Install Playwright and the Anthropic SDK. Playwright manages a real Chromium browser, so Claude sees exactly what a human would see.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="0" onchange="saveStep(this)"> Install dependencies</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>pip install anthropic playwright python-dotenv
+python -m playwright install chromium</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="1" onchange="saveStep(this)"> Create web_agent.py with the screenshot → action loop</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>import os
+import base64
+import json
+from dotenv import load_dotenv
+import anthropic
+from playwright.sync_api import sync_playwright
+
+load_dotenv()
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
+def screenshot_to_base64(page) -> str:
+    """Take a screenshot of the current page and return as base64."""
+    img_bytes = page.screenshot(full_page=False)
+    return base64.standard_b64encode(img_bytes).decode("utf-8")
+
+def run_computer_use_agent(url: str, task: str, max_steps: int = 10):
+    print(f"\nTask: {task}")
+    print(f"URL:  {url}\n")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page(viewport={"width": 1280, "height": 800})
+        page.goto(url, wait_until="networkidle", timeout=30000)
+        print("Page loaded. Starting agent loop...")
+
+        messages = []
+        tools = [
+            {
+                "type": "computer_20250124",
+                "name": "computer",
+                "display_width_px": 1280,
+                "display_height_px": 800,
+            }
+        ]
+
+        # Initial screenshot
+        screenshot_b64 = screenshot_to_base64(page)
+        messages.append({
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {"type": "base64", "media_type": "image/png", "data": screenshot_b64}
+                },
+                {"type": "text", "text": f"Task: {task}\n\nHere is the current state of the browser. Complete the task. When done, use the text tool to return your final answer."}
+            ]
+        })
+
+        for step in range(max_steps):
+            print(f"Step {step + 1}/{max_steps}...")
+            response = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=4096,
+                tools=tools,
+                messages=messages,
+                betas=["computer-use-2025-01-24"],
+            )
+
+            messages.append({"role": "assistant", "content": response.content})
+
+            if response.stop_reason == "end_turn":
+                for block in response.content:
+                    if hasattr(block, "text") and block.text:
+                        print(f"\nResult:\n{block.text}")
+                        browser.close()
+                        return block.text
+                break
+
+            # Execute computer use actions
+            tool_results = []
+            for block in response.content:
+                if block.type == "tool_use" and block.name == "computer":
+                    action = block.input.get("action")
+                    print(f"  Action: {action} {json.dumps({k:v for k,v in block.input.items() if k != 'action'})}")
+
+                    if action == "screenshot":
+                        img = screenshot_to_base64(page)
+                        tool_results.append({
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "content": [{"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": img}}]
+                        })
+                    elif action == "left_click":
+                        page.mouse.click(block.input["coordinate"][0], block.input["coordinate"][1])
+                        page.wait_for_timeout(500)
+                        img = screenshot_to_base64(page)
+                        tool_results.append({
+                            "type": "tool_result",
+                            "tool_use_id": block.id,
+                            "content": [{"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": img}}]
+                        })
+                    elif action == "type":
+                        page.keyboard.type(block.input["text"])
+                        tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": "Typed successfully."})
+                    elif action == "key":
+                        page.keyboard.press(block.input["key"])
+                        tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": "Key pressed."})
+                    elif action == "scroll":
+                        page.mouse.wheel(0, block.input.get("delta_y", 300))
+                        tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": "Scrolled."})
+
+            if tool_results:
+                messages.append({"role": "user", "content": tool_results})
+
+        browser.close()
+        return "Max steps reached."
+
+if __name__ == "__main__":
+    result = run_computer_use_agent(
+        url="https://news.ycombinator.com",
+        task="Find the top 3 story titles on the front page and return them as a numbered list."
+    )
+    print(f"\nFinal answer: {result}")</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="2" onchange="saveStep(this)"> Run the web agent and verify it extracts page content</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>python web_agent.py</code></pre></div>
+      <p>Try changing the URL and task. Good test: point it at a JavaScript-heavy site like a job board or pricing page and ask it to extract structured data.</p>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <button class="accordion-btn" onclick="toggleAccordion(this)">
+      <span class="accordion-title">Step 2 — Deploy to Railway with Docker</span>
+      <span class="accordion-arrow">▼</span>
+    </button>
+    <div class="accordion-body">
+      <p>Package the tool-use agent from Project a2 (or any agent) into a Docker container and deploy it to Railway. Railway auto-detects Dockerfiles, manages environment variables, and gives you logs and cron scheduling.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="3" onchange="saveStep(this)"> Create requirements.txt</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>anthropic>=0.40.0
+requests>=2.31.0
+python-dotenv>=1.0.0</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="4" onchange="saveStep(this)"> Create Dockerfile</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy agent code
+COPY agent.py .
+
+# Run the agent
+CMD ["python", "agent.py"]</code></pre></div>
+
+      <p>Create a production-ready version of your agent that reads its task from an environment variable. This lets Railway pass different tasks via config without changing code.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="5" onchange="saveStep(this)"> Update agent.py to read task from environment variable</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Add to the bottom of agent.py, replacing the existing __main__ block:
+if __name__ == "__main__":
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s"
+    )
+
+    task = os.getenv(
+        "AGENT_TASK",
+        "Search for today's top AI news, summarize 3 stories, and save to daily_brief.txt"
+    )
+    logging.info(f"Starting agent with task: {task}")
+    run_agent(task)
+    logging.info("Agent completed successfully.")</code></pre></div>
+
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="6" onchange="saveStep(this)"> Deploy to Railway</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Install Railway CLI
+npm install -g @railway/cli
+
+# Login and initialize
+railway login
+railway init
+
+# Deploy (Railway detects your Dockerfile automatically)
+railway up</code></pre></div>
+
+      <p>In the Railway dashboard, go to your service → <strong>Variables</strong> and add these environment variables.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="7" onchange="saveStep(this)"> Set environment variables in Railway dashboard</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>ANTHROPIC_API_KEY=your_key_here
+SERPER_API_KEY=your_key_here
+AGENT_TASK=Search for the latest AI research papers, summarize the top 3, save to report.txt</code></pre></div>
+
+      <p>Set up a cron schedule so the agent runs automatically. In Railway: go to your service → <strong>Settings → Cron Schedule</strong>.</p>
+      <div class="step-check-row"><label class="step-check"><input type="checkbox" data-pid="a6" data-step="8" onchange="saveStep(this)"> Configure cron schedule and verify logs in Railway dashboard</label></div>
+      <div class="code-block"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code># Example cron expressions for Railway:
+0 8 * * *      # Every day at 8am UTC
+0 */6 * * *    # Every 6 hours
+0 9 * * 1-5   # Weekdays at 9am UTC
+
+# View live logs from CLI:
+railway logs --tail</code></pre></div>
+      <p>Your agent is now running in production on a schedule, with full logging, environment isolation, and zero server management. Any push to your connected GitHub repo triggers an automatic redeploy.</p>
+    </div>
+  </div>
+</section>
+
+    </main>
 </div><!-- /#project-views -->
 
 <footer>
@@ -1863,6 +2106,34 @@ document.addEventListener('click', function(e) {
 
 // ── ACCORDION ──
 function toggle(header) { header.parentElement.classList.toggle('open'); }
+function toggleAccordion(btn) { btn.parentElement.classList.toggle('open'); }
+
+// ── COPY CODE BLOCKS ──
+function copyCode(btn) {
+  var pre = btn.nextElementSibling;
+  var text = pre ? pre.textContent : '';
+  navigator.clipboard.writeText(text.trim()).then(function() {
+    btn.textContent = '✓ Copied';
+    setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+// ── STEP CHECKBOXES ──
+function saveStep(input) {
+  var pid = input.dataset.pid;
+  var step = parseInt(input.dataset.step);
+  var key = 'zts_steps_' + pid;
+  var steps = JSON.parse(localStorage.getItem(key) || '{}');
+  steps[step] = input.checked;
+  localStorage.setItem(key, JSON.stringify(steps));
+}
+function loadSteps(pid) {
+  var key = 'zts_steps_' + pid;
+  var steps = JSON.parse(localStorage.getItem(key) || '{}');
+  document.querySelectorAll('[data-pid="' + pid + '"][data-step]').forEach(function(cb) {
+    cb.checked = !!steps[parseInt(cb.dataset.step)];
+  });
+}
 
 // ── PROGRESS BAR ──
 function updateProgress() {
@@ -1902,12 +2173,12 @@ const LABELS = {
   a6: 'Project 6 of 6 · Ninja'
 };
 const PROJECT_META = {
-  a1: { title: 'Your First Agent — No-Code', level: 'Starter', tools: ['Claude Free','Zapier','No Code'] },
-  a2: { title: 'File Intelligence Agent', level: 'Beginner', tools: ['Claude Code','Python','File Processing'] },
-  a3: { title: 'Web Research Agent', level: 'Intermediate', tools: ['Claude Code','Python','Serper API'] },
-  a4: { title: 'Multi-Agent Pipeline', level: 'Advanced', tools: ['Claude Code','Python','Multi-Agent'] },
-  a5: { title: 'Agent with Memory + MCP', level: 'Pro', tools: ['Claude Code','Python','Supabase','MCP'] },
-  a6: { title: 'Autonomous Business Agent', level: 'Ninja', tools: ['Claude Code','Python','Railway'] }
+  a1: { title: 'Your First Agent — No-Code', level: 'Starter', tools: ['Claude API','Zapier','No Code'] },
+  a2: { title: 'Tool-Use Agent', level: 'Beginner', tools: ['Python','Anthropic SDK','Tool Use'] },
+  a3: { title: 'Extended Thinking Agent', level: 'Intermediate', tools: ['Python','claude-opus-4-6','Extended Thinking'] },
+  a4: { title: 'Multi-Agent Orchestration', level: 'Advanced', tools: ['Python','claude-sonnet-4-6','Orchestration'] },
+  a5: { title: 'MCP: Claude Connected to Everything', level: 'Pro', tools: ['Claude Code','MCP','Python','Supabase'] },
+  a6: { title: 'Production Agent + Computer Use', level: 'Ninja', tools: ['Python','Computer Use API','Railway','Docker'] }
 };
 // Used when syncing to Supabase — includes both tracks so we don't overwrite web-apps completions
 const SYNC_ALL_ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8','a1','a2','a3','a4','a5','a6'];
@@ -1933,6 +2204,7 @@ function showProject(id) {
   window.location.hash = id;
   setupCopyButtons();
   initCheckboxes(id);
+  loadSteps(id);
   placeUnstuckCallout(id);
   initProjectCompletion(id);
 }

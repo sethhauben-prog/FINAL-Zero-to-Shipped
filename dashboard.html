@@ -302,9 +302,10 @@ body {
 }
 .tracks-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+@media (max-width: 960px) { .tracks-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .tracks-grid { grid-template-columns: 1fr; } }
 
 .track-card {
@@ -405,6 +406,8 @@ body {
 .track-cta:hover { opacity: 0.88; }
 .track-web .track-cta { background: var(--royal); color: #fff; }
 .track-agent .track-cta { background: #1a1a1a; color: #fff; }
+.track-marketing .track-card-header { background: #1a4a2e; }
+.track-marketing .track-cta { background: #1a4a2e; color: #fff; }
 .track-cta-arrow { font-size: 18px; }
 
 .coming-soon-badge {
@@ -471,6 +474,7 @@ footer .ft {
   <a href="dashboard.html" class="mobile-menu-link active">My Dashboard</a>
   <a href="web-apps.html" class="mobile-menu-link">Web Apps</a>
   <a href="agents.html" class="mobile-menu-link">AI Agents</a>
+  <a href="marketing.html" class="mobile-menu-link">AI Marketing</a>
   <a href="my-projects.html" class="mobile-menu-link">My Projects</a>
   <a href="my-profile.html" class="mobile-menu-link">My Profile</a>
   <div class="mobile-menu-actions">
@@ -546,8 +550,21 @@ footer .ft {
       </div>
     </div>
 
+    <!-- MARKETING TRACK -->
+    <div class="track-card track-marketing" onclick="window.location='marketing.html'">
+      <div class="track-card-header">
+        <span class="track-icon">📣</span>
+        <div class="track-name">AI<br><em>Marketing</em></div>
+        <div class="track-tagline">Run autonomous marketing campaigns across SEO, email, social, Reddit, and LinkedIn.</div>
+      </div>
+      <div class="track-card-body">
+        <div class="track-desc">Start with an AI SEO pipeline. Progress through email sequences, social content calendars, Reddit outreach, LinkedIn automation, and a full multi-channel campaign orchestrator.</div>
+        <a class="track-cta track-marketing" href="marketing.html">Start Marketing Track <span class="track-cta-arrow">→</span></a>
+      </div>
+    </div>
+
   </div>
-  <div class="free-note"><strong>Project 1 in both tracks is 100% free.</strong> No credit card or installation required to start.</div>
+  <div class="free-note"><strong>Project 1 in every track is 100% free.</strong> No credit card or installation required to start.</div>
 </section>
 
 <footer>

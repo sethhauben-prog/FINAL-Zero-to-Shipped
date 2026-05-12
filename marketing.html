@@ -25,6 +25,7 @@
   --green: #1a7a4a;
   --green-light: rgba(26,122,74,0.1);
   --red: #c0392b;
+  --p0: #1a7a4a;
   --p1: #1a3db5;
   --p2: #1a3db5;
   --p3: #1a3db5;
@@ -388,6 +389,28 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
     <div class="selector-label">Choose a project to start</div>
     <div class="project-grid">
 
+      <!-- M0 — FOUNDATION -->
+      <div class="proj-card" data-pid="m0" onclick="showProject('m0')">
+        <div class="proj-card-header">
+          <div class="proj-badge">
+            <div class="proj-num" style="background:#1a7a4a">0</div>
+            <div class="proj-level" style="color:#1a7a4a">Foundation</div>
+          </div>
+          <div class="proj-info">
+            <div class="proj-title">Connect Tools &amp; Data <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:400;color:#1a7a4a;letter-spacing:0.06em;vertical-align:middle;opacity:0.7;">· 1–2 hrs</span></div>
+            <div class="proj-desc">One-time setup. Connect Claude to your marketing stack via MCP connectors, feed it your brand context, pull baseline analytics, and define your ideal customer profile.</div>
+            <div class="proj-chips">
+              <span class="proj-chip hi">Claude Cowork</span>
+              <span class="proj-chip hi">Google Search Console MCP</span>
+              <span class="proj-chip">Mailchimp MCP</span>
+              <span class="proj-chip">Meta MCP</span>
+              <span class="proj-chip">Reddit MCP</span>
+            </div>
+          </div>
+        </div>
+        <div class="proj-cta" style="background:#1a7a4a">Start Foundation <span>→</span></div>
+      </div>
+
       <!-- M1 -->
       <div class="proj-card" data-pid="m1" onclick="showProject('m1')">
         <div class="proj-card-header">
@@ -527,7 +550,7 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
 
   <div class="project-nav-bar">
     <button class="pnav-back" onclick="showSelector()">← All Projects</button>
-    <div class="pnav-title" id="pnav-title">Project 1 of 6</div>
+    <div class="pnav-title" id="pnav-title">Foundation</div>
     <button class="pnav-next" id="pnav-next" onclick="nextProject()">Next Project →</button>
   </div>
 
@@ -536,6 +559,239 @@ footer .footer-title { font-family: 'Playfair Display', serif; font-size: 24px; 
   </div>
 
   <main class="container">
+
+    <!-- ═══ PROJECT 0 — FOUNDATION ═══ -->
+    <section class="project-section p1" id="m0" style="--p-color:#1a7a4a">
+      <div class="project-header">
+        <div class="project-badge">
+          <div class="project-num" style="background:#1a7a4a">0</div>
+          <div class="project-level-tag" style="color:#1a7a4a">Foundation</div>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Foundation — Connect Tools &amp; Data</div>
+          <div class="project-desc">One-time setup. Connect Claude to your marketing stack, give it brand context, pull baseline analytics, and define your ideal customer profile. Every project in this track builds on what you set up here.</div>
+          <div class="tool-chips">
+            <span class="chip highlight">Claude Cowork</span>
+            <span class="chip highlight">Google Search Console MCP</span>
+            <span class="chip highlight">Mailchimp MCP (Composio)</span>
+            <span class="chip">Meta MCP</span>
+            <span class="chip">Reddit MCP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="skill-unlock">
+        <div class="skill-unlock-label">🔓 What you'll set up</div>
+        <div class="skill-list">
+          <div class="skill-item">Claude connected to Google Search Console, Mailchimp, Meta, and Reddit via MCP</div>
+          <div class="skill-item">A brand context doc Claude reads before every marketing task</div>
+          <div class="skill-item">Baseline analytics snapshot — traffic, email list size, follower counts</div>
+          <div class="skill-item">A defined ICP (ideal customer profile) Claude references across all channels</div>
+        </div>
+      </div>
+
+      <div class="build-ideas">
+        <div class="build-ideas-label">💡 Why this matters</div>
+        <div class="build-ideas-text">Without context, Claude gives you generic marketing copy. With your brand brief, ICP, and live data piped in via MCP, every output is specific, on-brand, and actionable from the first prompt.</div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="accordion" id="acc-m0-1">
+        <div class="accordion-header" onclick="toggle(this)">
+          <span class="acc-icon">⚙️</span>
+          <span class="acc-title">Step 1 — Install MCP Connectors in Claude Cowork</span>
+          <span class="acc-chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>Open <strong>Claude Cowork</strong> (claude.ai/cowork or the desktop app). Go to <strong>Settings → Integrations → MCP</strong> and install each connector below. You only need to do this once — they persist across all your conversations.</p>
+          <div class="step-list">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Google Search Console MCP</div>
+                <div class="step-desc">Search for "Google Search Console" in the MCP marketplace. Connect your Google account and grant read access to your property. This lets Claude pull keyword rankings, impressions, and top pages live.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">Mailchimp MCP via Composio</div>
+                <div class="step-desc">Install the Composio MCP bundle. Connect Mailchimp — Composio handles the OAuth. Claude can now read list sizes, campaign stats, and open rates without you copying anything.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <div class="step-title">Meta Business Suite MCP</div>
+                <div class="step-desc">Connect your Facebook/Instagram Business account. Claude will be able to read follower counts and post performance when generating your social content calendar.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <div class="step-title">Reddit MCP</div>
+                <div class="step-desc">Install the Reddit MCP. Authenticate with your Reddit account. Claude can now scan subreddits and draft comments directly in later projects.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="accordion" id="acc-m0-2">
+        <div class="accordion-header" onclick="toggle(this)">
+          <span class="acc-icon">🧠</span>
+          <span class="acc-title">Step 2 — Write Your Brand Context Doc</span>
+          <span class="acc-chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>Create a plain text file called <code>brand-context.txt</code>. You'll paste this at the top of every Claude marketing conversation. Fill in the fields below for GoLive Labs (or swap in your own brand).</p>
+          <div class="copyable-wrap">
+<pre class="code-block">BRAND CONTEXT — GoLive Labs
+===========================
+Website: goliveailabs.com
+
+What we do:
+An online learning platform that teaches non-technical people to build
+and ship real software using AI tools (Claude, Supabase, Vercel).
+No prior experience required.
+
+Tracks:
+- Web Apps & Mobile (8 projects, Starter → Expert)
+- AI Agents (6 projects, Starter → Ninja)
+- AI Marketing (7 projects, Foundation → Ninja)
+
+Target audience:
+Aspiring developers, non-coders, career changers, and entrepreneurs
+who want to build real products — not just follow tutorials.
+
+Ideal Customer Profile (ICP):
+"A non-technical person who wants to ship real software using AI.
+No prior coding experience required. Motivated by building something
+real, not just learning theory."
+
+Tone of voice:
+Direct, encouraging, no fluff. We speak like a senior dev who wants
+you to succeed — not a corporate brand. Use plain English. Avoid jargon.
+
+Price point:
+Free to start. $10/month Creator plan unlocks all projects.
+
+Differentiator:
+Every project ships something live. No toy examples.
+Students go from zero to a live URL in the first session.
+===========================</pre>
+          </div>
+          <div class="step-list">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Save the file</div>
+                <div class="step-desc">Save <code>brand-context.txt</code> somewhere easy to find — your Desktop or a <code>/marketing</code> folder. You'll copy-paste it into Claude at the start of every session.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">Test it with Claude</div>
+                <div class="step-desc">Open a new Claude conversation, paste the context, then ask: <em>"Based on this brand context, what are 3 content angles that would resonate most with our ICP?"</em> Claude should give you specific, on-brand answers — not generic advice.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="accordion" id="acc-m0-3">
+        <div class="accordion-header" onclick="toggle(this)">
+          <span class="acc-icon">📊</span>
+          <span class="acc-title">Step 3 — Pull Baseline Analytics</span>
+          <span class="acc-chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>Before you run any campaigns, capture your starting numbers. You'll use these to measure what's actually working. Paste the prompt below into Claude with your MCP connectors active.</p>
+          <div class="copyable-wrap">
+<pre class="code-block">Use the Google Search Console MCP to pull:
+- Total clicks and impressions over the last 28 days
+- Top 10 landing pages by clicks
+- Top 10 queries by impressions with their average position
+
+Use the Mailchimp MCP to pull:
+- Total subscriber count
+- Average open rate across the last 5 campaigns
+
+Use the Meta MCP to pull:
+- Instagram follower count
+- Facebook page likes
+- Reach over the last 28 days
+
+Format everything as a clean baseline analytics snapshot with today's date.
+I'll use this as my marketing benchmark going forward.</pre>
+          </div>
+          <div class="step-list">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Save the output</div>
+                <div class="step-desc">Copy Claude's response into a file called <code>baseline-analytics.txt</code> with the date. You'll reference this in the Campaign Orchestrator (Project 6) to measure growth.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">Note any gaps</div>
+                <div class="step-desc">If an MCP can't connect (e.g. no Mailchimp account yet), just write "0 subscribers — new list" in the file. The important thing is having a dated starting point, not perfect data.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="accordion" id="acc-m0-4">
+        <div class="accordion-header" onclick="toggle(this)">
+          <span class="acc-icon">🎯</span>
+          <span class="acc-title">Step 4 — Define Your ICP with Claude</span>
+          <span class="acc-chevron">▾</span>
+        </div>
+        <div class="accordion-body">
+          <p>A sharp ICP makes every piece of content more effective. Use Claude to pressure-test and expand yours. Paste your brand context first, then use the prompt below.</p>
+          <div class="copyable-wrap">
+<pre class="code-block">Based on the brand context above, help me build a detailed ICP.
+
+Starting point: "Non-technical person who wants to ship real software
+using AI. No prior experience required."
+
+Please expand this into a full ICP covering:
+1. Demographics (age range, job titles, life stage)
+2. Psychographics (motivations, fears, aspirations)
+3. Where they spend time online (subreddits, Facebook groups, LinkedIn communities)
+4. What they search for before finding us
+5. The objections they have before signing up
+6. The exact language they use to describe their problem
+
+Format as a reference doc I can paste into future marketing prompts.</pre>
+          </div>
+          <div class="step-list">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Save as icp.txt</div>
+                <div class="step-desc">Save Claude's output as <code>icp.txt</code>. Add it to your <code>/marketing</code> folder alongside <code>brand-context.txt</code> and <code>baseline-analytics.txt</code>.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">Foundation complete</div>
+                <div class="step-desc">You now have three files Claude will use as context for every marketing project: brand context, baseline analytics, and ICP. You're ready to start Project 1 — AI SEO.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
 
     <!-- ═══ PROJECT 1 — AI SEO ═══ -->
     <section class="project-section p1" id="m1">
@@ -1862,8 +2118,9 @@ function setupCopyButtons() {
 }
 
 // ── PROJECT ORDER & META ──
-const ORDER = ['m1','m2','m3','m4','m5','m6'];
+const ORDER = ['m0','m1','m2','m3','m4','m5','m6'];
 const LABELS = {
+  m0: 'Foundation · Connect Tools & Data',
   m1: 'Project 1 of 6 · Starter',
   m2: 'Project 2 of 6 · Beginner',
   m3: 'Project 3 of 6 · Intermediate',
@@ -1872,6 +2129,7 @@ const LABELS = {
   m6: 'Project 6 of 6 · Ninja',
 };
 const PROJECT_META = {
+  m0: { title: 'Foundation — Connect Tools & Data', level: 'Foundation', tools: ['Claude Cowork', 'Google Search Console MCP', 'Mailchimp MCP', 'Meta MCP', 'Reddit MCP'] },
   m1: { title: 'AI SEO', level: 'Starter', tools: ['Claude API', 'Python'] },
   m2: { title: 'Email Marketing', level: 'Beginner', tools: ['Claude API', 'Python'] },
   m3: { title: 'Instagram & Facebook', level: 'Intermediate', tools: ['Claude API', 'Python'] },
@@ -1879,8 +2137,8 @@ const PROJECT_META = {
   m5: { title: 'LinkedIn Automation', level: 'Pro', tools: ['Claude API', 'Python'] },
   m6: { title: 'Full Campaign Orchestrator', level: 'Ninja', tools: ['Claude API', 'Python'] },
 };
-// Used when syncing to Supabase — includes both tracks so we don't overwrite web-apps completions
-const SYNC_ALL_ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8','a1','a2','a3','a4','a5','a6','m1','m2','m3','m4','m5','m6'];
+// Used when syncing to Supabase — includes all tracks so we don't overwrite other completions
+const SYNC_ALL_ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8','a1','a2','a3','a4','a5','a6','m0','m1','m2','m3','m4','m5','m6'];
 
 let currentProject = null;
 

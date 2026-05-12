@@ -302,10 +302,10 @@ body {
 }
 .tracks-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
-@media (max-width: 960px) { .tracks-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .tracks-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .tracks-grid { grid-template-columns: 1fr; } }
 
 .track-card {
@@ -408,6 +408,8 @@ body {
 .track-agent .track-cta { background: #1a1a1a; color: #fff; }
 .track-marketing .track-card-header { background: #1a4a2e; }
 .track-marketing .track-cta { background: #1a4a2e; color: #fff; }
+.track-sales .track-card-header { background: #7c3aed; }
+.track-sales .track-cta { background: #7c3aed; color: #fff; }
 .track-cta-arrow { font-size: 18px; }
 
 .coming-soon-badge {
@@ -475,6 +477,7 @@ footer .ft {
   <a href="web-apps.html" class="mobile-menu-link">Web Apps</a>
   <a href="agents.html" class="mobile-menu-link">AI Agents</a>
   <a href="marketing.html" class="mobile-menu-link">AI Marketing</a>
+  <a href="sales.html" class="mobile-menu-link">Sales</a>
   <a href="my-projects.html" class="mobile-menu-link">My Projects</a>
   <a href="my-profile.html" class="mobile-menu-link">My Profile</a>
   <div class="mobile-menu-actions">
@@ -560,6 +563,19 @@ footer .ft {
       <div class="track-card-body">
         <div class="track-desc">Start with an AI SEO pipeline. Progress through email sequences, social content calendars, Reddit outreach, LinkedIn automation, and a full multi-channel campaign orchestrator.</div>
         <a class="track-cta track-marketing" href="marketing.html">Start Marketing Track <span class="track-cta-arrow">→</span></a>
+      </div>
+    </div>
+
+    <!-- SALES TRACK -->
+    <div class="track-card track-sales" onclick="window.location='sales.html'">
+      <div class="track-card-header">
+        <span class="track-icon">💰</span>
+        <div class="track-name">Sales<br><em>with Claude</em></div>
+        <div class="track-tagline">Research prospects, write outreach, prep calls, generate proposals, and close deals with AI.</div>
+      </div>
+      <div class="track-card-body">
+        <div class="track-desc">Start with CRM and stack setup. Progress through lead research, cold outreach, discovery call prep, AI proposals, objection handling, and a full pipeline orchestrator.</div>
+        <a class="track-cta track-sales" href="sales.html">Start Sales Track <span class="track-cta-arrow">→</span></a>
       </div>
     </div>
 

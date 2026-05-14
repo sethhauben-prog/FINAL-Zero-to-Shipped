@@ -13,8 +13,12 @@ A plain HTML/CSS/JS learning platform with no build step or framework. Open file
 - `index.html` — Landing page (sticky white nav with tabs, rocket animation, track cards, FAQ accordion)
 - `signup.html` — Sign up page (split layout, email + Google OAuth)
 - `login.html` — Login page (split layout, email + Google OAuth)
-- `dashboard.html` — Post-login track selector (My Dashboard / My Projects / My Profile tabs; Admin tab injected for admin users)
-- `web-apps.html` — Web Apps track (project selector + individual project views, 8 projects)
+- `reset-password.html` — Password reset page (split layout, handles Supabase PASSWORD_RECOVERY event)
+- `dashboard.html` — Post-login track selector (My Dashboard / My Projects / My Profile tabs; Admin tab injected for admin users); 2-column track card grid
+- `web-apps.html` — Web Apps track (project selector + individual project views, 8 projects: p1–p8)
+- `agents.html` — AI Agents track (project selector + individual project views, 6 projects: a1–a6)
+- `marketing.html` — AI Marketing track (project selector + individual project views, 7 projects: m0–m6)
+- `sales.html` — Sales with Claude track (project selector + individual project views, 7 projects: s0–s6)
 - `my-projects.html` — Authenticated user's saved project library (add, edit, delete cards); syncs to Supabase `profiles.my_projects`
 - `project-library.html` — Public showcase of projects shared with the GoLive Labs community (reads from Supabase `shared_projects` table)
 - `testimonials.html` — Public testimonials page
@@ -62,8 +66,8 @@ All functions use native `fetch` with REST APIs — **zero npm dependencies**.
 ## Layout Patterns
 - **Landing page:** sticky white nav with tab bar (Project Library | Testimonials | Pricing) + Login/Sign Up buttons top-right; blue hero below; rocket SVG easter egg; FAQ accordion below track cards
 - **Auth pages:** full-viewport split — left panel (55%, royal blue) with headline + testimonial, right panel (45%, cream) with form
-- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip (expandable, shows "get unstuck" tip when open), 2-column track cards
-- **Web Apps track:** two-mode page — selector view (8 project cards) and project view (individual project with accordions). Controlled by `showProject(id)` / `showSelector()` JS. URL hash routing (`#p1`–`#p8`).
+- **Dashboard:** sticky nav with tabs (My Dashboard / My Projects / My Profile + Admin for admins), compact blue hero, 4-column orientation strip (expandable, shows "get unstuck" tip when open), 2-column track card grid (4 cards: Web Apps, AI Agents, AI Marketing, Sales)
+- **Track pages (web-apps, agents, marketing, sales):** two-mode page — selector view (project cards) and project view (individual project with accordions). Controlled by `showProject(id)` / `showSelector()` JS. URL hash routing per track.
 - **My Projects / Project Library / Testimonials / Pricing:** sticky white nav with same public tabs, blue hero, content
 - **Eyebrows:** IBM Plex Mono, 10px, uppercase, `letter-spacing: 0.18em`
 - **Buttons:** pill shape (`border-radius: 50px`) for nav; rectangular (`border-radius: 6px`) for form submits
@@ -73,18 +77,25 @@ Public pages (index, project-library, testimonials, pricing) share a sticky whit
 - Logo left
 - `.page-tabs` center — tabs with `border-bottom: 2px solid transparent` / `.active` uses `var(--royal)`
 - Login + Sign Up buttons right
-Authenticated pages (dashboard, my-projects) use same nav structure with different tabs + Log Out button.
+Authenticated track pages (web-apps, agents, marketing, sales, dashboard, my-projects) use same nav structure with tabs: My Dashboard | Web Apps | AI Agents | Marketing | Sales | My Projects | My Profile + Log Out button. The current page's tab has `.active`.
 Admin tab (gold color) is injected into dashboard nav after role check — only visible to `role = 'admin'` users.
 Mobile nav: hamburger at `max-width: 700px`, tabs hidden via `.site-nav > div { display: none !important; }` to override inline `style="display:flex"`.
 
-## Color Usage
-- Projects 1–3: `--royal` (blue)
-- Projects 4–6: `--gold`
-- Project 7: `--green` (Creator tier)
-- Project 8: `#7c3aed` (Expert/purple)
-- All `--p-color` CSS variables map to one of these per project
+## Color Usage — Track Pages
+All track pages use `--p-color` CSS variable per project section. Convention:
+- Foundation (project 0): `#1a7a4a` (green)
+- Projects 1–3: `--royal` (`#1a3db5`, blue)
+- Projects 4–6: `--gold` (`#c9922a`)
+- Web Apps p7: `--green` (`#1a7a4a`, Creator tier)
+- Web Apps p8: `#7c3aed` (Expert/purple)
 
-## Web Apps Track — Projects
+## Dashboard Track Cards
+- Web Apps: royal blue header (`--royal`)
+- AI Agents: dark/black header (`#1a1a1a`)
+- AI Marketing: dark green header (`#1a4a2e`)
+- Sales with Claude: purple header (`#7c3aed`)
+
+## Web Apps Track — Projects (`web-apps.html`)
 ```
 p1: Chat, Build & Ship                        — Starter      — 1–2 hrs   — Claude Free, GitHub, Vercel
 p2: Build and Deploy with Claude Code         — Beginner     — 1–3 hrs   — Claude Code, GitHub, Vercel, Terminal
@@ -98,6 +109,51 @@ p8: Launch Checklist                          — Expert       — 1–3 hrs   �
 - `ORDER = ['p1','p2','p3','p4','p5','p6','p7','p8']`
 - `LABELS` map each id to "Project X of 8 · Level"
 - p7 selector card is centered in the 2-col grid when alone
+
+## AI Agents Track — Projects (`agents.html`)
+```
+a1: Build a No-Code AI Assistant              — Starter      — 1–2 hrs   — Claude.ai, Zapier/Make
+a2: File Intelligence Agent                   — Beginner     — 1–3 hrs   — Claude API, Python
+a3: Web Research Agent                        — Intermediate — 2–4 hrs   — Claude API, Python, Jina Reader
+a4: Multi-Agent Pipeline                      — Advanced     — 3–6 hrs   — Claude API, Python
+a5: Memory & Persistent Agents                — Pro          — 4–7 hrs   — Claude API, Python, Supabase
+a6: Autonomous Agent (24/7)                   — Ninja        — 5–9 hrs   — Claude API, Python, Vercel Cron
+```
+- `ORDER = ['a1','a2','a3','a4','a5','a6']`
+- Default locked: `['a4','a5','a6']` (admin-configurable via `app_settings.locked_projects`)
+
+## AI Marketing Track — Projects (`marketing.html`)
+```
+m0: Foundation — Connect Tools & Data         — Foundation   — 1–2 hrs   — Claude Cowork, Google Search Console MCP, Mailchimp MCP, Meta MCP, Reddit MCP
+m1: AI SEO                                    — Starter      — 1–2 hrs   — Claude API, Python
+m2: Email Marketing                           — Beginner     — 1–3 hrs   — Claude API, Python
+m3: Instagram & Facebook                      — Intermediate — 2–4 hrs   — Claude API, Python
+m4: Reddit Marketing                          — Advanced     — 3–5 hrs   — Claude API, PRAW, Python
+m5: LinkedIn Automation                       — Pro          — 4–6 hrs   — Claude API, Python
+m6: Full Campaign Orchestrator                — Ninja        — 5–8 hrs   — Claude API, Python
+```
+- `ORDER = ['m0','m1','m2','m3','m4','m5','m6']`
+- Default locked: `['m4','m5','m6']`
+
+## Sales with Claude Track — Projects (`sales.html`)
+```
+s0: Foundation — CRM & Sales Stack Setup      — Foundation   — 1–2 hrs   — Claude Cowork, HubSpot MCP, Apollo MCP, LinkedIn MCP, Gmail MCP
+s1: Lead Research & Prospecting               — Starter      — 1–2 hrs   — Claude API, Apollo MCP, Python
+s2: Cold Outreach — Email & LinkedIn          — Beginner     — 1–3 hrs   — Claude API, Gmail MCP, Python
+s3: Discovery Calls & Follow-up              — Intermediate — 2–4 hrs   — Claude API, HubSpot MCP, Python
+s4: Proposals & Pitches                       — Advanced     — 3–5 hrs   — Claude API, HubSpot MCP, Python
+s5: Objection Handling & Deal Coaching        — Pro          — 2–4 hrs   — Claude API, Python
+s6: Full Pipeline Orchestrator                — Ninja        — 5–8 hrs   — Claude API, HubSpot MCP, Apollo MCP, Gmail MCP, Python
+```
+- `ORDER = ['s0','s1','s2','s3','s4','s5','s6']`
+- Default locked: `['s4','s5','s6']`
+
+## Cross-Track Supabase Sync
+All track pages maintain `SYNC_ALL_ORDER` to sync completions without overwriting other tracks:
+```js
+['p1','p2','p3','p4','p5','p6','p7','p8','a1','a2','a3','a4','a5','a6','m0','m1','m2','m3','m4','m5','m6','s0','s1','s2','s3','s4','s5','s6']
+```
+Each track filters `app_settings.locked_projects` by its own prefix (`startsWith('a')`, `startsWith('m')`, `startsWith('s')`).
 
 ## Pricing / Paywall
 - **Free:** Projects determined by `app_settings.locked_projects` — admin-configurable
@@ -114,12 +170,12 @@ p8: Launch Checklist                          — Expert       — 1–3 hrs   �
 - Each card has a "Project Completed" checkbox injected by `initCompletionCards()` on load (iterates `ORDER`)
 - Completion state syncs with the individual project view
 
-## Individual Project View Features
-- Step checkboxes with progress counters in accordion headers (localStorage: `zts_p1`–`zts_p8`)
-- Copy buttons on all code blocks
+## Individual Project View Features (all track pages)
+- Step checkboxes with progress counters in accordion headers (localStorage: `zts_p1`–`zts_p8`, `zts_a1`–`zts_a6`, `zts_m0`–`zts_m6`, `zts_s0`–`zts_s6`)
+- Copy buttons on all code blocks (`.copyable-wrap > pre.code-block` pattern — `setupCopyButtons()` auto-injects)
 - Read progress bar (fixed, top of page)
 - **"Get unstuck" callout** — blue info block injected after `.skill-unlock` section on each project open via `placeUnstuckCallout(id)`. Permanent (no dismiss). Tells users to paste errors into Claude.ai or Claude Code terminal.
-- **Completion section** dynamically injected by `initProjectCompletion(projectId)` — skips p8
+- **Completion section** dynamically injected by `initProjectCompletion(projectId)` — skips the last "orchestrator" project in each track (p8, and any track's ninja-level capstone)
   - "Yes, I completed this project" checkbox + inline star rating (1 Hard, 5 Easy) + comment textarea
   - Live project URL input (left-aligned)
   - "Get Certificate" checkbox — shows downloadable Canvas certificate when checked
